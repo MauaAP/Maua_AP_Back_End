@@ -3,9 +3,9 @@ const mysql = require('mysql')
 // Conexão de configuração MySQL 
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'mysql_username',
-    password: 'mysql_password',
-    database: 'database_name'
+    user: 'root',
+    password: 'password123',
+    database: 'crud'
 })
 
 connection.connect((err) => {
