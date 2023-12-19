@@ -29,6 +29,7 @@ const EventController = {
     EventService.createEvent(newEvent, (err, result) => {
       if (err) {
         res.status(500).json({ error: err.message })
+        console.log(err)
         return
       }
       res.status(201).json({ message: 'Evento criado', id: result.insertId })
