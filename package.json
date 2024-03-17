@@ -2,26 +2,30 @@
   "name": "maua_ap_back_end",
   "version": "1.0.0",
   "description": "Repositório para criação do back-end da aplicação da academia de professores do Instituto Mauá de Tecnologia.",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MauaAP/Maua_AP_Back_End.git"
+    "start": "nodemon server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MauaAP/Maua_AP_Back_End/issues"
-  },
   "homepage": "https://github.com/MauaAP/Maua_AP_Back_End#readme",
   "dependencies": {
+    "@prisma/client": "^5.11.0",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "mysql": "^2.18.1",
-    "nodemon": "^3.0.2"
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "nodemon": "^3.0.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.27",
+    "@types/uuid": "^9.0.8",
+    "prisma": "^5.11.0",
+    "typescript": "^5.4.2"
   }
 }
