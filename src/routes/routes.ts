@@ -1,5 +1,4 @@
-import express, { Express, Request, Response } from "express";
-import { CreateUserController } from "../modules/user/create_user/app/create_user_controller";
+import { Express, Request, Response } from "express";
 import CreateUserRoutes from "../modules/user/create_user/create_user_routes";
 
 const routes = (app: Express) => {
@@ -7,14 +6,12 @@ const routes = (app: Express) => {
     .route("/")
     .get((req: Request, res: Response) => res.status(200).send("Api AP"));
 
-  //teste
   app
     .route("/teste")
     .get((req: Request, res: Response) =>
       res.status(200).send("Hello, world!")
     );
 
-  // rota post
   app.use("/api", CreateUserRoutes);
 };
 
