@@ -1,35 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-import { UserProps } from "../../../../shared/domain/entities/user";
-
-const prisma = new PrismaClient();
+import { User, UserProps } from "../../../../shared/domain/entities/user";
+import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
 
 export class CreateUserUsecase {
-  async createUser(user: UserProps) {
-    try {
-      console.log("Criando novo usuário:", user);
+  constructor(private repo: IUserRepository) {}
 
-      const existingUser = await prisma.user.findUnique({
-        where: {
-          email: user.email,
-        },
-      });
-
-      if (existingUser) {
-        throw new Error("User already exists in the database.");
-      }
-
-      const newUser = await prisma.user.create({
-        data: user,
-      });
-      console.log("Usuário criado com sucesso:", newUser);
-      return newUser;
-    } catch (error: any) {
-      console.error("Erro ao criar usuário:", error);
-      // Verifica se o erro é devido ao usuário já existente e lança uma mensagem personalizada
-      if (error.message.includes("User already exists in the database.")) {
-        throw new Error("Usuário já cadastrado.");
-      }
-      throw new Error("Erro ao criar usuário no banco de dados.");
+  async execute(userProps: UserProps) {
+    if (!userProps.name) {
+      throw new Error("Missing name");
     }
+    if (!userProps.email) {
+      throw new Error("Missing email");
+    }
+    if (!userProps.password) {
+      throw new Error("Missing password");
+    }
+    if (!userProps.role) {
+      throw new Error("Missing role");
+    }
+
+    const newUser = await this.repo.createUser(new User(userProps));
+    return newUser;
   }
 }
