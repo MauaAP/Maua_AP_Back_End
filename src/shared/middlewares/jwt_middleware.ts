@@ -1,23 +1,30 @@
 import jwt from "jsonwebtoken";
 import { EntityError } from "../helpers/errors/domain_errors";
+import { ROLE } from "../domain/enums/role_enum";
+
+type UserFromToken = {
+  email: string;
+  role: ROLE;
+};
 
 export function getUserFromToken(authorization: string) {
   try {
-    const token = authorization.split(" ")[1];
+    const token = authorization;
     if (!token) {
       throw new EntityError("Token not provided");
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-      user: string;
-    };
-    if (!decoded || !decoded.user) {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as UserFromToken;
+    if (!decoded) {
       throw new EntityError("Invalid token");
     }
 
-    const user = JSON.parse(decoded.user);
+    const user = decoded;
     return user;
-  } catch (error) {
-    throw new EntityError("Failed to decode token");
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 }
