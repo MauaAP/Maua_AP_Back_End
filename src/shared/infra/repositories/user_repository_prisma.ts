@@ -75,4 +75,24 @@ export class UserRepositoryPrisma implements IUserRepository {
       throw new Error("Erro ao buscar usuário por email");
     }
   }
+
+  async getAll(): Promise<User[]> {
+    try {
+      const allUsersFromPrisma = await prisma.user.findMany();
+
+      const allUsers = allUsersFromPrisma.map((user) => {
+        return new User({
+          name: user.name,
+          email: user.email,
+          role: user.role as ROLE,
+          password: user.password,
+        });
+      });
+
+      return allUsers;
+    } catch (error) {
+      console.error("Erro ao buscar todos os usuários:", error);
+      throw new Error("Erro ao buscar todos os usuários");
+    }
+  }
 }
