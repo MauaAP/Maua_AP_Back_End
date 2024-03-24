@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { CreateUserUsecase } from "./create_user_usecase";
-import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
-import { ForbiddenAction, NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 import { BadRequest, Forbidden, InternalServerError } from "http-errors";
 import { UserProps } from "../../../../shared/domain/entities/user";
 import { MissingParameters } from "../../../../shared/helpers/errors/controller_errors";
+import { CreateUserViewModel } from "./create_user_viewmodel";
 
 export class CreateUserController {
   constructor(private createUserUsecase: CreateUserUsecase) {}
@@ -37,15 +36,17 @@ export class CreateUserController {
       }
 
       const userProps: UserProps = { name, email, role, password };
-      const newUser = await this.createUserUsecase.execute(userProps);
+      await this.createUserUsecase.execute(userProps);
 
-      res.status(201).json(newUser);
+      const viewModel = new CreateUserViewModel("Usuário cadastrado com sucesso!");
+      res.status(201).json(viewModel);
     } catch (error: any) {
-      if (error instanceof NoItemsFound || error instanceof EntityError) {
-        return res.status(400).json(new BadRequest(error.message));
-      }
-      if (error instanceof ForbiddenAction) {
-        return res.status(403).json(new Forbidden(error.message));
+      if (
+        error instanceof BadRequest ||
+        error instanceof Forbidden ||
+        error instanceof InternalServerError
+      ) {
+        return res.status(error.status).json(error);
       }
       return res.status(500).json(new InternalServerError(error.message));
     }
