@@ -3,14 +3,14 @@ import jwt from "jsonwebtoken";
 import { EntityError } from "../helpers/errors/domain_errors";
 import { ROLE } from "../domain/enums/role_enum";
 
-type UserFromToken = {
+export type UserFromToken = {
   email: string;
   role: ROLE;
 };
 
 declare module "express" {
   interface Request {
-    user?: UserFromToken; 
+    user?: UserFromToken;
   }
 }
 
@@ -43,10 +43,6 @@ export function authenticateToken(
     console.log("User from token:", user);
 
     req.user = user;
-
-    if (user.role === "ADMIN") {
-      console.log("User is an admin");
-    }
 
     next();
   } catch (error: any) {
