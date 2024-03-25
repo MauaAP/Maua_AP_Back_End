@@ -2,7 +2,7 @@ import { Express, Request, Response } from "express";
 import CreateUserRoutes from "../modules/user/create_user/create_user_routes";
 import AuthUserRoutes from "../modules/user/auth_user/auth_user_routes";
 import GetAllUserRoutes from "../modules/user/get_all_users/get_all_users_routes"
-import { authenticateAdminToken } from "../shared/middlewares/jwt_admin_middleware";
+import GetUserByEmailRoutes from "../modules/user/get_user_by_email/get_user_by_email_routes";
 const routes = (app: Express) => {
   app
     .route("/")
@@ -16,7 +16,8 @@ const routes = (app: Express) => {
 
   app.use("/api", CreateUserRoutes);
   app.use("/api", AuthUserRoutes);
-  app.use("/api", authenticateAdminToken, GetAllUserRoutes);
+  app.use("/api", GetAllUserRoutes);
+  app.use("/api", GetUserByEmailRoutes)
 };
 
 export default routes;
