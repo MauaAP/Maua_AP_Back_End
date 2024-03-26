@@ -1,5 +1,3 @@
-// shared/domain/entities/user.ts
-
 import { EntityError } from "../../helpers/errors/domain_errors";
 import { ROLE } from "../enums/role_enum";
 
