@@ -11,7 +11,8 @@ export class CreateUserController {
   async createUser(req: Request, res: Response) {
     try {
       console.log("TENTANDO CRIAR USUÁRIO");
-      const { name, email, role, password } = req.body;
+      const { name, email, role, password, telefone, cpf, registration } =
+        req.body;
 
       const errors = [];
 
@@ -31,14 +32,36 @@ export class CreateUserController {
         errors.push(new MissingParameters("Role"));
       }
 
+      if (!telefone) {
+        errors.push(new MissingParameters("Telefone"));
+      }
+
+      if (!cpf) {
+        errors.push(new MissingParameters("CPF"));
+      }
+
+      if (!registration) {
+        errors.push(new MissingParameters("Registration"));
+      }
+
       if (errors.length > 0) {
         return res.status(400).json(errors);
       }
 
-      const userProps: UserProps = { name, email, role, password };
+      const userProps: UserProps = {
+        name,
+        email,
+        role,
+        password,
+        telefone,
+        cpf,
+        registration,
+      };
       await this.createUserUsecase.execute(userProps);
 
-      const viewModel = new CreateUserViewModel("Usuário cadastrado com sucesso!");
+      const viewModel = new CreateUserViewModel(
+        "Usuário cadastrado com sucesso!"
+      );
       res.status(201).json(viewModel);
     } catch (error: any) {
       if (

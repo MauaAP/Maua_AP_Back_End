@@ -30,6 +30,9 @@ export class UserRepositoryPrisma implements IUserRepository {
           email: userProps.email,
           role: userProps.role as string,
           password: hashedPassword,
+          telefone: userProps.telefone || '', 
+          cpf: userProps.cpf || '', 
+          registration: userProps.registration,
         },
       });
 
@@ -38,6 +41,9 @@ export class UserRepositoryPrisma implements IUserRepository {
         email: createdUserFromPrisma.email,
         role: createdUserFromPrisma.role as ROLE,
         password: createdUserFromPrisma.password,
+        telefone: createdUserFromPrisma.telefone,
+        cpf: createdUserFromPrisma.cpf,
+        registration: createdUserFromPrisma.registration,
       });
 
       console.log("Usuário criado com sucesso:", createdUser);
@@ -69,6 +75,9 @@ export class UserRepositoryPrisma implements IUserRepository {
         email: existingUser.email,
         role: existingUser.role as ROLE,
         password: existingUser.password,
+        telefone: existingUser.telefone,
+        cpf: existingUser.cpf,
+        registration: existingUser.registration,
       });
     } catch (error) {
       console.error("Erro ao buscar usuário por email:", error);
@@ -86,6 +95,9 @@ export class UserRepositoryPrisma implements IUserRepository {
           email: user.email,
           role: user.role as ROLE,
           password: user.password,
+          telefone: user.telefone,
+          cpf: user.cpf,
+          registration: user.registration,
         });
       });
 

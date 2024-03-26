@@ -17,6 +17,16 @@ export class CreateUserUsecase {
     if (!userProps.role) {
       throw new Error("Missing role");
     }
+    if (!userProps.telefone) {
+      throw new Error("Missing telefone");
+    }
+    if (!userProps.cpf) {
+      throw new Error("Missing cpf");
+    }
+
+    if (!userProps.registration) {
+      throw new Error("Missing registration");
+    }
 
     const newUser = await this.repo.createUser(new User(userProps));
     return newUser;
