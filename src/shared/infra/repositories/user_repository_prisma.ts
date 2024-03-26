@@ -95,4 +95,31 @@ export class UserRepositoryPrisma implements IUserRepository {
       throw new Error("Erro ao buscar todos os usuários");
     }
   }
+
+  async updateUser(user: User): Promise<User> {
+    try {
+      const updatedUserFromPrisma = await prisma.user.update({
+        where: {
+          email: user.email,
+        },
+        data: {
+          name: user.name,
+          role: user.role as string,
+          password: user.password,
+        },
+      });
+
+      const updatedUser = new User({
+        name: updatedUserFromPrisma.name,
+        email: updatedUserFromPrisma.email,
+        role: updatedUserFromPrisma.role as ROLE,
+        password: updatedUserFromPrisma.password,
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      throw new Error("Erro ao atualizar usuário");
+    }
+  }
 }
