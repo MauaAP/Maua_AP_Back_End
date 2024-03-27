@@ -14,10 +14,14 @@ const routes = (app: Express) => {
       res.status(200).send("Hello, world!")
     );
 
+    // user routes
+
   app.use("/api", CreateUserRoutes);
   app.use("/api", AuthUserRoutes);
   app.use("/api", GetAllUserRoutes);
   app.use("/api", GetUserByEmailRoutes)
+
+  
 };
 
 export default routes;
