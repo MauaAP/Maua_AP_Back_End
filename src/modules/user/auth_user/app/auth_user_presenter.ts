@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { AuthUserController } from "./app/auth_user_controller";
-import { AuthUserUsecase } from "./app/auth_user_usecase";
-import { UserRepositoryPrisma } from "../../../shared/infra/repositories/user_repository_prisma";
+import { AuthUserController } from "./auth_user_controller";
+import { AuthUserUsecase } from "./auth_user_usecase";
+import { UserRepositoryPrisma } from "../../../../shared/infra/repositories/user_repository_prisma";
 
 const router = express.Router();
 const userRepository = new UserRepositoryPrisma();

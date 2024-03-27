@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import { UserRepositoryPrisma } from "../../../shared/infra/repositories/user_repository_prisma";
-import { GetUserByEmailUseCase } from "./app/get_user_by_email_usecase";
-import { GetUserByEmailController } from "./app/get_user_by_email_controller";
-import { authenticateToken } from "../../../shared/middlewares/jwt_middleware";
+import { UserRepositoryPrisma } from "../../../../shared/infra/repositories/user_repository_prisma";
+import { GetUserByEmailUseCase } from "./get_user_by_email_usecase";
+import { GetUserByEmailController } from "./get_user_by_email_controller";
+import { authenticateToken } from "../../../../shared/middlewares/jwt_middleware";
 
 const router = express.Router();
 

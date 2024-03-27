@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import { EventRepositoryPrisma } from "../../../shared/infra/repositories/event_repository_prisma";
-import { CreateEventController } from "./app/create_event_controller";
-import { CreateEventUsecase } from "./app/create_event_usecase";
-import { authenticateToken } from "../../../shared/middlewares/jwt_middleware";
+import { EventRepositoryPrisma } from "../../../../shared/infra/repositories/event_repository_prisma";
+import { CreateEventController } from "./create_event_controller";
+import { CreateEventUsecase } from "./create_event_usecase";
+import { authenticateToken } from "../../../../shared/middlewares/jwt_middleware";
 
 const router = express.Router();
 const eventRepository = new EventRepositoryPrisma();
