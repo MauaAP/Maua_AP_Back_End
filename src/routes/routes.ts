@@ -1,9 +1,9 @@
 import { Express, Request, Response } from "express";
-import CreateUserRoutes from "../modules/user/create_user/create_user_routes";
-import AuthUserRoutes from "../modules/user/auth_user/auth_user_routes";
-import GetAllUserRoutes from "../modules/user/get_all_users/get_all_users_routes";
-import GetUserByEmailRoutes from "../modules/user/get_user_by_email/get_user_by_email_routes";
-import CreateEventRoutes from "../modules/event/create_event/create_event_routes";
+import CreateUserPresenter from "../modules/user/create_user/app/create_user_presenter";
+import AuthUserPresenter from "../modules/user/auth_user/app/auth_user_presenter";
+import GetAllUserPresenter from "../modules/user/get_all_users/app/get_all_users_presenter";
+import GetUserByEmailPresenter from "../modules/user/get_user_by_email/app/get_user_by_email_presenter";
+import CreateEventPresenter from "../modules/event/create_event/app/create_event_presenter";
 const routes = (app: Express) => {
   app
     .route("/")
@@ -17,13 +17,13 @@ const routes = (app: Express) => {
 
   // user routes
 
-  app.use("/api", CreateUserRoutes);
-  app.use("/api", AuthUserRoutes);
-  app.use("/api", GetAllUserRoutes);
-  app.use("/api", GetUserByEmailRoutes);
+  app.use("/api", CreateUserPresenter);
+  app.use("/api", AuthUserPresenter);
+  app.use("/api", GetAllUserPresenter);
+  app.use("/api", GetUserByEmailPresenter);
 
   // event routes
-  app.use("/api", CreateEventRoutes);
+  app.use("/api", CreateEventPresenter);
 };
 
 export default routes;
