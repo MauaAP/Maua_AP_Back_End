@@ -17,3 +17,24 @@ model User {
   cpf          String @unique
   registration String @unique
 }
+
+model Event {
+  id                    String   @id @default(uuid())
+  eventName             String
+  date                  DateTime
+  host                  String
+  manager               String[]
+  duration              String
+  hostEmail             String[]
+  hostPhone             String[]
+  local                 String
+  modality              String
+  targetAudience        String
+  activityType          String
+  maxParticipants       Int?
+  goals                 String
+  contentActivities     String[]
+  developedCompetencies String
+  initTime              DateTime
+  finishTime            DateTime
+}
