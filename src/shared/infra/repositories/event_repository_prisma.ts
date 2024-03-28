@@ -33,6 +33,7 @@ export class EventRepositoryPrisma implements IEventRepository {
       });
 
       const createdEvent = new Event({
+        eventId: createdEventFromPrisma.id,
         eventName: createdEventFromPrisma.eventName,
         date: createdEventFromPrisma.date.getTime(),
         host: createdEventFromPrisma.host,
@@ -68,6 +69,7 @@ export class EventRepositoryPrisma implements IEventRepository {
 
       const events = eventsFromPrisma.map((event) => {
         return new Event({
+          eventId: event.id,
           eventName: event.eventName,
           date: event.date.getTime(),
           host: event.host,
