@@ -1,6 +1,7 @@
 import { EntityError } from "../../helpers/errors/domain_errors";
 
 export interface EventProps {
+  eventId?: string;
   eventName: string;
   date: number;
   host: string;
@@ -96,6 +97,14 @@ export class Event {
     if (!Event.validateTime(props.finishTime)) {
       throw new EntityError("finish time");
     }
+  }
+
+  get eventId(): string {
+    return this.props.eventId || "";
+  }
+
+  set eventId(eventId: string) {
+    this.props.eventId = eventId;
   }
 
   get eventName(): string {
