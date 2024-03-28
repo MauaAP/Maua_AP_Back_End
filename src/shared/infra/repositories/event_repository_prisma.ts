@@ -97,4 +97,47 @@ export class EventRepositoryPrisma implements IEventRepository {
       throw new Error("Erro ao buscar eventos no banco de dados.");
     }
   }
+
+  async getEventById(eventId: string): Promise<Event> {
+    try {
+      console.log("Buscando evento por ID:", eventId);
+
+      const eventFromPrisma = await prisma.event.findUnique({
+        where: {
+          id: eventId,
+        },
+      });
+
+      if (!eventFromPrisma) {
+        throw new Error("Evento não encontrado.");
+      }
+
+      const event = new Event({
+        eventId: eventFromPrisma.id,
+        eventName: eventFromPrisma.eventName,
+        date: eventFromPrisma.date.getTime(),
+        host: eventFromPrisma.host,
+        manager: eventFromPrisma.manager,
+        duration: eventFromPrisma.duration,
+        hostEmail: eventFromPrisma.hostEmail,
+        hostPhone: eventFromPrisma.hostPhone,
+        local: eventFromPrisma.local,
+        modality: eventFromPrisma.modality,
+        targetAudience: eventFromPrisma.targetAudience,
+        activityType: eventFromPrisma.activityType,
+        goals: eventFromPrisma.goals,
+        contentActivities: eventFromPrisma.contentActivities,
+        developedCompetencies: eventFromPrisma.developedCompetencies,
+        initTime: eventFromPrisma.initTime.getTime(),
+        finishTime: eventFromPrisma.finishTime.getTime(),
+      });
+
+      console.log("Evento encontrado:", event);
+
+      return event;
+    } catch (error: any) {
+      console.error("Erro ao buscar evento por ID:", error);
+      throw new Error("Erro ao buscar evento por ID no banco de dados.");
+    }
+  }
 }
