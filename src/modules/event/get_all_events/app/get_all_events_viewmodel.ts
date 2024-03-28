@@ -1,6 +1,7 @@
 import { Event } from "../../../../shared/domain/entities/event";
 
 export class GetAllEventsViewmodel {
+  eventId: string;
   eventName: string;
   date: number;
   host: string;
@@ -19,6 +20,7 @@ export class GetAllEventsViewmodel {
   finishTime: number;
 
   constructor(event: Event) {
+    this.eventId = event.eventId;
     this.eventName = event.eventName;
     this.date = event.date;
     this.host = event.host;
