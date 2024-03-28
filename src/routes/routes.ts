@@ -5,6 +5,8 @@ import GetAllUserPresenter from "../modules/user/get_all_users/app/get_all_users
 import GetUserByEmailPresenter from "../modules/user/get_user_by_email/app/get_user_by_email_presenter";
 import CreateEventPresenter from "../modules/event/create_event/app/create_event_presenter";
 import GetAllEventsPresenter from "../modules/event/get_all_events/app/get_all_events_presenter";
+import GetEventByIdPresenter from "../modules/event/get_event_by_id/app/get_event_by_id_presenter";
+
 const routes = (app: Express) => {
   app
     .route("/")
@@ -25,6 +27,7 @@ const routes = (app: Express) => {
   // event routes
   app.use("/api", CreateEventPresenter);
   app.use("/api", GetAllEventsPresenter);
+  app.use("/api", GetEventByIdPresenter);
 };
 
 export default routes;
