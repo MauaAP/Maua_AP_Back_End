@@ -140,4 +140,21 @@ export class EventRepositoryPrisma implements IEventRepository {
       throw new Error("Erro ao buscar evento por ID no banco de dados.");
     }
   }
+
+  async delete(eventId: string): Promise<void> {
+    try {
+      console.log("Deletando evento por ID:", eventId);
+
+      await prisma.event.delete({
+        where: {
+          id: eventId,
+        },
+      });
+
+      console.log("Evento deletado com sucesso.");
+    } catch (error: any) {
+      console.error("Erro ao deletar evento por ID:", error);
+      throw new Error("Erro ao deletar evento por ID no banco de dados.");
+    }
+  }
 }
