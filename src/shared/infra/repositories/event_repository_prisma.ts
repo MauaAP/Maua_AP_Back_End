@@ -3,32 +3,33 @@ import { EventProps } from "../../../shared/domain/entities/event";
 import { IEventRepository } from "../../../shared/domain/repositories/event_repository_interface";
 import { Event } from "../../domain/entities/event";
 import { ROLE } from "../../domain/enums/role_enum";
+import { MODALITY } from "../../domain/enums/modality_type";
 
 const prisma = new PrismaClient();
 
 export class EventRepositoryPrisma implements IEventRepository {
-  async createEvent(eventProps: EventProps): Promise<Event> {
+  async createEvent(event: Event): Promise<Event> {
     try {
-      console.log("Criando novo evento:", eventProps);
+      console.log("Criando novo evento:", event);
 
       const createdEventFromPrisma = await prisma.event.create({
         data: {
-          eventName: eventProps.eventName,
-          date: new Date(eventProps.date),
-          host: eventProps.host,
-          manager: eventProps.manager,
-          duration: eventProps.duration,
-          hostEmail: eventProps.hostEmail,
-          hostPhone: eventProps.hostPhone,
-          local: eventProps.local,
-          modality: eventProps.modality,
-          targetAudience: eventProps.targetAudience,
-          activityType: eventProps.activityType,
-          goals: eventProps.goals,
-          contentActivities: eventProps.contentActivities,
-          developedCompetencies: eventProps.developedCompetencies,
-          initTime: new Date(eventProps.initTime),
-          finishTime: new Date(eventProps.finishTime),
+          eventName: event.eventName,
+          date: new Date(event.date),
+          host: event.host,
+          manager: event.manager,
+          duration: event.duration,
+          hostEmail: event.hostEmail,
+          hostPhone: event.hostPhone,
+          local: event.local,
+          modality: event.modality as string,
+          targetAudience: event.targetAudience,
+          activityType: event.activityType,
+          goals: event.goals,
+          contentActivities: event.contentActivities,
+          developedCompetencies: event.developedCompetencies,
+          initTime: new Date(event.initTime),
+          finishTime: new Date(event.finishTime),
         },
       });
 
@@ -42,7 +43,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         hostEmail: createdEventFromPrisma.hostEmail,
         hostPhone: createdEventFromPrisma.hostPhone,
         local: createdEventFromPrisma.local,
-        modality: createdEventFromPrisma.modality,
+        modality: createdEventFromPrisma.modality as MODALITY,
         targetAudience: createdEventFromPrisma.targetAudience,
         activityType: createdEventFromPrisma.activityType,
         goals: createdEventFromPrisma.goals,
@@ -78,7 +79,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           hostEmail: event.hostEmail,
           hostPhone: event.hostPhone,
           local: event.local,
-          modality: event.modality,
+          modality: event.modality as MODALITY,
           targetAudience: event.targetAudience,
           activityType: event.activityType,
           goals: event.goals,
@@ -122,7 +123,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         hostEmail: eventFromPrisma.hostEmail,
         hostPhone: eventFromPrisma.hostPhone,
         local: eventFromPrisma.local,
-        modality: eventFromPrisma.modality,
+        modality: eventFromPrisma.modality as MODALITY,
         targetAudience: eventFromPrisma.targetAudience,
         activityType: eventFromPrisma.activityType,
         goals: eventFromPrisma.goals,
