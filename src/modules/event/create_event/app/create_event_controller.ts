@@ -11,7 +11,8 @@ export class CreateEventController {
     try {
       const userFromToken = req.user as UserFromToken;
 
-      if (userFromToken.role !== "ADMIN") {
+      const allowedRoles = ["ADMIN", "SECRETARY", "MODERATOR"];
+      if (!allowedRoles.includes(userFromToken.role)) {
         return res.status(403).json({ error: "Acesso negado." });
       }
       const {

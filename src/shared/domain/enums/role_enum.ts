@@ -1,16 +1,16 @@
 export enum ROLE {
-  USER = "USER",
   ADMIN = "ADMIN",
+  SECRETARY = "SECRETARY",
   MODERATOR = "MODERATOR",
   PROFESSOR = "PROFESSOR",
 }
 
 export function toEnum(value: string): ROLE {
   switch (value) {
-    case "USER":
-      return ROLE.USER;
     case "ADMIN":
       return ROLE.ADMIN;
+    case "SECRETARY":
+      return ROLE.SECRETARY;
     case "MODERATOR":
       return ROLE.MODERATOR;
     case "PROFESSOR":

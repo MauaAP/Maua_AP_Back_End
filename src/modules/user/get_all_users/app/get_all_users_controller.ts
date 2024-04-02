@@ -19,7 +19,8 @@ export class GetAllUsersController {
     try {
       const userFromToken = req.user as UserFromToken;
 
-      if (userFromToken.role !== "ADMIN") {
+      const allowedRoles = ["ADMIN", "SECRETARY"];
+      if (!allowedRoles.includes(userFromToken.role)) {
         return res.status(403).json({ error: "Acesso negado." });
       }
 
@@ -30,7 +31,7 @@ export class GetAllUsersController {
       res.status(200).json(usersViewModel);
     } catch (error: any) {
       if (error instanceof NoItemsFound) {
-        return res.status(404).json({ error: error.message });
+        return res.status(204).json({ error: error.message });
       }
       if (
         error instanceof WrongTypeParameters ||

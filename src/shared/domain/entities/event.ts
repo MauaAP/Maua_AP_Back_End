@@ -1,4 +1,5 @@
 import { EntityError } from "../../helpers/errors/domain_errors";
+import { MODALITY } from "../enums/modality_type";
 
 export interface EventProps {
   eventId?: string;
@@ -10,7 +11,7 @@ export interface EventProps {
   hostEmail: string[];
   hostPhone: string[];
   local: string;
-  modality: string;
+  modality: MODALITY;
   targetAudience: string;
   activityType: string;
   numberMaxParticipants?: number;
@@ -231,7 +232,7 @@ export class Event {
     this.props.local = local;
   }
 
-  setModality(modality: string): void {
+  setModality(modality: MODALITY): void {
     if (!Event.isValidAtributtes(modality)) {
       throw new EntityError("modality");
     }
