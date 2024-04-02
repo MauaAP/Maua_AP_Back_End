@@ -37,4 +37,5 @@ model Event {
   developedCompetencies String
   initTime              DateTime
   finishTime            DateTime
+  link                 String?
 }
