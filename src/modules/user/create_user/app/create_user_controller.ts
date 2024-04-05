@@ -58,7 +58,6 @@ export class CreateUserController {
         password,
         telefone,
         cpf,
-        registration,
         status,
       };
       await this.createUserUsecase.execute(userProps);

@@ -33,7 +33,6 @@ export class UserRepositoryPrisma implements IUserRepository {
           password: hashedPassword,
           telefone: userProps.telefone || '', 
           cpf: userProps.cpf || '', 
-          registration: userProps.registration,
           status: userProps.status as string,
         },
       });
@@ -45,7 +44,6 @@ export class UserRepositoryPrisma implements IUserRepository {
         password: createdUserFromPrisma.password,
         telefone: createdUserFromPrisma.telefone,
         cpf: createdUserFromPrisma.cpf,
-        registration: createdUserFromPrisma.registration,
         status: createdUserFromPrisma.status as STATUS,
       });
 
@@ -70,7 +68,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
 
       if (!existingUser) {
-        return undefined; // Usuário não encontrado
+        return undefined; 
       }
 
       return new User({
@@ -80,7 +78,6 @@ export class UserRepositoryPrisma implements IUserRepository {
         password: existingUser.password,
         telefone: existingUser.telefone,
         cpf: existingUser.cpf,
-        registration: existingUser.registration,
         status: existingUser.status as STATUS,
       });
     } catch (error) {
@@ -101,7 +98,6 @@ export class UserRepositoryPrisma implements IUserRepository {
           password: user.password,
           telefone: user.telefone,
           cpf: user.cpf,
-          registration: user.registration,
           status: user.status as STATUS,
         });
       });

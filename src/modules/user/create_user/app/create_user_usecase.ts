@@ -24,9 +24,6 @@ export class CreateUserUsecase {
       throw new Error("Missing cpf");
     }
 
-    if (!userProps.registration) {
-      throw new Error("Missing registration");
-    }
     if (!userProps.status) {
       throw new Error("Missing status");
     }

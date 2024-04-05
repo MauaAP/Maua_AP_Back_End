@@ -8,7 +8,6 @@ import {
 } from "../../../../shared/helpers/errors/usecase_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import {
-  MissingParameters,
   WrongTypeParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 
