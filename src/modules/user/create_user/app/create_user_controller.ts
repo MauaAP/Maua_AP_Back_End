@@ -11,7 +11,7 @@ export class CreateUserController {
   async createUser(req: Request, res: Response) {
     try {
       console.log("TENTANDO CRIAR USUÁRIO");
-      const { name, email, role, password, telefone, cpf, registration } =
+      const { name, email, role, password, telefone, cpf, registration, status } =
         req.body;
 
       const errors = [];
@@ -30,6 +30,9 @@ export class CreateUserController {
 
       if (!role) {
         errors.push(new MissingParameters("Role"));
+      }
+      if (!status) {
+        errors.push(new MissingParameters("Status"));
       }
 
       if (!telefone) {
@@ -56,6 +59,7 @@ export class CreateUserController {
         telefone,
         cpf,
         registration,
+        status,
       };
       await this.createUserUsecase.execute(userProps);
 
