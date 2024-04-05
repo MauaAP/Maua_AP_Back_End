@@ -4,6 +4,7 @@ import { IUserRepository } from "../../../shared/domain/repositories/user_reposi
 import { User } from "../../domain/entities/user";
 import { ROLE } from "../../domain/enums/role_enum";
 import bcrypt from "bcrypt";
+import { STATUS } from "../../domain/enums/status_enum";
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,7 @@ export class UserRepositoryPrisma implements IUserRepository {
           telefone: userProps.telefone || '', 
           cpf: userProps.cpf || '', 
           registration: userProps.registration,
+          status: userProps.status as string,
         },
       });
 
@@ -44,6 +46,7 @@ export class UserRepositoryPrisma implements IUserRepository {
         telefone: createdUserFromPrisma.telefone,
         cpf: createdUserFromPrisma.cpf,
         registration: createdUserFromPrisma.registration,
+        status: createdUserFromPrisma.status as STATUS,
       });
 
       console.log("Usuário criado com sucesso:", createdUser);
@@ -78,6 +81,7 @@ export class UserRepositoryPrisma implements IUserRepository {
         telefone: existingUser.telefone,
         cpf: existingUser.cpf,
         registration: existingUser.registration,
+        status: existingUser.status as STATUS,
       });
     } catch (error) {
       console.error("Erro ao buscar usuário por email:", error);
@@ -98,6 +102,7 @@ export class UserRepositoryPrisma implements IUserRepository {
           telefone: user.telefone,
           cpf: user.cpf,
           registration: user.registration,
+          status: user.status as STATUS,
         });
       });
 
