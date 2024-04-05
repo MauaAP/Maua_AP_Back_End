@@ -9,7 +9,6 @@ export interface UserProps {
   password: string;
   telefone?: string;
   cpf?: string;
-  registration: string;
   status: STATUS;
 }
 
@@ -72,10 +71,6 @@ export class User {
     return this.props.cpf;
   }
 
-  get registration(): string {
-    return this.props.registration;
-  }
-
   get status(): STATUS {
     return this.props.status;
   }
@@ -120,13 +115,6 @@ export class User {
       throw new EntityError("Invalid cpf");
     }
     this.props.cpf = cpf;
-  }
-
-  setRegistration(registration: string): void {
-    if (!User.validateRegistration(registration)) {
-      throw new EntityError("Invalid registration");
-    }
-    this.props.registration = registration;
   }
 
   setStatus(status: STATUS): void {
