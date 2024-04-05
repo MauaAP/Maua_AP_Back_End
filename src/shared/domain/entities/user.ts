@@ -1,5 +1,6 @@
 import { EntityError } from "../../helpers/errors/domain_errors";
 import { ROLE } from "../enums/role_enum";
+import { STATUS } from "../enums/status_enum";
 
 export interface UserProps {
   name: string;
@@ -9,6 +10,7 @@ export interface UserProps {
   telefone?: string;
   cpf?: string;
   registration: string;
+  status: STATUS;
 }
 
 export class User {
@@ -74,6 +76,10 @@ export class User {
     return this.props.registration;
   }
 
+  get status(): STATUS {
+    return this.props.status;
+  }
+
   setName(name: string): void {
     if (!User.isValidName(name)) {
       throw new EntityError("Invalid name");
@@ -123,6 +129,13 @@ export class User {
     this.props.registration = registration;
   }
 
+  setStatus(status: STATUS): void {
+    if (!User.validatestatus(status)) {
+      throw new EntityError("Invalid status");
+    }
+    this.props.status = status;
+  }
+
   static isValidName(name: string): boolean {
     name = name.trim();
     return name.length >= 2 && name.length <= 130;
@@ -156,22 +169,101 @@ export class User {
     return true;
   }
 
+  static validatestatus(status: STATUS): boolean {
+    if (status == null) {
+      return false;
+    }
+
+    if (Object.values(STATUS).includes(status) == false) {
+      return false;
+    }
+
+    return true;
+  }
+
   static validatePhoneNumber(phoneNumber: string): boolean {
-    phoneNumber = phoneNumber.replace(/\D/g, '');
-  
+    phoneNumber = phoneNumber.replace(/\D/g, "");
+
     if (phoneNumber.length !== 11) {
       return false;
     }
-  
-    const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
+
+    const validDDDs = [
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "21",
+      "22",
+      "24",
+      "27",
+      "28",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "37",
+      "38",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46",
+      "47",
+      "48",
+      "49",
+      "51",
+      "53",
+      "54",
+      "55",
+      "61",
+      "62",
+      "63",
+      "64",
+      "65",
+      "66",
+      "67",
+      "68",
+      "69",
+      "71",
+      "73",
+      "74",
+      "75",
+      "77",
+      "79",
+      "81",
+      "82",
+      "83",
+      "84",
+      "85",
+      "86",
+      "87",
+      "88",
+      "89",
+      "91",
+      "92",
+      "93",
+      "94",
+      "95",
+      "96",
+      "97",
+      "98",
+      "99",
+    ];
     const ddd = phoneNumber.substring(0, 2);
     if (!validDDDs.includes(ddd)) {
       return false;
     }
-  
+
     return true;
   }
-  
 
   static validateCPF(cpf: string): boolean {
     cpf = cpf.replace(/\D/g, "");
