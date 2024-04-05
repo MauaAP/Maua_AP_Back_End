@@ -15,7 +15,7 @@ model User {
   password     String
   telefone     String @unique
   cpf          String @unique
-  registration String @unique
+  status       String
 }
 
 model Event {
