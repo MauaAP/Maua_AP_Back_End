@@ -27,6 +27,9 @@ export class CreateUserUsecase {
     if (!userProps.registration) {
       throw new Error("Missing registration");
     }
+    if (!userProps.status) {
+      throw new Error("Missing status");
+    }
 
     const newUser = await this.repo.createUser(new User(userProps));
     return newUser;
