@@ -288,9 +288,4 @@ export class User {
 
     return true;
   }
-
-  static validateRegistration(registration: string): boolean {
-    const registrationRegex = /^\d-\d{5}$/;
-    return registrationRegex.test(registration);
-  }
 }
