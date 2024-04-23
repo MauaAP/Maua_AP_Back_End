@@ -3,6 +3,7 @@ import { ROLE } from "../enums/role_enum";
 import { STATUS } from "../enums/status_enum";
 
 export interface UserProps {
+  id?: string;
   name: string;
   email: string;
   role: ROLE;
@@ -45,6 +46,10 @@ export class User {
     if (props.telefone && !User.validatePhoneNumber(props.telefone)) {
       throw new EntityError("Invalid telefone");
     }
+  }
+
+  get userId(): string | undefined {
+    return this.props.id;
   }
 
   get name(): string {

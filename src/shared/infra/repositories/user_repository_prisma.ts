@@ -72,6 +72,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       }
 
       return new User({
+        id: existingUser.id,
         name: existingUser.name,
         email: existingUser.email,
         role: existingUser.role as ROLE,
@@ -92,6 +93,7 @@ export class UserRepositoryPrisma implements IUserRepository {
 
       const allUsers = allUsersFromPrisma.map((user) => {
         return new User({
+          id: user.id,
           name: user.name,
           email: user.email,
           role: user.role as ROLE,
@@ -106,6 +108,34 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao buscar todos os usuários:", error);
       throw new Error("Erro ao buscar todos os usuários");
+    }
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
+    try {
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!existingUser) {
+        return undefined; 
+      }
+
+      return new User({
+        id: existingUser.id,
+        name: existingUser.name,
+        email: existingUser.email,
+        role: existingUser.role as ROLE,
+        password: existingUser.password,
+        telefone: existingUser.telefone,
+        cpf: existingUser.cpf,
+        status: existingUser.status as STATUS,
+      });
+    } catch (error) {
+      console.error("Erro ao buscar usuário por id:", error);
+      throw new Error("Erro ao buscar usuário por id");
     }
   }
 }
