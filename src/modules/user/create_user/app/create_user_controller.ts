@@ -11,7 +11,7 @@ export class CreateUserController {
   async createUser(req: Request, res: Response) {
     try {
       console.log("TENTANDO CRIAR USUÁRIO");
-      const { name, email, role, password, telefone, cpf, registration, status } =
+      const { name, email, role, password, telefone, cpf, status } =
         req.body;
 
       const errors = [];
@@ -41,10 +41,6 @@ export class CreateUserController {
 
       if (!cpf) {
         errors.push(new MissingParameters("CPF"));
-      }
-
-      if (!registration) {
-        errors.push(new MissingParameters("Registration"));
       }
 
       if (errors.length > 0) {
