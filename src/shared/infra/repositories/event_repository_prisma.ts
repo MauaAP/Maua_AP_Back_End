@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { EventProps } from "../../../shared/domain/entities/event";
 import { IEventRepository } from "../../../shared/domain/repositories/event_repository_interface";
 import { Event } from "../../domain/entities/event";
-import { ROLE } from "../../domain/enums/role_enum";
 import { MODALITY } from "../../domain/enums/modality_type";
 
 const prisma = new PrismaClient();
