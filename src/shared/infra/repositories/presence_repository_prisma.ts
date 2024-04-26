@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { IPresenceRepository } from "../../domain/repositories/presence_repository_interface";
 import { Presence } from "../../domain/entities/presence";
+import { NoItemsFound } from "../../helpers/errors/usecase_errors";
 
 const prisma = new PrismaClient();
 
@@ -9,18 +10,24 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     try {
       console.log("Criando nova presença:", presence);
 
+      // Check if a presence with the same eventId, userId, and date already exists
       const existingPresence = await prisma.presence.findUnique({
         where: {
-          eventId_userId: {
+          eventId_userId_date: {
             eventId: presence.eventId,
             userId: presence.userId,
+            date: new Date(presence.date),
           },
         },
       });
 
       if (existingPresence) {
-        console.error("Já existe uma presença cadastrada para este evento e usuário.");
-        throw new Error("Já existe uma presença cadastrada para este evento e usuário.");
+        console.error(
+          "Já existe uma presença cadastrada para este evento, usuário, e data."
+        );
+        throw new Error(
+          "Já existe uma presença cadastrada para este evento, usuário, e data."
+        );
       }
 
       const createdPresenceFromPrisma = await prisma.presence.create({
@@ -52,5 +59,29 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
       console.error("Erro ao criar presença:", error);
       throw new Error("Erro ao criar presença no banco de dados.");
     }
+  }
+
+  async getPresenceByUserAndEvent(
+    userId: string,
+    eventId: string
+  ): Promise<Presence | null> {
+    const presenceFromPrisma = await prisma.presence.findFirst({
+      where: {
+        userId: userId,
+        eventId: eventId,
+      },
+    });
+
+    if (!presenceFromPrisma) {
+      return null;
+    }
+
+    const presence = new Presence({
+      userId: presenceFromPrisma.userId,
+      eventId: presenceFromPrisma.eventId,
+      date: presenceFromPrisma.date.getTime(),
+    });
+
+    return presence;
   }
 }
