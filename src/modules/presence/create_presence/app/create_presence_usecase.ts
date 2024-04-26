@@ -16,6 +16,17 @@ export class CreatePresenceUsecase {
   async execute(userId: string, eventId: string): Promise<Presence> {
     const user = await this.userRepository.getUserById(userId);
     const event = await this.eventRepository.getEventById(eventId);
+    const presence = await this.presenceRepository.getPresenceByUserAndEvent(
+      userId,
+      eventId
+    );
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    if (presence && new Date(presence.date).getTime() === currentDate.getTime()) {
+      throw new Error("Presença já registrada para hoje.");
+    }
 
     if (!user) {
       throw new Error("Usuário não registrado.");
@@ -27,22 +38,18 @@ export class CreatePresenceUsecase {
     const presenceProps = {
       userId,
       eventId,
+      date: currentDate.getTime(),
     };
 
     try {
-        const presence = new Presence({
-            ...presenceProps,
-            date: Date.now(),
-        });
+      const createdPresence = await this.presenceRepository.createPresence(
+        new Presence(presenceProps)
+      );
 
-        const createdPresence = await this.presenceRepository.createPresence(
-            presence
-        );
-
-        return createdPresence;
+      return createdPresence;
     } catch (error) {
-        console.error("Erro ao criar presença:", error);
-        throw new Error("Erro ao criar presença no banco de dados.");
+      console.error("Erro ao criar presença:", error);
+      throw new Error("Erro ao criar presença no banco de dados.");
     }
   }
 }
