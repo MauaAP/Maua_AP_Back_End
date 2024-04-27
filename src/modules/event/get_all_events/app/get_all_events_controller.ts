@@ -20,7 +20,7 @@ export class GetAllEventsController {
     try {
       const userFromToken = req.user as UserFromToken;
 
-      if (userFromToken.role !== "ADMIN") {
+      if (!userFromToken) {
         return res.status(403).json({ error: "Acesso negado." });
       }
 
