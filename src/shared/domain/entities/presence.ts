@@ -1,7 +1,7 @@
 import { EntityError } from "../../helpers/errors/domain_errors";
 
 export interface PresenceProps {
-  id?: string;
+  presenceId?: string;
   eventId: string;
   userId: string;
   date: number;
@@ -26,8 +26,8 @@ export class Presence {
     }
   }
 
-  get presenceId(): string | undefined {
-    return this.props.id;
+  get presenceId(): string {
+    return this.props.presenceId as string;
   }
 
   get eventId(): string {
