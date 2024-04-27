@@ -47,6 +47,7 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
       });
 
       const createdPresence = new Presence({
+        presenceId: createdPresenceFromPrisma.id,
         userId: createdPresenceFromPrisma.userId,
         eventId: createdPresenceFromPrisma.eventId,
         date: createdPresenceFromPrisma.date.getTime(),
@@ -77,11 +78,35 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     }
 
     const presence = new Presence({
+      presenceId: presenceFromPrisma.id,
       userId: presenceFromPrisma.userId,
       eventId: presenceFromPrisma.eventId,
       date: presenceFromPrisma.date.getTime(),
     });
 
     return presence;
+  }
+
+  async getAllPresencesByEventId(eventId: string): Promise<Presence[]> {
+    const presencesFromPrisma = await prisma.presence.findMany({
+      where: {
+        eventId: eventId,
+      },
+    });
+
+    if (presencesFromPrisma.length === 0) {
+      throw new NoItemsFound("Nenhuma presença encontrada para o evento.");
+    }
+
+    const presences = presencesFromPrisma.map((presenceFromPrisma) => {
+      return new Presence({
+        presenceId: presenceFromPrisma.id,
+        userId: presenceFromPrisma.userId,
+        eventId: presenceFromPrisma.eventId,
+        date: presenceFromPrisma.date.getTime(),
+      });
+    });
+
+    return presences;
   }
 }
