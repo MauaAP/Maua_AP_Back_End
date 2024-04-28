@@ -15,6 +15,13 @@ export class GetAllPresencesByEventController {
       if (!allowedRoles.includes(userFromToken.role)) {
         return res.status(403).json({ error: "Acesso negado." });
       }
+      if (!req.params.eventId) {
+        return res.status(400).json({ error: "Id do evento não informado." });
+      }
+      if (!req.params) {
+        return res.status(400).json({ error: "Dados não informados." });
+      }
+      
       const eventId: string = req.params.eventId;
       const presences = await this.repo.execute(eventId);
       const viewmodel = presences.map((presence) => new GetAllPresencesByEventViewmodel(presence));
