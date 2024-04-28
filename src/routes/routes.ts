@@ -9,6 +9,7 @@ import GetEventByIdPresenter from "../modules/event/get_event_by_id/app/get_even
 import DeleteEventByIdPresenter from "../modules/event/delete_event_by_id/app/delete_event_by_id_presenter";
 import CreatePresencePresenter from "../modules/presence/create_presence/app/create_presence_presenter";
 import GetAllPresencesByEventPresenter from "../modules/presence/get_all_presences_by_event/app/get_all_presences_by_event_presenter";
+import GetAllPresencesByUserPresenter from "../modules/presence/get_all_presences_by_user/app/get_all_presences_by_user_presenter";
 
 import app from "../app";
 
@@ -38,6 +39,7 @@ const routes = (app: Express) => {
 // presence routes
 app.use("/api", CreatePresencePresenter);
 app.use("/api", GetAllPresencesByEventPresenter);
+app.use("/api", GetAllPresencesByUserPresenter);
 };
 
 export default routes;
