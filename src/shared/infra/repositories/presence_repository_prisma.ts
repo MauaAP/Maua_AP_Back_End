@@ -109,4 +109,27 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
 
     return presences;
   }
+
+  async getAllPresencesByUserId(userId: string): Promise<Presence[]> {
+    const presencesFromPrisma = await prisma.presence.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+
+    if (presencesFromPrisma.length === 0) {
+      throw new NoItemsFound("Nenhuma presença encontrada para o usuário.");
+    }
+
+    const presences = presencesFromPrisma.map((presenceFromPrisma) => {
+      return new Presence({
+        presenceId: presenceFromPrisma.id,
+        userId: presenceFromPrisma.userId,
+        eventId: presenceFromPrisma.eventId,
+        date: presenceFromPrisma.date.getTime(),
+      });
+    });
+
+    return presences;
+  }
 }
