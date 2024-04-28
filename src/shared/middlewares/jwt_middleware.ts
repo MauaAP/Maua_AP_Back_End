@@ -4,6 +4,7 @@ import { EntityError } from "../helpers/errors/domain_errors";
 import { ROLE } from "../domain/enums/role_enum";
 
 export type UserFromToken = {
+  id: string;
   email: string;
   role: ROLE;
 };
