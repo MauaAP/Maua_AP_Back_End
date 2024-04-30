@@ -5,6 +5,8 @@ export class GetAllUsersViewmodel {
   name: string;
   email: string;
   role: string;
+  telefone?: string;
+  cpf?: string;
   status: string;
 
   constructor(user: User) {
@@ -12,6 +14,8 @@ export class GetAllUsersViewmodel {
     this.name = user.name;
     this.email = user.email;
     this.role = user.role;
+    this.telefone = user.telefone;
+    this.cpf = user.cpf;
     this.status = user.status;
   }
 }
