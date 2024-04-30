@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { BadRequest, Forbidden, InternalServerError } from "http-errors";
-import { UserProps } from "../../../../shared/domain/entities/user";
 import { MissingParameters } from "../../../../shared/helpers/errors/controller_errors";
 import { UpdateStatusViewmodel } from "./update_status_viewmodel";
 import { UpdateStatusUsecase } from "./update_status_usecase";
