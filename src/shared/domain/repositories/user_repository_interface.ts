@@ -1,4 +1,5 @@
 import { User } from "../entities/user";
+import { STATUS } from "../enums/status_enum";
 
 export interface IUserRepository {
 
@@ -6,5 +7,6 @@ export interface IUserRepository {
   getUserByEmail(email: string): Promise<User | undefined>;
   getAll(): Promise<User[]>;
   getUserById(id: string): Promise<User | undefined>;
+  updateStatus(id: String, status: STATUS): Promise<User>;
 
 }
