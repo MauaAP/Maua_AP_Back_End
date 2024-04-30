@@ -138,4 +138,33 @@ export class UserRepositoryPrisma implements IUserRepository {
       throw new Error("Erro ao buscar usuário por id");
     }
   }
+
+  async updateStatus(id: string, status: STATUS): Promise<User> {
+    try {
+      const updatedUserFromPrisma = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status: status as STATUS,
+        },
+      });
+
+      const updatedUser = new User({
+        id: updatedUserFromPrisma.id,
+        name: updatedUserFromPrisma.name,
+        email: updatedUserFromPrisma.email,
+        role: updatedUserFromPrisma.role as ROLE,
+        password: updatedUserFromPrisma.password,
+        telefone: updatedUserFromPrisma.telefone,
+        cpf: updatedUserFromPrisma.cpf,
+        status: updatedUserFromPrisma.status as STATUS,
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Erro ao atualizar status do usuário:", error);
+      throw new Error("Erro ao atualizar status do usuário");
+    }
+  }
 }
