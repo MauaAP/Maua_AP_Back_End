@@ -5,7 +5,7 @@ import { BadRequest, Forbidden, InternalServerError } from "http-errors";
 import { GetAllPresencesByEventViewmodel } from "./get_all_presences_by_event_viewmodel";
 
 export class GetAllPresencesByEventController {
-  constructor(private repo: GetAllPresencesByEventUsecase) {}
+  constructor(private getAllPresencesByEventUsecase: GetAllPresencesByEventUsecase) {}
 
   async handle(req: Request, res: Response) {
     try {
@@ -23,7 +23,7 @@ export class GetAllPresencesByEventController {
       }
       
       const eventId: string = req.params.eventId;
-      const presences = await this.repo.execute(eventId);
+      const presences = await this.getAllPresencesByEventUsecase.execute(eventId);
       const viewmodel = presences.map((presence) => new GetAllPresencesByEventViewmodel(presence));
       return res.status(200).json(viewmodel);
     } catch (error: any) {
