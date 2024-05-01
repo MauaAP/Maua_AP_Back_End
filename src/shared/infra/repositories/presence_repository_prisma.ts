@@ -132,4 +132,25 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
 
     return presences;
   }
+
+  async getPresenceById(id: string): Promise<Presence | undefined> {
+    const presenceFromPrisma = await prisma.presence.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!presenceFromPrisma) {
+      return undefined;
+    }
+
+    const presence = new Presence({
+      presenceId: presenceFromPrisma.id,
+      userId: presenceFromPrisma.userId,
+      eventId: presenceFromPrisma.eventId,
+      date: presenceFromPrisma.date.getTime(),
+    });
+
+    return presence;
+  }
 }
