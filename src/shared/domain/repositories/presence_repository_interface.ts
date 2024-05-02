@@ -7,5 +7,5 @@ export interface IPresenceRepository {
     getAllPresencesByUserId(userId: string): Promise<Presence[]>;
     getPresenceById(id: string): Promise<Presence | undefined>;
     // getAll(): Promise<Presence[]>;
-    // deletePresenceById(id: string): Promise<void>;
+    deletePresenceById(id: string): Promise<void>;
 }
