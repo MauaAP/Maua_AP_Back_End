@@ -153,4 +153,17 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
 
     return presence;
   }
+
+  async deletePresenceById(id: string): Promise<void> {
+    try {
+      await prisma.presence.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      console.error("Erro ao deletar presença:", error);
+      throw new Error("Erro ao deletar presença no banco de dados.");
+    }
+  }
 }
