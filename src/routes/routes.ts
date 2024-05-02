@@ -12,7 +12,7 @@ import CreatePresencePresenter from "../modules/presence/create_presence/app/cre
 import GetAllPresencesByEventPresenter from "../modules/presence/get_all_presences_by_event/app/get_all_presences_by_event_presenter";
 import GetAllPresencesByUserPresenter from "../modules/presence/get_all_presences_by_user/app/get_all_presences_by_user_presenter";
 import GetPresenceByIdPresenter from "../modules/presence/get_presence_by_id/app/get_presence_by_id_presenter";
-
+import DeletePresenceByIdPresenter from "../modules/presence/delete_presence_by_id/app/delete_presence_by_id_presenter";
 
 import app from "../app";
 
@@ -45,6 +45,7 @@ app.use("/api", CreatePresencePresenter);
 app.use("/api", GetAllPresencesByEventPresenter);
 app.use("/api", GetAllPresencesByUserPresenter);
 app.use("/api", GetPresenceByIdPresenter);
+app.use("/api", DeletePresenceByIdPresenter);
 };
 
 export default routes;

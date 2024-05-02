@@ -20,7 +20,7 @@ export class GetPresenceByIdController {
     try {
       const presence = await this.repo.execute(presenceId);
       if (!presence) {
-        return res.status(404).json({ error: "Presença não encontrada." });
+        return res.status(204).json({ error: "Presença não encontrada." });
       }
 
       const viewmodel = new GetPresencesByIdViewmodel(presence);
