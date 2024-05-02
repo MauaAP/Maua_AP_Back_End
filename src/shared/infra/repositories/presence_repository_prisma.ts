@@ -10,7 +10,6 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     try {
       console.log("Criando nova presença:", presence);
 
-      // Check if a presence with the same eventId, userId, and date already exists
       const existingPresence = await prisma.presence.findUnique({
         where: {
           eventId_userId_date: {
