@@ -11,6 +11,10 @@ export class GetAllPresencesByUserController {
     try {
       const userFromToken = req.user as UserFromToken;
 
+      if(!req.headers) {
+        return res.status(403).json({ error: "Acesso negado." });
+      }
+
       if (!userFromToken) {
         return res.status(403).json({ error: "Acesso negado." });
       }
