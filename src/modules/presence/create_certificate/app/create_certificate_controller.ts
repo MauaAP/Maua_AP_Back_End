@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { CreateCertificateUsecase } from "./create_certificate_usecase";
 import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
-import { createReadStream } from "fs";
 
 export class CreateCertificateController {
     constructor(private createCertificateUseCase: CreateCertificateUsecase ) {}
