@@ -64,7 +64,6 @@ export class CreateCertificateUsecase {
     const page = await browser.newPage();
     await page.setContent(htmlString);
 
-    // Configurando a orientação paisagem e o formato A4
     const pdfBuffer = await page.pdf({ format: 'A4', landscape: true });
 
     await browser.close();
