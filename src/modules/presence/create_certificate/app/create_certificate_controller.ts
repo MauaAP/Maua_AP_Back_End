@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateCertificateUsecase } from "./create_certificate_usecase";
 import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
+import { createReadStream } from "fs";
 
 export class CreateCertificateController {
     constructor(private createCertificateUseCase: CreateCertificateUsecase ) {}
@@ -17,8 +18,8 @@ export class CreateCertificateController {
                 return res.status(422).json({error: "Missing presence id"})
             }
 
-            await this.createCertificateUseCase.execute(presenceId)
-            return res.status(201).json({message: "testando foiii"})
+            const certificateUrl = await this.createCertificateUseCase.execute(presenceId)
+            return res.status(201).json({message: "Certificate created successfully", certificateUrl})
         } catch (error: any) {
             return res.status(400).json({error: error.message})
         }
