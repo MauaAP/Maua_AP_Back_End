@@ -3,20 +3,14 @@ import { IPresenceRepository } from "../../../../shared/domain/repositories/pres
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
 import { JsonInfo, getCertificateHtml } from "../../../../shared/utils/html_certificate";
 import { saveCertificate } from "../../../../shared/infra/repositories/certificate_repository_s3";
-import { promisify } from "util";
-import PuppeteerHTMLPDF from "puppeteer-html-pdf";
+import * as pdf from 'html-pdf';
 
 export class CreateCertificateUsecase {
-  private htmlPdf: any;
-
   constructor(
     private presenceRepository: IPresenceRepository,
     private eventRepository: IEventRepository,
     private userRepository: IUserRepository
-  ) {
-    // Instancie o htmlPdf aqui
-    this.htmlPdf = new PuppeteerHTMLPDF();
-  }
+  ) {}
 
   async execute(presenceId: string) {
     const presence = await this.presenceRepository.getPresenceById(presenceId);
@@ -66,18 +60,21 @@ export class CreateCertificateUsecase {
 
     const html = getCertificateHtml(json);
 
-    this.htmlPdf.setOptions({ 
-      format: "A4",
-      path: "./certificate.pdf",
-      landscape: true,
+    const options: pdf.CreateOptions = {
+      format: 'A4'
+    };
+
+    const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
+      pdf.create(html, options).toBuffer((err: any, buffer: Buffer) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(buffer);
+        }
+      });
     });
-    const stream = this.htmlPdf.create(html);
-    const certificatePdf = await promisify(stream.arrayBuffer.bind(stream))();
-    const certificateUrl = await saveCertificate(
-      userId,
-      eventId,
-      Buffer.from(certificatePdf)
-    );
+
+    const certificateUrl = await saveCertificate(userId, eventId, pdfBuffer);
     return certificateUrl;
   }
 }
