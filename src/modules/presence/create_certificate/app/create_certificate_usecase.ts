@@ -63,7 +63,9 @@ export class CreateCertificateUsecase {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(htmlString);
-    const pdfBuffer = await page.pdf({ format: 'A4' });
+
+    // Configurando a orientação paisagem e o formato A4
+    const pdfBuffer = await page.pdf({ format: 'A4', landscape: true });
 
     await browser.close();
 
