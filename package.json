@@ -13,6 +13,7 @@
   "homepage": "https://github.com/MauaAP/Maua_AP_Back_End#readme",
   "dependencies": {
     "@prisma/client": "^5.11.0",
+    "aws-sdk": "^2.1613.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
