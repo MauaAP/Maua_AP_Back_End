@@ -15,7 +15,7 @@ export async function saveCertificate(
   console.log("Certificate PDF length:", certificatePdf.length); // Verificar o comprimento do certificatePdf
 
   const params = {
-    Bucket: "api-imt",
+    Bucket: "ap-imt",
     Key: `${userId}-${eventId}-certificado.pdf`,
     Body: certificatePdf
   };
