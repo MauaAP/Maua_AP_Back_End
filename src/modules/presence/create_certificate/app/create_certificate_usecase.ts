@@ -3,7 +3,7 @@ import { IPresenceRepository } from "../../../../shared/domain/repositories/pres
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
 import { JsonInfo, getCertificateHtml } from "../../../../shared/utils/html_certificate";
 import { saveCertificate } from "../../../../shared/infra/repositories/certificate_repository_s3";
-import * as pdf from 'html-pdf';
+import puppeteer from 'puppeteer';
 
 export class CreateCertificateUsecase {
   constructor(
@@ -58,21 +58,14 @@ export class CreateCertificateUsecase {
         new Date(event.finishTime).getMinutes().toString(),
     };
 
-    const html = getCertificateHtml(json);
+    const htmlString = getCertificateHtml(json);
 
-    const options: pdf.CreateOptions = {
-      format: 'A4'
-    };
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlString);
+    const pdfBuffer = await page.pdf({ format: 'A4' });
 
-    const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
-      pdf.create(html, options).toBuffer((err: any, buffer: Buffer) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(buffer);
-        }
-      });
-    });
+    await browser.close();
 
     const certificateUrl = await saveCertificate(userId, eventId, pdfBuffer);
     return certificateUrl;
