@@ -11,11 +11,11 @@ export async function saveCertificate(
   eventId: string,
   certificatePdf: Buffer
 ): Promise<string> {
-  console.log("Certificate PDF type:", typeof certificatePdf); // Verificar o tipo do certificatePdf
-  console.log("Certificate PDF length:", certificatePdf.length); // Verificar o comprimento do certificatePdf
+  console.log("Certificate PDF type:", typeof certificatePdf); 
+  console.log("Certificate PDF length:", certificatePdf.length); 
 
   const params = {
-    Bucket: "ap-imt",
+    Bucket: `${process.env.BUCKET_NAME}`,
     Key: `${userId}-${eventId}-certificado.pdf`,
     Body: certificatePdf
   };
