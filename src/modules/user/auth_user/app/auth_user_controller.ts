@@ -19,7 +19,7 @@ export class AuthUserController {
       const user = await this.usecase.execute(email, password);
 
       const token = jwt.sign(
-        { id: user.userId, email: user.email, role: user.role },
+        { id: user.userId, email: user.email, role: user.role, status: user.status },
         process.env.JWT_SECRET as string,
         { expiresIn: "24h" }
       );
