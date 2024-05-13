@@ -1,13 +1,11 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { AwsCredentialIdentity } from "@aws-sdk/types";
 
-// Obtém as credenciais do ambiente
 const credentials: AwsCredentialIdentity = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ""
 };
 
-// Verifica se a região está definida
 const region = process.env.REGION || "us-east-1";
 
 const s3 = new S3Client({
