@@ -2,7 +2,7 @@ import { IEventRepository } from "../../../../shared/domain/repositories/event_r
 import { IPresenceRepository } from "../../../../shared/domain/repositories/presence_repository_interface";
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
 import { JsonInfo, getCertificateHtml } from "../../../../shared/utils/html_certificate";
-import { saveCertificate } from "../../../../shared/infra/repositories/certificate_repository_s3";
+// import { saveCertificate } from "../../../../shared/infra/repositories/certificate_repository_s3";
 import puppeteer from 'puppeteer';
 
 export class CreateCertificateUsecase {
@@ -68,7 +68,7 @@ export class CreateCertificateUsecase {
 
     await browser.close();
 
-    const certificateUrl = await saveCertificate(userId, eventId, pdfBuffer);
-    return certificateUrl;
+    // const certificateUrl = await saveCertificate(userId, eventId, pdfBuffer);
+    // return certificateUrl;
   }
 }

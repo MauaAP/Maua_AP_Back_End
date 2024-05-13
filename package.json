@@ -12,9 +12,9 @@
   "license": "ISC",
   "homepage": "https://github.com/MauaAP/Maua_AP_Back_End#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.574.0",
     "@hayzeddev/html-pdf-converter": "^1.0.9",
     "@prisma/client": "^5.11.0",
-    "aws-sdk": "^2.1613.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
