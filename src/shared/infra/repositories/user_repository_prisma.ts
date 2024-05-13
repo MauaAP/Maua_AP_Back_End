@@ -91,7 +91,7 @@ export class UserRepositoryPrisma implements IUserRepository {
     try {
       const allUsersFromPrisma = await prisma.user.findMany();
 
-      const allUsers = allUsersFromPrisma.map((user) => {
+      const allUsers = allUsersFromPrisma.map((user: any) => {
         return new User({
           id: user.id,
           name: user.name,
