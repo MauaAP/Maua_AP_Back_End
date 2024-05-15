@@ -10,12 +10,12 @@ export class GetAllPresencesController {
 
   async handle(req: Request, res: Response) {
     try {
-      const userFromToken = req.user as UserFromToken;
+      // const userFromToken = req.user as UserFromToken;
 
-      const allowedRoles = ["ADMIN", "SECRETARY"];
-      if (!allowedRoles.includes(userFromToken.role)) {
-        return res.status(403).json({ error: "Acesso negado." });
-      }
+      // const allowedRoles = ["ADMIN", "SECRETARY"];
+      // if (!allowedRoles.includes(userFromToken.role)) {
+      //   return res.status(403).json({ error: "Acesso negado." });
+      // }
 
       const presences = await this.getAllPresencesUsecase.execute();
       const viewmodel = presences.map(
