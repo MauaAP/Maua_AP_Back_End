@@ -9,10 +9,10 @@ export class CreatePresenceController {
 
   async handle(req: Request, res: Response) {
     try {
-      const userFromToken = req.user as UserFromToken;
-      if (!userFromToken) {
-        return res.status(401).json({ error: "Token not found" });
-      }
+      // const userFromToken = req.user as UserFromToken;
+      // if (!userFromToken) {
+      //   return res.status(401).json({ error: "Token not found" });
+      // }
       const userId = req.body.userid;
       const eventId = req.body.eventid;
 
