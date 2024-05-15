@@ -4,6 +4,7 @@ import AuthUserPresenter from "../modules/user/auth_user/app/auth_user_presenter
 import GetAllUsersPresenter from "../modules/user/get_all_users/app/get_all_users_presenter";
 import GetAllUsersToPresenceListPresenter from "../modules/user/get_all_users_to_presence_list/app/get_all_users_to_presence_list_presenter";
 import GetUserByEmailPresenter from "../modules/user/get_user_by_email/app/get_user_by_email_presenter";
+import GetUserByIdPresenter from "../modules/user/get_user_by_id/app/get_user_by_id_presenter";
 import UpdateStatusPresenter from "../modules/user/update_status/app/update_status_presenter";
 import CreateEventPresenter from "../modules/event/create_event/app/create_event_presenter";
 import GetAllEventsPresenter from "../modules/event/get_all_events/app/get_all_events_presenter";
@@ -35,6 +36,7 @@ const routes = (app: Express) => {
   app.use("/api", GetAllUsersPresenter);
   app.use("/api", GetAllUsersToPresenceListPresenter);
   app.use("/api", GetUserByEmailPresenter);
+  app.use("/api", GetUserByIdPresenter);
   app.use("/api", UpdateStatusPresenter);
 
   // event routes
