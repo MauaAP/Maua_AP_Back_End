@@ -11,7 +11,7 @@ const getAllPresencesByUserUsecase = new GetAllPresencesByUserUsecase(presenceRe
 const getAllPresencesByUserController = new GetAllPresencesByUserController(getAllPresencesByUserUsecase);
 
 router.get(
-  "/presences",
+  "/presences-by-user/",
   authenticateToken,
   async (req: Request, res: Response) => {
     await getAllPresencesByUserController.handle(req, res);
