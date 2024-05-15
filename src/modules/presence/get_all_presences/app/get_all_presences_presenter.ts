@@ -13,7 +13,7 @@ const getAllPresencesByEventController = new GetAllPresencesController(getAllPre
 
 router.get(
   "/presences",
-  authenticateToken,
+  // authenticateToken,
   async (req: Request, res: Response) => {
     await getAllPresencesByEventController.handle(req, res);
   }
