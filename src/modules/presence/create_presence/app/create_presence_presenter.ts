@@ -7,14 +7,24 @@ import { EventRepositoryPrisma } from "../../../../shared/infra/repositories/eve
 import { authenticateToken } from "../../../../shared/middlewares/jwt_middleware";
 
 const router = express.Router();
-const userRepository = new UserRepositoryPrisma(); 
-const presenceRepository = new PresenceRepositoryPrisma(); 
-const eventRepository = new EventRepositoryPrisma(); 
-const createPresenceUsecase = new CreatePresenceUsecase(presenceRepository, userRepository, eventRepository); // Fix the constructor arguments
-const createPresenceController = new CreatePresenceController(createPresenceUsecase);
+const userRepository = new UserRepositoryPrisma();
+const presenceRepository = new PresenceRepositoryPrisma();
+const eventRepository = new EventRepositoryPrisma();
+const createPresenceUsecase = new CreatePresenceUsecase(
+  presenceRepository,
+  userRepository,
+  eventRepository
+); // Fix the constructor arguments
+const createPresenceController = new CreatePresenceController(
+  createPresenceUsecase
+);
 
-router.post("/create-presence", authenticateToken, async (req: Request, res: Response) => {
+router.post(
+  "/create-presence",
+//   authenticateToken, depois qualquer coisa voltar a autenticação. Criar tela nova de login para marcar automaticamente o professor que vier no token la na checkbox da lista de professores na tela de presenças
+  async (req: Request, res: Response) => {
     await createPresenceController.handle(req, res);
-});
+  }
+);
 
 export default router;
