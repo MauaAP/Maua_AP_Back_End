@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Repositório para criação do back-end da aplicação da academia de professores do Instituto Mauá de Tecnologia.",
   "main": "server.ts",
-  "scripts": {
+  "scripts": { 
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js",
     "start:dev": "nodemon server.ts",
