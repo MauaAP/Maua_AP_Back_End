@@ -119,7 +119,7 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             <aside class="bodyInfo">
                 <p class="fontGentiumBookRegular">A Academia de Professores do Centro Universitário do Instituto Mauá de Tecnologia confere a</p>
                 <h2>${jsonInfo.name}</h2>
-                <p class="fontGentiumBookRegular">o presente Certificado por ter participado do evento ${jsonInfo.eventName}, ministrado por ${jsonInfo.manager}, realizado em ${jsonInfo.date}, das ${jsonInfo.initTime} às ${jsonInfo.finishTime}, perfazendo um total de ${jsonInfo.duration} horas, na sala ${jsonInfo.local}.</p>
+                <p class="fontGentiumBookRegular">o presente Certificado por ter participado do evento ${jsonInfo.eventName}, ministrado por ${jsonInfo.manager}, realizado em ${jsonInfo.date}, das ${jsonInfo.initTime} às ${jsonInfo.finishTime}.</p>
                 <p class="fontGentiumBookRegular">São Caetano do Sul, ${jsonInfo.dateNow} de ${jsonInfo.monthNow} de ${jsonInfo.yearNow}.</p>
             </aside>
             <aside class="footerInfo">
