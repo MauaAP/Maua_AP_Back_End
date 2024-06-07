@@ -5,7 +5,7 @@ import routes from "./src/routes/routes";
 const PORT = process.env.PORT || 3015;
 
 app.listen(PORT, () => {
-  console.log("Servidor rodando na porta 3015");
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
 
 import cors from "cors";
