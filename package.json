@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js", 
     "start:dev": "nodemon server.ts",
-    "build": "tsc"    
+    "build": "tsc",
+    "postinstall": "apt-get update && apt-get install -y wget unzip && wget -q -O /tmp/chrome.zip https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && apt-get install -y /tmp/chrome.zip && rm /tmp/chrome.zip"    
   },
   "keywords": [],
   "author": "",
