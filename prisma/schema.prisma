@@ -25,7 +25,6 @@ model Event {
   date                  DateTime
   host                  String
   manager               String[]
-  duration              String
   hostEmail             String[]
   hostPhone             String[]
   local                 String
