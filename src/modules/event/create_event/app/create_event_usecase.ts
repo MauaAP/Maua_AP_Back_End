@@ -38,6 +38,9 @@ export class CreateEventUsecase {
     if (!eventProps.goals) {
       throw new Error("Missing goals");
     }
+    if (!eventProps.period) {
+      throw new Error("Missing period");
+    }
     if (!eventProps.contentActivities) {
       throw new Error("Missing content activities");
     }
