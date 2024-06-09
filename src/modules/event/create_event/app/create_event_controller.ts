@@ -20,7 +20,6 @@ export class CreateEventController {
         date,
         host,
         manager,
-        duration,
         hostEmail,
         hostPhone,
         local,
@@ -47,9 +46,6 @@ export class CreateEventController {
       }
       if (!manager) {
         errors.push("Missing manager");
-      }
-      if (!duration) {
-        errors.push("Missing duration");
       }
       if (!hostEmail) {
         errors.push("Missing host email");
@@ -92,7 +88,6 @@ export class CreateEventController {
         date,
         host,
         manager,
-        duration,
         hostEmail,
         hostPhone,
         local,
