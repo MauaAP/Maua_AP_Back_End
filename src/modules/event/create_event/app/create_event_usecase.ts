@@ -17,9 +17,6 @@ export class CreateEventUsecase {
     if (!eventProps.manager) {
       throw new Error("Missing manager");
     }
-    if (!eventProps.duration) {
-      throw new Error("Missing duration");
-    }
     if (!eventProps.hostEmail) {
       throw new Error("Missing host email");
     }

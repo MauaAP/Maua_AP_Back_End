@@ -4,7 +4,6 @@ export type JsonInfo = {
     initTime: string
     finishTime: string
     eventName: string
-    duration: string
     date: string
     local: string
     dateNow: string

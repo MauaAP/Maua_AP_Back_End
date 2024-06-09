@@ -7,7 +7,6 @@ export interface EventProps {
   date: number;
   host: string;
   manager: string[];
-  duration: string;
   hostEmail: string[];
   hostPhone: string[];
   local: string;
@@ -42,10 +41,6 @@ export class Event {
 
     if (!Event.isValidManager(props.manager)) {
       throw new EntityError("manager");
-    }
-
-    if (!Event.isValidAtributtes(props.duration)) {
-      throw new EntityError("duration");
     }
 
     if (!Event.isValidAtributtes(props.hostEmail)) {
@@ -124,10 +119,6 @@ export class Event {
     return this.props.manager;
   }
 
-  get duration(): string {
-    return this.props.duration;
-  }
-
   get hostEmail(): string[] {
     return this.props.hostEmail;
   }
@@ -202,13 +193,6 @@ export class Event {
       throw new EntityError("manager");
     }
     this.props.manager = manager;
-  }
-
-  setDuration(duration: string): void {
-    if (!Event.isValidAtributtes(duration)) {
-      throw new EntityError("duration");
-    }
-    this.props.duration = duration;
   }
 
   setHostEmail(hostEmail: string[]): void {

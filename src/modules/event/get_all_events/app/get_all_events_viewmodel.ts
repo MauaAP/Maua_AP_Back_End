@@ -6,7 +6,6 @@ export class GetAllEventsViewmodel {
   date: number;
   host: string;
   manager: string[];
-  duration: string;
   hostEmail: string[];
   hostPhone: string[];
   local: string;
@@ -25,7 +24,6 @@ export class GetAllEventsViewmodel {
     this.date = event.date;
     this.host = event.host;
     this.manager = event.manager;
-    this.duration = event.duration;
     this.hostEmail = event.hostEmail;
     this.hostPhone = event.hostPhone;
     this.local = event.local;
