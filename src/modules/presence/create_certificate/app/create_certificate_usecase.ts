@@ -42,7 +42,6 @@ export class CreateCertificateUsecase {
       name: user.name,
       manager: event.manager,
       eventName: event.eventName,
-      duration: event.duration,
       date: eventDate,
       local: event.local,
       dateNow: new Date().getDate().toString(),
