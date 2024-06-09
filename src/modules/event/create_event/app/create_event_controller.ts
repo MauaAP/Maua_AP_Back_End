@@ -27,6 +27,7 @@ export class CreateEventController {
         targetAudience,
         activityType,
         goals,
+        period,
         contentActivities,
         developedCompetencies,
         initTime,
@@ -68,6 +69,9 @@ export class CreateEventController {
       if (!goals) {
         errors.push("Missing goals");
       }
+      if (!period) {
+        errors.push("Missing period");
+      }
       if (!contentActivities) {
         errors.push("Missing content activities");
       }
@@ -95,6 +99,7 @@ export class CreateEventController {
         targetAudience,
         activityType,
         goals,
+        period,
         contentActivities,
         developedCompetencies,
         initTime,

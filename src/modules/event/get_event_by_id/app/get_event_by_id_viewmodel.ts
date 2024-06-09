@@ -13,6 +13,7 @@ export class GetEventByIdViewmodel {
   targetAudience: string;
   activityType: string;
   goals: string;
+  period: string;
   contentActivities: string[];
   developedCompetencies: string;
   initTime: number;
@@ -31,6 +32,7 @@ export class GetEventByIdViewmodel {
     this.targetAudience = event.targetAudience;
     this.activityType = event.activityType;
     this.goals = event.goals;
+    this.period = event.period;
     this.contentActivities = event.contentActivities;
     this.developedCompetencies = event.developedCompetencies;
     this.initTime = event.initTime;
