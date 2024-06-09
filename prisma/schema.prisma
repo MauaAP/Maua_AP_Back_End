@@ -33,6 +33,7 @@ model Event {
   activityType          String
   maxParticipants       Int?
   goals                 String
+  period                String
   contentActivities     String[]
   developedCompetencies String
   initTime              DateTime
