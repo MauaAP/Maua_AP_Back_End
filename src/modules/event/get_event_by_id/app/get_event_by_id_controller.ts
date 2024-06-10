@@ -12,8 +12,8 @@ export class GetEventByIdController {
       const viewmodel = new GetEventByIdViewmodel(event);
       return res.status(200).json(viewmodel);
     } catch (error: any) {
-      console.error("Erro ao buscar evento por ID:", error);
-      throw new Error("Erro ao buscar evento por ID no banco de dados.");
+      console.error("Erro ao buscar evento por ID:", error.message);
+      return res.status(500).json({ error: error.message });
     }
   }
 }

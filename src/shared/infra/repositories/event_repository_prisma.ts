@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { IEventRepository } from "../../../shared/domain/repositories/event_repository_interface";
 import { Event } from "../../domain/entities/event";
 import { MODALITY } from "../../domain/enums/modality_type";
@@ -108,6 +108,7 @@ export class EventRepositoryPrisma implements IEventRepository {
       });
 
       if (!eventFromPrisma) {
+        console.error(`Evento não encontrado para o ID: ${eventId}`);
         throw new Error("Evento não encontrado.");
       }
 
@@ -135,8 +136,16 @@ export class EventRepositoryPrisma implements IEventRepository {
 
       return event;
     } catch (error: any) {
-      console.error("Erro ao buscar evento por ID:", error);
-      throw new Error("Erro ao buscar evento por ID no banco de dados.");
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        console.error("Erro conhecido do Prisma ao buscar evento por ID:", error.message);
+        throw new Error("Erro no banco de dados ao buscar evento por ID.");
+      } else if (error instanceof Prisma.PrismaClientInitializationError) {
+        console.error("Erro de inicialização do Prisma:", error.message);
+        throw new Error("Erro de inicialização do banco de dados.");
+      } else {
+        console.error("Erro desconhecido ao buscar evento por ID:", error);
+        throw new Error(`Erro ao buscar evento por ID no banco de dados: ${error.message}`);
+      }
     }
   }
 
