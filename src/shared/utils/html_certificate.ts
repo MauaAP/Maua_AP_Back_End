@@ -123,7 +123,7 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             </aside>
             <aside class="footerInfo">
                 <div class="cardInfo">
-                    <label>prof. Dr. Octavio Mattasoglio Neto</label>
+                    <label>prof. Dr. Octávio Mattasoglio Neto</label>
                     <label>Presidente da Academia de Professores</label>
                     <label>CEUN-IMT</label>
                 </div>
