@@ -10,13 +10,21 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     try {
       console.log("Criando nova presença:", presence);
 
-      const existingPresence = await prisma.presence.findUnique({
+      // const existingPresence = await prisma.presence.findUnique({
+      //   where: {
+      //     eventId_userId_date: {
+      //       eventId: presence.eventId,
+      //       userId: presence.userId,
+      //       date: new Date(presence.date),
+      //     },
+      //   },
+      // });
+
+      const existingPresence = await prisma.presence.findFirst({
         where: {
-          eventId_userId_date: {
-            eventId: presence.eventId,
-            userId: presence.userId,
-            date: new Date(presence.date),
-          },
+          userId: presence.userId,
+          eventId: presence.eventId,
+          date: new Date(presence.date),
         },
       });
 
