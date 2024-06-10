@@ -48,7 +48,7 @@ model Presence {
   event   Event    @relation(fields: [eventId], references: [id])
   userId  String
   user    User     @relation(fields: [userId], references: [id])
-  date    DateTime @unique
+  date    DateTime 
 
-  @@unique([eventId, userId, date])
+  @@unique([eventId, userId])
 }
