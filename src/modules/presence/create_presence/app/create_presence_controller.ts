@@ -3,6 +3,14 @@ import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 import { CreatePresenceViewModel } from "./create_presence_viewmodel";
 import { BadRequest, Forbidden, InternalServerError } from "http-errors";
 import { CreatePresenceUsecase } from "./create_presence_usecase";
+import {
+  InvalidParameter,
+  InvalidRequest,
+  MissingParameters,
+} from "../../../../shared/helpers/errors/controller_errors";
+import { ParameterError } from "../../../../shared/helpers/http/http_codes";
+import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
+import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 
 export class CreatePresenceController {
   constructor(private createPresenceUseCase: CreatePresenceUsecase) {}
@@ -16,16 +24,11 @@ export class CreatePresenceController {
       const userId = req.body.userid;
       const eventId = req.body.eventid;
 
-      console.log("UserID from request:", userId);
-      console.log("EventID from request:", eventId);
-
-      const errors = [];
-
       if (!userId) {
-        errors.push("Missing user id");
+        throw new MissingParameters("Missing Event Name");
       }
       if (!eventId) {
-        errors.push("Missing event id");
+        throw new MissingParameters("Missing Date");
       }
 
       await this.createPresenceUseCase.execute(userId, eventId);
@@ -35,14 +38,25 @@ export class CreatePresenceController {
 
       return res.status(200).json(presenceViewModel);
     } catch (error: any) {
-      if (
-        error instanceof BadRequest ||
-        error instanceof Forbidden ||
-        error instanceof InternalServerError
-      ) {
-        return res.status(error.status).json(error);
+      if (error instanceof InvalidRequest) {
+        return new BadRequest(error.message).send(res);
       }
-      return res.status(500).json(new InternalServerError(error.message));
+      if (error instanceof InvalidParameter) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof EntityError) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof Forbidden) {
+        return new Forbidden(error.getMessage()).send(res);
+      }
+      if (error instanceof MissingParameters) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof NoItemsFound) {
+        return new Forbidden(error.message).send(res);
+      }
+      return new InternalServerError("Internal Server Error").send(res);
     }
   }
 }
