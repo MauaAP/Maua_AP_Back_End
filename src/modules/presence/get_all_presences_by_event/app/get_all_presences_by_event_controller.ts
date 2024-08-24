@@ -3,9 +3,19 @@ import { GetAllPresencesByEventUsecase } from "./get_all_presences_by_event_usec
 import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 import { BadRequest, Forbidden, InternalServerError } from "http-errors";
 import { GetAllPresencesByEventViewmodel } from "./get_all_presences_by_event_viewmodel";
+import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
+import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
+import { ParameterError } from "../../../../shared/helpers/http/http_codes";
+import {
+  InvalidParameter,
+  InvalidRequest,
+  MissingParameters,
+} from "../../../../shared/helpers/errors/controller_errors";
 
 export class GetAllPresencesByEventController {
-  constructor(private getAllPresencesByEventUsecase: GetAllPresencesByEventUsecase) {}
+  constructor(
+    private getAllPresencesByEventUsecase: GetAllPresencesByEventUsecase
+  ) {}
 
   async handle(req: Request, res: Response) {
     try {
@@ -13,28 +23,40 @@ export class GetAllPresencesByEventController {
 
       const allowedRoles = ["ADMIN", "SECRETARY"];
       if (!allowedRoles.includes(userFromToken.role)) {
-        return res.status(403).json({ error: "Acesso negado." });
+        throw new Forbidden("You don't have permission to access this project");
       }
       if (!req.params.eventId) {
-        return res.status(400).json({ error: "Id do evento não informado." });
+        throw new MissingParameters("Missing user id");
       }
       if (!req.params) {
-        return res.status(400).json({ error: "Dados não informados." });
+        throw new MissingParameters("Not found date");
       }
-      
+
       const eventId: string = req.params.eventId;
-      const presences = await this.getAllPresencesByEventUsecase.execute(eventId);
-      const viewmodel = presences.map((presence) => new GetAllPresencesByEventViewmodel(presence));
+      const presences = await this.getAllPresencesByEventUsecase.execute(
+        eventId
+      );
+      const viewmodel = presences.map(
+        (presence) => new GetAllPresencesByEventViewmodel(presence)
+      );
       return res.status(200).json(viewmodel);
     } catch (error: any) {
-      if (
-        error instanceof BadRequest ||
-        error instanceof Forbidden ||
-        error instanceof InternalServerError
-      ) {
-        return res.status(error.status).json(error);
+      if (error instanceof InvalidRequest) {
+        return new BadRequest(error.message).send(res);
       }
-      return res.status(500).json(new InternalServerError(error.message));
+      if (error instanceof InvalidParameter) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof EntityError) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof Forbidden) {
+        return new Forbidden(error.getMessage()).send(res);
+      }
+      if (error instanceof NoItemsFound) {
+        return new Forbidden(error.message).send(res);
+      }
+      return new InternalServerError("Internal Server Error").send(res);
     }
   }
 }
