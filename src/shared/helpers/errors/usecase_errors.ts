@@ -17,3 +17,9 @@ export class ForbiddenAction extends BaseError {
     super(`The action is forbidden for this ${message}`);
   }
 }
+
+export class ConflictItems extends BaseError {
+  constructor(message: string) {
+    super(`Conflict items for ${message}`);
+  }
+}
