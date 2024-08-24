@@ -4,6 +4,8 @@ import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 import { BadRequest, InternalServerError } from "http-errors";
 import jwt from "jsonwebtoken";
+import { ParameterError } from "../../../../shared/helpers/http/http_codes";
+import { InvalidCredentialsError } from "../../../../shared/helpers/errors/login_errors";
 
 export class AuthUserController {
   constructor(private usecase: AuthUserUsecase) {}
@@ -19,7 +21,12 @@ export class AuthUserController {
       const user = await this.usecase.execute(email, password);
 
       const token = jwt.sign(
-        { id: user.userId, email: user.email, role: user.role, status: user.status },
+        {
+          id: user.userId,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+        },
         process.env.JWT_SECRET as string,
         { expiresIn: "24h" }
       );
@@ -27,9 +34,12 @@ export class AuthUserController {
       res.status(200).json({ token });
     } catch (error: any) {
       if (error instanceof NoItemsFound || error instanceof EntityError) {
-        return res.status(400).json(new BadRequest(error.message));
+        return new ParameterError(error.message).send(res);
       }
-      return res.status(500).json(new InternalServerError(error.message));
+      if (error instanceof InvalidCredentialsError) {
+        return new BadRequest(error.message).send(res);
+      }
+      return new InternalServerError(error.message).send(res);
     }
   }
 }
