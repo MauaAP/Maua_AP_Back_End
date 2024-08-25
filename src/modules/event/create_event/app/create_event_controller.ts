@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
 import { CreateEventUsecase } from "./create_event_usecase";
 import { CreateEventViewmodel } from "./create_event_viemodel";
-import { BadRequest, Forbidden, InternalServerError } from "http-errors";
+import {
+  ParameterError,
+  BadRequest,
+  InternalServerError,
+  Forbidden,
+} from "../../../../shared/helpers/http/http_codes";
 import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 import { ConflictItems } from "../../../../shared/helpers/errors/usecase_errors";
-import { ParameterError } from "../../../../shared/helpers/http/http_codes";
 import {
   InvalidParameter,
   InvalidRequest,
