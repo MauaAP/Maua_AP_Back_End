@@ -8,7 +8,6 @@ import {
   InvalidParameter,
   InvalidRequest,
   MissingParameters,
-  WrongTypeParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 
 import { DeletePresenceByIdUsecase } from "./delete_presence_by_id_usecase";
