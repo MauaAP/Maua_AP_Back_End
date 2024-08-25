@@ -1,12 +1,10 @@
-import { PrismaClient } from "@prisma/client";
 import { UserProps } from "../../../shared/domain/entities/user";
 import { IUserRepository } from "../../../shared/domain/repositories/user_repository_interface";
 import { User } from "../../domain/entities/user";
 import { ROLE } from "../../domain/enums/role_enum";
 import bcrypt from "bcrypt";
 import { STATUS } from "../../domain/enums/status_enum";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../../../prisma/prisma";
 
 export class UserRepositoryPrisma implements IUserRepository {
   async createUser(userProps: UserProps): Promise<User> {
@@ -56,6 +54,8 @@ export class UserRepositoryPrisma implements IUserRepository {
         throw new Error("Usuário já cadastrado.");
       }
       throw new Error("Erro ao criar usuário no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -83,6 +83,8 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
     } catch (error) {
       console.error("Erro ao buscar usuário por email:", error);
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -107,6 +109,8 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao buscar todos os usuários:", error);
       throw new Error("Erro ao buscar todos os usuários");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -135,6 +139,8 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao buscar usuário por id:", error);
       throw new Error("Erro ao buscar usuário por id");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -164,6 +170,8 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao atualizar status do usuário:", error);
       throw new Error("Erro ao atualizar status do usuário");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 }
