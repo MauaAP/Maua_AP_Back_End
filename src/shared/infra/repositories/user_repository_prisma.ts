@@ -31,8 +31,8 @@ export class UserRepositoryPrisma implements IUserRepository {
           email: userProps.email,
           role: userProps.role as string,
           password: hashedPassword,
-          telefone: userProps.telefone || '', 
-          cpf: userProps.cpf || '', 
+          telefone: userProps.telefone || "",
+          cpf: userProps.cpf || "",
           status: userProps.status as string,
         },
       });
@@ -68,7 +68,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
 
       if (!existingUser) {
-        return undefined; 
+        return undefined;
       }
 
       return new User({
@@ -83,7 +83,6 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
     } catch (error) {
       console.error("Erro ao buscar usuário por email:", error);
-      throw new Error("Erro ao buscar usuário por email");
     }
   }
 
@@ -120,7 +119,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
 
       if (!existingUser) {
-        return undefined; 
+        return undefined;
       }
 
       return new User({
