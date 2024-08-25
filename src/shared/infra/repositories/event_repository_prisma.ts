@@ -57,6 +57,8 @@ export class EventRepositoryPrisma implements IEventRepository {
     } catch (error: any) {
       console.error("Erro ao criar evento:", error);
       throw new Error("Erro ao criar evento no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -94,6 +96,8 @@ export class EventRepositoryPrisma implements IEventRepository {
     } catch (error: any) {
       console.error("Erro ao buscar eventos:", error);
       throw new Error("Erro ao buscar eventos no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -137,15 +141,22 @@ export class EventRepositoryPrisma implements IEventRepository {
       return event;
     } catch (error: any) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        console.error("Erro conhecido do Prisma ao buscar evento por ID:", error.message);
+        console.error(
+          "Erro conhecido do Prisma ao buscar evento por ID:",
+          error.message
+        );
         throw new Error("Erro no banco de dados ao buscar evento por ID.");
       } else if (error instanceof Prisma.PrismaClientInitializationError) {
         console.error("Erro de inicialização do Prisma:", error.message);
         throw new Error("Erro de inicialização do banco de dados.");
       } else {
         console.error("Erro desconhecido ao buscar evento por ID:", error);
-        throw new Error(`Erro ao buscar evento por ID no banco de dados: ${error.message}`);
+        throw new Error(
+          `Erro ao buscar evento por ID no banco de dados: ${error.message}`
+        );
       }
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -163,6 +174,8 @@ export class EventRepositoryPrisma implements IEventRepository {
     } catch (error: any) {
       console.error("Erro ao deletar evento por ID:", error);
       throw new Error("Erro ao deletar evento por ID no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 }
