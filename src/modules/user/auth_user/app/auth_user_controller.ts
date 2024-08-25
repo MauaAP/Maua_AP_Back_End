@@ -2,9 +2,12 @@ import { AuthUserUsecase } from "./auth_user_usecase";
 import { Request, Response } from "express";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
-import { BadRequest, InternalServerError } from "http-errors";
 import jwt from "jsonwebtoken";
-import { ParameterError } from "../../../../shared/helpers/http/http_codes";
+import {
+  ParameterError,
+  BadRequest,
+  InternalServerError,
+} from "../../../../shared/helpers/http/http_codes";
 import { InvalidCredentialsError } from "../../../../shared/helpers/errors/login_errors";
 
 export class AuthUserController {
@@ -19,6 +22,7 @@ export class AuthUserController {
       }
 
       const user = await this.usecase.execute(email, password);
+
 
       const token = jwt.sign(
         {
