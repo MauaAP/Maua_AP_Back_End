@@ -2,23 +2,12 @@ import { PrismaClient } from "@prisma/client";
 import { IPresenceRepository } from "../../domain/repositories/presence_repository_interface";
 import { Presence } from "../../domain/entities/presence";
 import { NoItemsFound } from "../../helpers/errors/usecase_errors";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../../../prisma/prisma";
 
 export class PresenceRepositoryPrisma implements IPresenceRepository {
   async createPresence(presence: Presence): Promise<Presence> {
     try {
       console.log("Criando nova presença:", presence);
-
-      // const existingPresence = await prisma.presence.findUnique({
-      //   where: {
-      //     eventId_userId_date: {
-      //       eventId: presence.eventId,
-      //       userId: presence.userId,
-      //       date: new Date(presence.date),
-      //     },
-      //   },
-      // });
 
       const existingPresence = await prisma.presence.findFirst({
         where: {
@@ -66,6 +55,8 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     } catch (error) {
       console.error("Erro ao criar presença:", error);
       throw new Error("Erro ao criar presença no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -73,111 +64,146 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     userId: string,
     eventId: string
   ): Promise<Presence | null> {
-    const presenceFromPrisma = await prisma.presence.findFirst({
-      where: {
-        userId: userId,
-        eventId: eventId,
-      },
-    });
+    try {
+      const presenceFromPrisma = await prisma.presence.findFirst({
+        where: {
+          userId: userId,
+          eventId: eventId,
+        },
+      });
 
-    if (!presenceFromPrisma) {
-      return null;
+      if (!presenceFromPrisma) {
+        return null;
+      }
+
+      const presence = new Presence({
+        presenceId: presenceFromPrisma.id,
+        userId: presenceFromPrisma.userId,
+        eventId: presenceFromPrisma.eventId,
+        date: presenceFromPrisma.date.getTime(),
+      });
+
+      return presence;
+    } catch (error) {
+      console.error("Erro ao buscar presença por usuário e evento:", error);
+      throw new Error("Erro ao buscar presença por usuário e evento.");
+    } finally {
+      await prisma.$disconnect();
     }
-
-    const presence = new Presence({
-      presenceId: presenceFromPrisma.id,
-      userId: presenceFromPrisma.userId,
-      eventId: presenceFromPrisma.eventId,
-      date: presenceFromPrisma.date.getTime(),
-    });
-
-    return presence;
   }
 
   async getAllPresencesByEventId(eventId: string): Promise<Presence[]> {
-    const presencesFromPrisma = await prisma.presence.findMany({
-      where: {
-        eventId: eventId,
-      },
-    });
-
-    if (presencesFromPrisma.length === 0) {
-      throw new NoItemsFound("Nenhuma presença encontrada para o evento.");
-    }
-
-    const presences = presencesFromPrisma.map((presenceFromPrisma) => {
-      return new Presence({
-        presenceId: presenceFromPrisma.id,
-        userId: presenceFromPrisma.userId,
-        eventId: presenceFromPrisma.eventId,
-        date: presenceFromPrisma.date.getTime(),
+    try {
+      const presencesFromPrisma = await prisma.presence.findMany({
+        where: {
+          eventId: eventId,
+        },
       });
-    });
 
-    return presences;
+      if (presencesFromPrisma.length === 0) {
+        throw new NoItemsFound("Nenhuma presença encontrada para o evento.");
+      }
+
+      const presences = presencesFromPrisma.map((presenceFromPrisma) => {
+        return new Presence({
+          presenceId: presenceFromPrisma.id,
+          userId: presenceFromPrisma.userId,
+          eventId: presenceFromPrisma.eventId,
+          date: presenceFromPrisma.date.getTime(),
+        });
+      });
+
+      return presences;
+    } catch (error) {
+      console.error("Erro ao buscar presenças por evento:", error);
+      throw new Error("Erro ao buscar presenças por evento.");
+    } finally {
+      await prisma.$disconnect();
+    }
   }
 
   async getAllPresencesByUserId(userId: string): Promise<Presence[]> {
-    const presencesFromPrisma = await prisma.presence.findMany({
-      where: {
-        userId: userId,
-      },
-    });
-
-    if (presencesFromPrisma.length === 0) {
-      throw new NoItemsFound("Nenhuma presença encontrada para o usuário.");
-    }
-
-    const presences = presencesFromPrisma.map((presenceFromPrisma) => {
-      return new Presence({
-        presenceId: presenceFromPrisma.id,
-        userId: presenceFromPrisma.userId,
-        eventId: presenceFromPrisma.eventId,
-        date: presenceFromPrisma.date.getTime(),
+    try {
+      const presencesFromPrisma = await prisma.presence.findMany({
+        where: {
+          userId: userId,
+        },
       });
-    });
 
-    return presences;
+      if (presencesFromPrisma.length === 0) {
+        throw new NoItemsFound("Nenhuma presença encontrada para o usuário.");
+      }
+
+      const presences = presencesFromPrisma.map((presenceFromPrisma) => {
+        return new Presence({
+          presenceId: presenceFromPrisma.id,
+          userId: presenceFromPrisma.userId,
+          eventId: presenceFromPrisma.eventId,
+          date: presenceFromPrisma.date.getTime(),
+        });
+      });
+
+      return presences;
+    } catch (error) {
+      console.error("Erro ao buscar presenças por usuário:", error);
+      throw new Error("Erro ao buscar presenças por usuário.");
+    } finally {
+      await prisma.$disconnect();
+    }
   }
 
   async getAllPresences(): Promise<Presence[]> {
-    const presencesFromPrisma = await prisma.presence.findMany();
+    try {
+      const presencesFromPrisma = await prisma.presence.findMany();
 
-    if (presencesFromPrisma.length === 0) {
-      throw new NoItemsFound("Nenhuma presença encontrada.");
+      if (presencesFromPrisma.length === 0) {
+        throw new NoItemsFound("Nenhuma presença encontrada.");
+      }
+
+      const presences = presencesFromPrisma.map((presenceFromPrisma) => {
+        return new Presence({
+          presenceId: presenceFromPrisma.id,
+          userId: presenceFromPrisma.userId,
+          eventId: presenceFromPrisma.eventId,
+          date: presenceFromPrisma.date.getTime(),
+        });
+      });
+
+      return presences;
+    } catch (error) {
+      console.error("Erro ao buscar todas as presenças:", error);
+      throw new Error("Erro ao buscar todas as presenças.");
+    } finally {
+      await prisma.$disconnect();
     }
+  }
 
-    const presences = presencesFromPrisma.map((presenceFromPrisma) => {
-      return new Presence({
+  async getPresenceById(id: string): Promise<Presence | undefined> {
+    try {
+      const presenceFromPrisma = await prisma.presence.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!presenceFromPrisma) {
+        return undefined;
+      }
+
+      const presence = new Presence({
         presenceId: presenceFromPrisma.id,
         userId: presenceFromPrisma.userId,
         eventId: presenceFromPrisma.eventId,
         date: presenceFromPrisma.date.getTime(),
       });
-    });
 
-    return presences;
-  }
-
-  async getPresenceById(id: string): Promise<Presence | undefined> {
-    const presenceFromPrisma = await prisma.presence.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!presenceFromPrisma) {
-      return undefined;
+      return presence;
+    } catch (error) {
+      console.error("Erro ao buscar presença por ID:", error);
+      throw new Error("Erro ao buscar presença por ID.");
+    } finally {
+      await prisma.$disconnect();
     }
-
-    const presence = new Presence({
-      presenceId: presenceFromPrisma.id,
-      userId: presenceFromPrisma.userId,
-      eventId: presenceFromPrisma.eventId,
-      date: presenceFromPrisma.date.getTime(),
-    });
-
-    return presence;
   }
 
   async deletePresenceById(id: string): Promise<void> {
@@ -190,6 +216,8 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     } catch (error) {
       console.error("Erro ao deletar presença:", error);
       throw new Error("Erro ao deletar presença no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 }
