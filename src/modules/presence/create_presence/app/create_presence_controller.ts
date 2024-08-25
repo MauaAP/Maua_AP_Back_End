@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
-import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 import { CreatePresenceViewModel } from "./create_presence_viewmodel";
-import { BadRequest, Forbidden, InternalServerError } from "http-errors";
+import {
+  ParameterError,
+  BadRequest,
+  InternalServerError,
+  Forbidden,
+} from "../../../../shared/helpers/http/http_codes";
 import { CreatePresenceUsecase } from "./create_presence_usecase";
 import {
   InvalidParameter,
   InvalidRequest,
   MissingParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
-import { ParameterError } from "../../../../shared/helpers/http/http_codes";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 
@@ -49,9 +52,6 @@ export class CreatePresenceController {
       }
       if (error instanceof Forbidden) {
         return new Forbidden(error.getMessage()).send(res);
-      }
-      if (error instanceof MissingParameters) {
-        return new ParameterError(error.message).send(res);
       }
       if (error instanceof NoItemsFound) {
         return new Forbidden(error.message).send(res);
