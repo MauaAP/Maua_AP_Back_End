@@ -27,9 +27,11 @@ export class GetAllPresencesController {
       // }
 
       const presences = await this.getAllPresencesUsecase.execute();
+      // console.log(presences)
       const viewmodel = presences.map(
-        (presence) => new GetAllPresencesViewmodel(presence)
+        (presence) => new GetAllPresencesViewmodel(presence).toJSON()
       );
+      // console.log(viewmodel)
       return res.status(200).json(viewmodel);
     } catch (error: any) {
       if (error instanceof InvalidRequest) {
