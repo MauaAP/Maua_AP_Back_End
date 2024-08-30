@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Repositório para criação do back-end da aplicação da academia de professores do Instituto Mauá de Tecnologia.",
   "main": "server.ts",
-  "scripts": { 
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js",
     "start:dev": "nodemon server.ts",
@@ -17,6 +17,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",
     "@prisma/client": "^5.11.0",
+    "@types/nodemailer": "^6.4.15",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -26,6 +27,7 @@
     "jsdom": "^24.0.0",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
+    "nodemailer": "^6.9.14",
     "nodemon": "^3.0.2",
     "puppeteer-html-pdf": "^4.0.6",
     "uuid": "^9.0.1"
