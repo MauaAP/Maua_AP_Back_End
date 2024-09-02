@@ -11,7 +11,19 @@ export type JsonInfo = {
     yearNow: string
 }
 
+function formatMonth(month: string): string {
+    const months = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    return months[parseInt(month) - 1];
+}
+
+function formatTime(time: string): string {
+    return time.includes(':') ? time : `${time}:00`;
+}
+
 export function getCertificateHtml(jsonInfo: JsonInfo): string {
+    const [day, month, year] = jsonInfo.date.split('/');
+    const formattedDate = `${day} de ${formatMonth(month)} de ${year}`;
+    
     return `<!DOCTYPE html>
     <html lang="pt-br">
     <head>
@@ -118,8 +130,8 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             <aside class="bodyInfo">
                 <p class="fontGentiumBookRegular">A Academia de Professores do Centro Universitário do Instituto Mauá de Tecnologia confere a</p>
                 <h2>${jsonInfo.name}</h2>
-                <p class="fontGentiumBookRegular">o presente Certificado por ter participado do evento ${jsonInfo.eventName}, ministrado por ${jsonInfo.manager}, realizado em ${jsonInfo.date}, das ${jsonInfo.initTime} às ${jsonInfo.finishTime}.</p>
-                <p class="fontGentiumBookRegular">São Caetano do Sul, ${jsonInfo.dateNow} de ${jsonInfo.monthNow} de ${jsonInfo.yearNow}.</p>
+                <p class="fontGentiumBookRegular">o presente Certificado por ter participado do evento ${jsonInfo.eventName}, ministrado por ${jsonInfo.manager.join(', ')}, realizado em ${formattedDate}, das ${formatTime(jsonInfo.initTime)} às ${formatTime(jsonInfo.finishTime)}.</p>
+                <p class="fontGentiumBookRegular">São Caetano do Sul, ${jsonInfo.dateNow} de ${formatMonth(jsonInfo.monthNow)} de ${jsonInfo.yearNow}.</p>
             </aside>
             <aside class="footerInfo">
                 <div class="cardInfo">
@@ -135,5 +147,5 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             </aside>
         </section>
     </body>
-    </html>`
+    </html>`;
 }
