@@ -24,11 +24,11 @@ export class GetAllUsersController {
       const userFromToken = req.user as UserFromToken;
 
       const allowedRoles = ["ADMIN", "SECRETARY", "MODERATOR"];
-      if (!allowedRoles.includes(userFromToken.role)) {
-        throw new Forbidden(
-          "You do not have permission to access this feature"
-        );
-      }
+      // if (!allowedRoles.includes(userFromToken.role)) {
+      //   throw new Forbidden(
+      //     "You do not have permission to access this feature"
+      //   );
+      // }
       const users = await this.usecase.execute();
 
       const csv = parse(users, {
