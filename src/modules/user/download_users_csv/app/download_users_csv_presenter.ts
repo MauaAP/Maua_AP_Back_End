@@ -12,7 +12,6 @@ const getAllUsersController = new GetAllUsersController(getAllUsersUseCase);
 
 router.get(
   "/download-users",
-  authenticateToken,
   async (req: Request, res: Response) => {
     await getAllUsersController.handle(req, res);
   }
