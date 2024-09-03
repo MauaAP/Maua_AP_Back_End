@@ -4,6 +4,7 @@ import { Presence } from "../../domain/entities/presence";
 import { NoItemsFound } from "../../helpers/errors/usecase_errors";
 import { prisma } from "../../../../prisma/prisma";
 import { CompleteCertificateDTO } from "../dto/complete_certificate_dto";
+import { PresencesFromEventDTO } from "../dto/presences_from_event_dto";
 
 export class PresenceRepositoryPrisma implements IPresenceRepository {
   async createPresence(presence: Presence): Promise<Presence> {
@@ -93,11 +94,25 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     }
   }
 
-  async getAllPresencesByEventId(eventId: string): Promise<Presence[]> {
+  async getAllPresencesByEventId(
+    eventId: string
+  ): Promise<PresencesFromEventDTO[]> {
     try {
       const presencesFromPrisma = await prisma.presence.findMany({
         where: {
           eventId: eventId,
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+          event: {
+            select: {
+              eventName: true,
+            },
+          },
         },
       });
 
@@ -106,12 +121,14 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
       }
 
       const presences = presencesFromPrisma.map((presenceFromPrisma) => {
-        return new Presence({
-          presenceId: presenceFromPrisma.id,
-          userId: presenceFromPrisma.userId,
-          eventId: presenceFromPrisma.eventId,
-          date: presenceFromPrisma.date.getTime(),
-        });
+        return new PresencesFromEventDTO(
+          presenceFromPrisma.id,
+          presenceFromPrisma.userId,
+          presenceFromPrisma.eventId,
+          presenceFromPrisma.date.getTime(),
+          presenceFromPrisma.event.eventName,
+          presenceFromPrisma.user.name
+        );
       });
 
       return presences;
@@ -155,23 +172,21 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
 
   async getAllPresences(): Promise<CompleteCertificateDTO[]> {
     try {
-      const presencesFromPrisma = await prisma.presence.findMany(
-        {
-          include: {
-            user: {
-              select: {
-                name: true,
-              }
-            },
-            event: {
-              select: {
-                eventName: true,
-              }
+      const presencesFromPrisma = await prisma.presence.findMany({
+        include: {
+          user: {
+            select: {
+              name: true,
             },
           },
-        }
-      );
-      
+          event: {
+            select: {
+              eventName: true,
+            },
+          },
+        },
+      });
+
       if (presencesFromPrisma.length === 0) {
         throw new NoItemsFound("Nenhuma presença encontrada.");
       }
