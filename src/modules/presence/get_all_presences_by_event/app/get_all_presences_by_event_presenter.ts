@@ -11,7 +11,7 @@ const getAllPresencesByEventUsecase = new GetAllPresencesByEventUsecase(presence
 const getAllPresencesByEventController = new GetAllPresencesByEventController(getAllPresencesByEventUsecase);
 
 router.get(
-  "/presences/:eventId/",
+  "/presences/event/:eventId/",
   authenticateToken,
   async (req: Request, res: Response) => {
     await getAllPresencesByEventController.handle(req, res);
