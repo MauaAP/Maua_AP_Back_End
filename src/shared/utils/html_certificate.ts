@@ -17,7 +17,10 @@ function formatMonth(month: string): string {
 }
 
 function formatTime(time: string): string {
-    return time.includes(':') ? time : `${time}:00`;
+    let [hours, minutes] = time.split(':');
+    hours = hours.padStart(2, '0');
+    minutes = (minutes || '00').padStart(2, '0');
+    return minutes === '00' ? `${hours}h` : `${hours}h ${minutes}`;
 }
 
 export function getCertificateHtml(jsonInfo: JsonInfo): string {
@@ -135,7 +138,7 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             </aside>
             <aside class="footerInfo">
                 <div class="cardInfo">
-                    <label>prof. Dr. Octávio Mattasoglio Neto</label>
+                    <label>prof. Dr. Octavio Mattasoglio Neto</label>
                     <label>Presidente da Academia de Professores</label>
                     <label>CEUN-IMT</label>
                 </div>
