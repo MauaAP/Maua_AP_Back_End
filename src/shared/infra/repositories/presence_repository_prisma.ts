@@ -170,25 +170,48 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     }
   }
 
-  async getAllPresences(): Promise<CompleteCertificateDTO[]> {
+  async getAllPresences(profUser: string): Promise<CompleteCertificateDTO[]> {
     try {
-      const presencesFromPrisma = await prisma.presence.findMany({
-        include: {
-          user: {
-            select: {
-              name: true,
+      var presencesFromPrisma;
+      if(profUser != ""){
+        presencesFromPrisma = await prisma.presence.findMany({
+          include: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+            event: {
+              select: {
+                eventName: true,
+              },
             },
           },
-          event: {
-            select: {
-              eventName: true,
+          where: {
+            user: {
+              id: profUser
+            }
+          }
+        });
+      } else {
+        presencesFromPrisma = await prisma.presence.findMany({
+          include: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+            event: {
+              select: {
+                eventName: true,
+              },
             },
           },
-        },
-      });
+        });
+      }
 
       if (presencesFromPrisma.length === 0) {
-        throw new NoItemsFound("Nenhuma presença encontrada.");
+        return []
       }
 
       const presences = presencesFromPrisma.map((presenceFromPrisma) => {

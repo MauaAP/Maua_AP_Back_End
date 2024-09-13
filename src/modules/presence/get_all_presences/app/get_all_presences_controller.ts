@@ -13,20 +13,19 @@ import {
 } from "../../../../shared/helpers/errors/controller_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
+import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 
 export class GetAllPresencesController {
   constructor(private getAllPresencesUsecase: GetAllPresencesUsecase) {}
 
   async handle(req: Request, res: Response) {
     try {
-      // const userFromToken = req.user as UserFromToken;
-
-      // const allowedRoles = ["ADMIN", "SECRETARY"];
-      // if (!allowedRoles.includes(userFromToken.role)) {
-      //   return res.status(403).json({ error: "Acesso negado." });
-      // }
-
-      const presences = await this.getAllPresencesUsecase.execute();
+      const userFromToken = req.user as UserFromToken;
+      var userId = "";
+      if(userFromToken.role === "PROFESSOR"){
+        userId = userFromToken.id
+      }
+      const presences = await this.getAllPresencesUsecase.execute(userId);
       // console.log(presences)
       const viewmodel = presences.map(
         (presence) => new GetAllPresencesViewmodel(presence).toJSON()

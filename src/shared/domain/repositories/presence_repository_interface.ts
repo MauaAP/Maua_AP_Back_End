@@ -10,7 +10,7 @@ export interface IPresenceRepository {
   ): Promise<Presence | null>;
   getAllPresencesByEventId(eventId: string): Promise<PresencesFromEventDTO[]>;
   getAllPresencesByUserId(userId: string): Promise<Presence[]>;
-  getAllPresences(): Promise<CompleteCertificateDTO[]>;
+  getAllPresences(profUser: string): Promise<CompleteCertificateDTO[]>;
   getPresenceById(id: string): Promise<Presence | undefined>;
   deletePresenceById(id: string): Promise<void>;
 }

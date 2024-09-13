@@ -5,8 +5,8 @@ export class GetAllPresencesUsecase {
     this.presenceRepository = presenceRepository;
   }
 
-  async execute() {
-    const presences = await this.presenceRepository.getAllPresences();
+  async execute(profUser: string) {
+    const presences = await this.presenceRepository.getAllPresences(profUser);
     return presences;
   }
 }
