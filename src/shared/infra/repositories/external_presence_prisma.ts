@@ -76,4 +76,18 @@ export class ExternalPresenceRepositoryPrisma
 
     return externalPresence;
   }
+
+  async getExternalPresenceById(id: string): Promise<ExternalPresence | null> {
+    try {
+      const externalPresence = await prisma.externalPresence.findUnique({
+        where: {
+          id,
+        },
+      });
+      return externalPresence;
+    } catch (error) {
+      console.error("Erro ao buscar presença externa:", error);
+      throw new Error("Erro ao buscar presença externa no banco de dados.");
+    }
+  }
 }
