@@ -21,40 +21,34 @@ export class CreateUserController {
 
   async createUser(req: Request, res: Response) {
     try {
-      console.log("TENTANDO CRIAR USUÁRIO");
       const { name, email, role, password, telefone, cpf, status } = req.body;
 
-      const errors = [];
-
       if (!name) {
-        errors.push(new MissingParameters("Name"));
+        throw new MissingParameters("Name");
       }
 
       if (!email) {
-        errors.push(new MissingParameters("Email"));
+        throw new MissingParameters("Email");
       }
 
       if (!password) {
-        errors.push(new MissingParameters("Password"));
+        throw new MissingParameters("Password");
       }
 
       if (!role) {
-        errors.push(new MissingParameters("Role"));
+        throw new MissingParameters("Role");
       }
+
       if (!status) {
-        errors.push(new MissingParameters("Status"));
+        throw new MissingParameters("Status");
       }
 
       if (!telefone) {
-        errors.push(new MissingParameters("Telefone"));
+        throw new MissingParameters("Telefone");
       }
 
       if (!cpf) {
-        errors.push(new MissingParameters("CPF"));
-      }
-
-      if (errors.length > 0) {
-        return res.status(400).json(errors);
+        throw new MissingParameters("CPF");
       }
 
       const userProps: UserProps = {
