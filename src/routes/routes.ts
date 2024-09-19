@@ -20,6 +20,7 @@ import GetAllPresencesPresenter from "../modules/presence/get_all_presences/app/
 import GetPresenceByIdPresenter from "../modules/presence/get_presence_by_id/app/get_presence_by_id_presenter";
 import DeletePresenceByIdPresenter from "../modules/presence/delete_presence_by_id/app/delete_presence_by_id_presenter";
 import CreateCertificatePresenter from "../modules/presence/create_certificate/app/create_certificate_presenter";
+import CreateExternalCertificatePresenter from "../modules/presence/create_external_certificate/app/create_external_certificate_presenter";
 
 import app from "../app";
 
@@ -55,6 +56,7 @@ const routes = (app: Express) => {
   app.use("/api", CreateCertificatePresenter);
 
   app.use("/api", CreateExternalPresencePresenter);
+  app.use("/api", CreateExternalCertificatePresenter);
 };
 
 export default routes;
