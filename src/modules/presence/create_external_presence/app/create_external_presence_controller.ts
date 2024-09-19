@@ -13,7 +13,7 @@ import {
   MissingParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
-import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
+import { DuplicatedItem, NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 
 export class CreateExternalPresenceController {
   constructor(
@@ -60,6 +60,9 @@ export class CreateExternalPresenceController {
       }
       if (error instanceof NoItemsFound) {
         return new Forbidden(error.message).send(res);
+      }
+      if(error instanceof DuplicatedItem) {
+        return new BadRequest(error.message).send(res);
       }
       return new InternalServerError("Internal Server Error").send(res);
     }
