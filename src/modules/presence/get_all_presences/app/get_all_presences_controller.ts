@@ -22,7 +22,7 @@ export class GetAllPresencesController {
     try {
       const userFromToken = req.user as UserFromToken;
       var userId = "";
-      if(userFromToken.role === "PROFESSOR"){
+      if(userFromToken.role === "PROFESSOR" || userFromToken.role === "MODERATOR") {
         userId = userFromToken.id
       }
       const presences = await this.getAllPresencesUsecase.execute(userId);
