@@ -20,7 +20,7 @@ function formatTime(time: string): string {
     let [hours, minutes] = time.split(':');
     hours = hours.padStart(2, '0');
     minutes = (minutes || '00').padStart(2, '0');
-    return minutes === '00' ? `${hours}h` : `${hours}h ${minutes}`;
+    return minutes === '00' ? `${hours}h` : `${hours}h${minutes}`;
 }
 
 export function getCertificateHtml(jsonInfo: JsonInfo): string {
