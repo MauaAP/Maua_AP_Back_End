@@ -13,6 +13,7 @@ import GetEventByIdPresenter from "../modules/event/get_event_by_id/app/get_even
 import DeleteEventByIdPresenter from "../modules/event/delete_event_by_id/app/delete_event_by_id_presenter";
 import DownloadEventsCsvPresenter from "../modules/event/download_events_csv/app/download_events_csv_presenter";
 import CreatePresencePresenter from "../modules/presence/create_presence/app/create_presence_presenter";
+import CreateExternalPresencePresenter from "../modules/presence/create_external_presence/app/create_external_presence_presenter";
 import GetAllPresencesByEventPresenter from "../modules/presence/get_all_presences_by_event/app/get_all_presences_by_event_presenter";
 import GetAllPresencesByTokenPresenter from "../modules/presence/get_all_presences_by_token/app/get_all_presences_by_token_presenter";
 import GetAllPresencesPresenter from "../modules/presence/get_all_presences/app/get_all_presences_presenter";
@@ -26,12 +27,6 @@ const routes = (app: Express) => {
   app
     .route("/")
     .get((req: Request, res: Response) => res.status(200).send("Api AP"));
-
-  app
-    .route("/teste")
-    .get((req: Request, res: Response) =>
-      res.status(200).send("Hello, world!")
-    );
 
   // user routes
   app.use("/api", CreateUserPresenter);
@@ -58,6 +53,8 @@ const routes = (app: Express) => {
   app.use("/api", GetPresenceByIdPresenter);
   app.use("/api", DeletePresenceByIdPresenter);
   app.use("/api", CreateCertificatePresenter);
+
+  app.use("/api", CreateExternalPresencePresenter);
 };
 
 export default routes;
