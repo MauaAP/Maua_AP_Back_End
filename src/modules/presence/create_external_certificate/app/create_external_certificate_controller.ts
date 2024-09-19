@@ -20,12 +20,7 @@ export class CreateExternalCertificateController {
 
   async handle(req: Request, res: Response) {
     try {
-      const userFromToken = req.user as UserFromToken;
-      if (!userFromToken) {
-        throw new Forbidden(
-          "You do not have permission to access this feature"
-        );
-      }
+
       const presenceId = req.params.presenceId;
 
       if (!presenceId) {
