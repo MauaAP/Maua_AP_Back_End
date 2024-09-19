@@ -1,9 +1,9 @@
 import { ExternalPresence, Prisma } from "@prisma/client";
-import { IExternalPresenceInterface } from "../../domain/repositories/external_presence_interface";
+import { IExternalPresenceRepository } from "../../domain/repositories/external_presence_interface";
 import { prisma } from "../../../../prisma/prisma";
 
 export class ExternalPresenceRepositoryPrisma
-  implements IExternalPresenceInterface
+  implements IExternalPresenceRepository
 {
   async createExternalPresence(
     data: Prisma.ExternalPresenceUncheckedCreateInput
@@ -50,5 +50,30 @@ export class ExternalPresenceRepositoryPrisma
     } finally {
       await prisma.$disconnect();
     }
+  }
+
+  async findByEmailAndEvent(
+    email: string,
+    eventId: string,
+    date: Date
+  ): Promise<ExternalPresence | null> {
+    const startOfTheDay = new Date(date);
+    startOfTheDay.setHours(0, 0, 0, 0);
+
+    const endOfTheDay = new Date(date);
+    endOfTheDay.setHours(23, 59, 59, 999);
+
+    const externalPresence = await prisma.externalPresence.findFirst({
+      where: {
+        email,
+        eventId,
+        date: {
+          gte: startOfTheDay,
+          lte: endOfTheDay,
+        },
+      },
+    });
+
+    return externalPresence;
   }
 }
