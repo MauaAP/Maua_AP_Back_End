@@ -12,9 +12,8 @@ const createCertificateUseCase = new CreateExternalCertificateUsecase(
   presenceRepository,
   eventRepository
 );
-const createExternalCertificateController = new CreateExternalCertificateController(
-  createCertificateUseCase
-);
+const createExternalCertificateController =
+  new CreateExternalCertificateController(createCertificateUseCase);
 
 router.get(
   "/create-external-certificate/:presenceId",
