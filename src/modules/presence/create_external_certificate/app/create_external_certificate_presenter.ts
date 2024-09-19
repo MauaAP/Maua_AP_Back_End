@@ -12,7 +12,7 @@ const createCertificateUseCase = new CreateExternalCertificateUsecase(
   presenceRepository,
   eventRepository
 );
-const createCertificateController = new CreateExternalCertificateController(
+const createExternalCertificateController = new CreateExternalCertificateController(
   createCertificateUseCase
 );
 
@@ -20,7 +20,7 @@ router.get(
   "/create-external-certificate/:presenceId",
   authenticateToken,
   async (req: Request, res: Response) => {
-    await createCertificateController.handle(req, res);
+    await createExternalCertificateController.handle(req, res);
   }
 );
 
