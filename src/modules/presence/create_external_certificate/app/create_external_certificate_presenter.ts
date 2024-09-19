@@ -17,7 +17,6 @@ const createExternalCertificateController =
 
 router.get(
   "/create-external-certificate/:presenceId",
-  authenticateToken,
   async (req: Request, res: Response) => {
     await createExternalCertificateController.handle(req, res);
   }
