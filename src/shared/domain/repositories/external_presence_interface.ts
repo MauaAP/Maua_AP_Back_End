@@ -1,7 +1,6 @@
 import { ExternalPresence, Prisma } from "@prisma/client";
 
-export interface IExternalPresenceInterface {
-  createExternalPresence(
-    data: Prisma.ExternalPresenceUncheckedCreateInput
-  ): Promise<ExternalPresence>;
+export interface IExternalPresenceRepository {
+  createExternalPresence(data: Prisma.ExternalPresenceUncheckedCreateInput): Promise<ExternalPresence>;
+  findByEmailAndEvent(email: string, eventId: string, date: Date): Promise<ExternalPresence | null>;
 }
