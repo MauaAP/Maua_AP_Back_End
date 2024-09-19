@@ -34,13 +34,11 @@ export class CreateExternalPresenceController {
         throw new MissingParameters("Missing event ID parameter.");
       }
 
-      const externalPresence = await this.createExternalPresenceUseCase.execute(
-        {
-          email,
-          name,
-          eventId,
-        }
-      );
+      await this.createExternalPresenceUseCase.execute({
+        email,
+        name,
+        eventId,
+      });
 
       const externalPresenceViewModel = new CreateExternalPresenceViewModel(
         "Presença externa registrada!"
