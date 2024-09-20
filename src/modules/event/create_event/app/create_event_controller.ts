@@ -51,52 +51,52 @@ export class CreateEventController {
       } = req.body;
 
       if (!eventName) {
-        throw new MissingParameters("Missing Event Name");
+        throw new MissingParameters("Event Name");
       }
       if (!date) {
-        throw new MissingParameters("Missing Date");
+        throw new MissingParameters("Date");
       }
       if (!host) {
-        throw new MissingParameters("Missing Host");
+        throw new MissingParameters("Host");
       }
       if (!manager) {
-        throw new MissingParameters("Missing Manager");
+        throw new MissingParameters("Manager");
       }
       if (!hostEmail) {
-        throw new MissingParameters("Missing Host Email");
+        throw new MissingParameters("Host Email");
       }
       if (!hostPhone) {
-        throw new MissingParameters("Missing Host Phone");
+        throw new MissingParameters("Host Phone");
       }
       if (!local) {
-        throw new MissingParameters("Missing Local");
+        throw new MissingParameters("Local");
       }
       if (!modality) {
-        throw new MissingParameters("Missing Modality");
+        throw new MissingParameters("Modality");
       }
       if (!targetAudience) {
-        throw new MissingParameters("Missing Target Audience");
+        throw new MissingParameters("Target Audience");
       }
       if (!activityType) {
-        throw new MissingParameters("Missing Activity Type");
+        throw new MissingParameters("Activity Type");
       }
       if (!goals) {
-        throw new MissingParameters("Missing Goals");
+        throw new MissingParameters("Goals");
       }
       if (!period) {
-        throw new MissingParameters("Missing Period");
+        throw new MissingParameters("Period");
       }
       if (!contentActivities) {
-        throw new MissingParameters("Missing Content Activities");
+        throw new MissingParameters("Content Activities");
       }
       if (!developedCompetencies) {
-        throw new MissingParameters("Missing Developed Competencies");
+        throw new MissingParameters("Developed Competencies");
       }
       if (!initTime) {
-        throw new MissingParameters("Missing Init Time");
+        throw new MissingParameters("Init Time");
       }
       if (!finishTime) {
-        throw new MissingParameters("Missing Finish Time");
+        throw new MissingParameters("Finish Time");
       }
 
       const eventProps = {
