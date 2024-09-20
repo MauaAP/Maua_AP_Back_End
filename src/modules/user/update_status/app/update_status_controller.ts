@@ -28,7 +28,7 @@ export class UpdateStatusController {
     }
 
     if (!req.body) {
-      throw new NoItemsFound("Body");
+      throw new MissingParameters("Body");
     }
     if (!req.body.id) {
       throw new MissingParameters("Id");
