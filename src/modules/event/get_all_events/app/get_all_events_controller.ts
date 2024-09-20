@@ -46,7 +46,7 @@ export class GetAllEventsController {
         return new Forbidden(error.getMessage()).send(res);
       }
       if (error instanceof NoItemsFound) {
-        return new Forbidden(error.message).send(res);
+        return new BadRequest(error.message).send(res);
       }
       return new InternalServerError("Internal Server Error").send(res);
     }
