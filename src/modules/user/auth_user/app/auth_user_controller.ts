@@ -9,6 +9,7 @@ import {
   InternalServerError,
 } from "../../../../shared/helpers/http/http_codes";
 import { InvalidCredentialsError } from "../../../../shared/helpers/errors/login_errors";
+import { MissingParameters } from "../../../../shared/helpers/errors/controller_errors";
 
 export class AuthUserController {
   constructor(private usecase: AuthUserUsecase) {}
@@ -17,12 +18,14 @@ export class AuthUserController {
     const { email, password } = req.body;
 
     try {
-      if (!email || !password) {
-        throw new BadRequest("Email and password are required");
+      if (!email) {
+        throw new BadRequest("email");
+      }
+      if (!password) {
+        throw new MissingParameters("password");
       }
 
       const user = await this.usecase.execute(email, password);
-
 
       const token = jwt.sign(
         {
