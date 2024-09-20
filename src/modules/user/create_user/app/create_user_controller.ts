@@ -15,12 +15,22 @@ import {
 import { CreateUserViewModel } from "./create_user_viewmodel";
 import { ConflictItems } from "../../../../shared/helpers/errors/usecase_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
+import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 
 export class CreateUserController {
   constructor(private createUserUsecase: CreateUserUsecase) {}
 
   async createUser(req: Request, res: Response) {
     try {
+      const userFromToken = req.user as UserFromToken;
+
+      const allowedRoles = ["ADMIN", "SECRETARY", "MODERATOR"];
+      if (!allowedRoles.includes(userFromToken.role)) {
+        throw new Forbidden(
+          "You do not have permission to access this feature"
+        );
+      }
+      
       const { name, email, role, password, telefone, cpf, status } = req.body;
 
       if (!name) {
