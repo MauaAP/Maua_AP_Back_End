@@ -27,7 +27,11 @@ export class DeleteEventByIdController {
 
   async handle(req: Request, res: Response) {
     try {
-      await this.deleteEventByIdUsecase.execute(req.params.id);
+      const eventId = req.params.id;
+      if (!eventId) {
+        throw new MissingParameters("Event Id");
+      }
+      await this.deleteEventByIdUsecase.execute(eventId);
       const viewmodel = new DeleteEventByIdViewmodel(
         "Evento deletado com sucesso."
       );
