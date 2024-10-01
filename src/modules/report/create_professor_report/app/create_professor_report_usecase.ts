@@ -35,12 +35,9 @@ export class CreateProfessorReportUsecase {
 
     const activities = events.map((event) => ({
       date: new Date(event.date).toLocaleDateString(),
-      time: `${new Date(event.initTime).getHours()}:${new Date(
-        event.initTime
-      ).getMinutes()}`,
+      time: formatTime(new Date(event.initTime).getHours(), new Date(event.initTime).getMinutes()),
       duration: `${
-        new Date(event.finishTime).getHours() -
-        new Date(event.initTime).getHours()
+        new Date(event.finishTime).getHours() - new Date(event.initTime).getHours()
       }h${new Date(event.finishTime).getMinutes()}`,
       event: event.eventName,
     }));
@@ -73,4 +70,8 @@ export class CreateProfessorReportUsecase {
     const reportUrl = await saveReport(professorId, pdfBuffer);
     return reportUrl;
   }
+}
+
+function formatTime(hours: number, minutes: number): string {
+  return minutes === 0 ? `${hours}h` : `${hours}h${minutes}`;
 }
