@@ -84,11 +84,37 @@ export async function saveReport(
     console.log("Uploading certificate to S3...");
     const command = new PutObjectCommand(params);
     const data = await s3.send(command);
-    console.log("Certificate uploaded successfully. Data:", data);
+    console.log("Report uploaded successfully. Data:", data);
     const certificateUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${userId}-relatorio.pdf`;
     return certificateUrl;
   } catch (error: any) {
     console.error("Error uploading certificate to S3:", error);
     throw new Error(`Erro ao salvar certificado no S3: ${error.message}`);
+  }
+}
+
+export async function saveReitoriaReport(
+  date: string,
+  ReportPdf: Buffer
+): Promise<string> {
+  console.log("Certificate report PDF type:", typeof ReportPdf);
+  console.log("Certificate report PDF length:", ReportPdf.length);
+
+  const params = {
+    Bucket: `${process.env.BUCKET_NAME}`,
+    Key: `relatorios-reitoria/${date}-relatorio.pdf`,
+    Body: ReportPdf,
+  };
+  console.log(params.Key);
+  try {
+    console.log("Uploading certificate report to S3...");
+    const command = new PutObjectCommand(params);
+    const data = await s3.send(command);
+    console.log("Certificate report uploaded successfully. Data:", data);
+    const certificateUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${date}-relatorio-reitoria.pdf`;
+    return certificateUrl;
+  } catch (error: any) {
+    console.error("Error uploading certificate report to S3:", error);
+    throw new Error(`Erro ao salvar report no S3: ${error.message}`);
   }
 }
