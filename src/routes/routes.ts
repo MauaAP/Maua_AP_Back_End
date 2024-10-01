@@ -21,8 +21,7 @@ import GetPresenceByIdPresenter from "../modules/presence/get_presence_by_id/app
 import DeletePresenceByIdPresenter from "../modules/presence/delete_presence_by_id/app/delete_presence_by_id_presenter";
 import CreateCertificatePresenter from "../modules/presence/create_certificate/app/create_certificate_presenter";
 import CreateExternalCertificatePresenter from "../modules/presence/create_external_certificate/app/create_external_certificate_presenter";
-
-import app from "../app";
+import CreateProfessorReportPresenter from "../modules/report/create_professor_report/app/create_professor_report_presenter";
 
 const routes = (app: Express) => {
   app
@@ -57,6 +56,8 @@ const routes = (app: Express) => {
 
   app.use("/api", CreateExternalPresencePresenter);
   app.use("/api", CreateExternalCertificatePresenter);
+
+  app.use("/api", CreateProfessorReportPresenter);
 };
 
 export default routes;
