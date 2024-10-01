@@ -36,9 +36,7 @@ export class CreateProfessorReportUsecase {
     const activities = events.map((event) => ({
       date: new Date(event.date).toLocaleDateString(),
       time: formatTime(new Date(event.initTime).getHours(), new Date(event.initTime).getMinutes()),
-      duration: `${
-        new Date(event.finishTime).getHours() - new Date(event.initTime).getHours()
-      }h${new Date(event.finishTime).getMinutes()}`,
+      duration: formatDuration(new Date(event.initTime), new Date(event.finishTime)),
       event: event.eventName,
     }));
 
@@ -75,3 +73,27 @@ export class CreateProfessorReportUsecase {
 function formatTime(hours: number, minutes: number): string {
   return minutes === 0 ? `${hours}h` : `${hours}h${minutes}`;
 }
+
+function formatDuration(startTime: Date, endTime: Date): string {
+    const startHours = startTime.getHours();
+    const startMinutes = startTime.getMinutes();
+    const endHours = endTime.getHours();
+    const endMinutes = endTime.getMinutes();
+
+    let totalHours = endHours - startHours;
+    let totalMinutes = endMinutes - startMinutes;
+
+    if (totalMinutes < 0) {
+        totalMinutes += 60;
+        totalHours -= 1;
+    }
+
+    if (totalHours > 0 && totalMinutes > 0) {
+        return `${totalHours}h ${totalMinutes}min`;
+    } else if (totalHours > 0) {
+        return `${totalHours}h`;
+    } else {
+        return `${totalMinutes}min`;
+    }
+}
+
