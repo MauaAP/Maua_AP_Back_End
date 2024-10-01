@@ -23,6 +23,7 @@ import CreateCertificatePresenter from "../modules/presence/create_certificate/a
 import CreateExternalCertificatePresenter from "../modules/presence/create_external_certificate/app/create_external_certificate_presenter";
 import CreateProfessorReportPresenter from "../modules/report/create_professor_report_by_token/app/create_professor_report_presenter";
 import CreateProfessorReportByUserPresenter from "../modules/report/create_professor_report_by_user/app/create_professor_report_by_user_presenter";
+import CreateReitoriaReportPresenter from "../modules/report/create_reitoria_report/app/create_reitoria_report_presenter";  
 
 const routes = (app: Express) => {
   app
@@ -62,6 +63,7 @@ const routes = (app: Express) => {
   // report routes
   app.use("/api", CreateProfessorReportPresenter);
   app.use("/api", CreateProfessorReportByUserPresenter);
+  app.use("/api", CreateReitoriaReportPresenter);
 };
 
 export default routes;
