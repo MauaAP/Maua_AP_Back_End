@@ -24,6 +24,10 @@ function formatMonth(month: string): string {
     return months[parseInt(month) - 1];
 }
 
+function formatTime(hours: number, minutes: number): string {
+    return minutes === 0 ? `${hours}h` : `${hours}h${minutes}`;
+}
+
 export function getProfessorReportHtml(reportInfo: ProfessorReportInfo): string {
     const formattedActivities = reportInfo.activities.map(activity => `
         <tr>
