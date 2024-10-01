@@ -28,6 +28,30 @@ function formatTime(hours: number, minutes: number): string {
     return minutes === 0 ? `${hours}h` : `${hours}h${minutes}`;
 }
 
+function formatDuration(startTime: Date, endTime: Date): string {
+    const startHours = startTime.getHours();
+    const startMinutes = startTime.getMinutes();
+    const endHours = endTime.getHours();
+    const endMinutes = endTime.getMinutes();
+
+    let totalHours = endHours - startHours;
+    let totalMinutes = endMinutes - startMinutes;
+
+    // Se os minutos finais forem menores que os minutos iniciais, precisamos ajustar a hora
+    if (totalMinutes < 0) {
+        totalMinutes += 60;
+        totalHours -= 1;
+    }
+
+    if (totalHours > 0 && totalMinutes > 0) {
+        return `${totalHours}h ${totalMinutes}min`;
+    } else if (totalHours > 0) {
+        return `${totalHours}h`;
+    } else {
+        return `${totalMinutes}min`;
+    }
+}
+
 export function getProfessorReportHtml(reportInfo: ProfessorReportInfo): string {
     const formattedActivities = reportInfo.activities.map(activity => `
         <tr>
