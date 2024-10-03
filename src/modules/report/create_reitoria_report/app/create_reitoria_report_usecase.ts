@@ -20,14 +20,14 @@ export class CreateReitoriaReportUsecase {
     const events: Event[] = await this.eventRepository.getAll();
 
     const activities = events.map((event: Event) => {
-      const professors = event.props.host.split(",").length; 
-      const technicalStaff = event.props.manager.length; 
-      const collaborators = event.props.hostEmail.length; 
+      const professors = event.props.host.split(",").length;
+      const technicalStaff = event.props.manager.length;
+      const collaborators = event.props.hostEmail.length;
       const students = 0;
       const total = professors + technicalStaff + collaborators + students;
 
       return {
-        event: event.props.eventName, 
+        event: event.props.eventName,
         professors,
         technicalStaff,
         collaborators,
@@ -69,6 +69,14 @@ export class CreateReitoriaReportUsecase {
     await browser.close();
 
     const reportUrl = await saveReitoriaReport(date, pdfBuffer);
-    return reportUrl;
+
+    // Isso com certeza é a coisa mais gambiarra que você desenvolvedor atual do projeto verá!
+    // Mas é o que temos para hoje, infelizmente.
+    // Se arrumar, glória eterna para o senhor! Absolute Cinema! Adeus!
+    const antesPontoCom = reportUrl.split(".com/")[0];
+    const depoisPontoCom = reportUrl.split(".com/")[1];
+    const formattedReportUrl = `${antesPontoCom}.com/relatorios-reitoria/${depoisPontoCom}`;
+
+    return formattedReportUrl;
   }
 }
