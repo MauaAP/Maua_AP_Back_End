@@ -72,7 +72,15 @@ export class CreateProfessorReportByUserUsecase {
     await browser.close();
 
     const reportUrl = await saveReport(professorId, pdfBuffer);
-    return reportUrl;
+
+    // Isso com certeza é a coisa mais gambiarra que você desenvolvedor atual do projeto verá!
+    // Mas é o que temos para hoje, infelizmente.
+    // Se arrumar, glória eterna para o senhor! Absolute Cinema! Adeus!
+    const antesPontoCom = reportUrl.split(".com/")[0];
+    const depoisPontoCom = reportUrl.split(".com/")[1];
+    const formattedReportUrl = `${antesPontoCom}.com/relatorios/${depoisPontoCom}`;
+
+    return formattedReportUrl;
   }
 }
 
