@@ -35,8 +35,14 @@ export class CreateProfessorReportUsecase {
 
     const activities = events.map((event) => ({
       date: new Date(event.date).toLocaleDateString(),
-      time: formatTime(new Date(event.initTime).getHours(), new Date(event.initTime).getMinutes()),
-      duration: formatDuration(new Date(event.initTime), new Date(event.finishTime)),
+      time: formatTime(
+        new Date(event.initTime).getHours(),
+        new Date(event.initTime).getMinutes()
+      ),
+      duration: formatDuration(
+        new Date(event.initTime),
+        new Date(event.finishTime)
+      ),
       event: event.eventName,
     }));
 
@@ -66,7 +72,15 @@ export class CreateProfessorReportUsecase {
     await browser.close();
 
     const reportUrl = await saveReport(professorId, pdfBuffer);
-    return reportUrl;
+
+    // Isso com certeza é a coisa mais gambiarra que você desenvolvedor atual do projeto verá!
+    // Mas é o que temos para hoje, infelizmente.
+    // Se arrumar, glória eterna para o senhor! Absolute Cinema! Adeus!
+    const antesPontoCom = reportUrl.split(".com/")[0];
+    const depoisPontoCom = reportUrl.split(".com/")[1];
+    const formattedReportUrl = `${antesPontoCom}.com/relatorios/${depoisPontoCom}`;
+
+    return formattedReportUrl;
   }
 }
 
@@ -75,25 +89,24 @@ function formatTime(hours: number, minutes: number): string {
 }
 
 function formatDuration(startTime: Date, endTime: Date): string {
-    const startHours = startTime.getHours();
-    const startMinutes = startTime.getMinutes();
-    const endHours = endTime.getHours();
-    const endMinutes = endTime.getMinutes();
+  const startHours = startTime.getHours();
+  const startMinutes = startTime.getMinutes();
+  const endHours = endTime.getHours();
+  const endMinutes = endTime.getMinutes();
 
-    let totalHours = endHours - startHours;
-    let totalMinutes = endMinutes - startMinutes;
+  let totalHours = endHours - startHours;
+  let totalMinutes = endMinutes - startMinutes;
 
-    if (totalMinutes < 0) {
-        totalMinutes += 60;
-        totalHours -= 1;
-    }
+  if (totalMinutes < 0) {
+    totalMinutes += 60;
+    totalHours -= 1;
+  }
 
-    if (totalHours > 0 && totalMinutes > 0) {
-        return `${totalHours}h ${totalMinutes}min`;
-    } else if (totalHours > 0) {
-        return `${totalHours}h`;
-    } else {
-        return `${totalMinutes}min`;
-    }
+  if (totalHours > 0 && totalMinutes > 0) {
+    return `${totalHours}h ${totalMinutes}min`;
+  } else if (totalHours > 0) {
+    return `${totalHours}h`;
+  } else {
+    return `${totalMinutes}min`;
+  }
 }
-
