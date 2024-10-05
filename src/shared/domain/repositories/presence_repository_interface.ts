@@ -13,4 +13,5 @@ export interface IPresenceRepository {
   getAllPresences(profUser: string): Promise<CompleteCertificateDTO[]>;
   getPresenceById(id: string): Promise<Presence | undefined>;
   deletePresenceById(id: string): Promise<void>;
+  countPresencesByEventId(eventId: string): Promise<number>;
 }
