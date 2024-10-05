@@ -26,6 +26,7 @@ export class CreateReitoriaReportUsecase {
         throw new NoItemsFound("Event not found");
       }
       const professors = await this.presenceRepository.countPresencesByEventId(event.props.eventId);
+      console.log('aquiiiii' , event.eventName,  professors )
 
 
       const technicalStaff = event.props.manager.length;
