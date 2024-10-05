@@ -17,13 +17,11 @@ jobs:
       run: |
         curl https://cli-assets.heroku.com/install.sh | sh
 
-    - name: Authenticate with Heroku
+    - name: Set up Heroku remote
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        heroku auth:token
-        heroku git:remote -a <your-heroku-app-name>  # Substitua com o nome do seu app no Heroku
+        heroku git:remote -a <your-heroku-app-name>  # Substitua pelo nome da sua aplicação no Heroku
 
     - name: Deploy to Heroku
-      run: |
-        git push heroku main
+      run: git push heroku main
