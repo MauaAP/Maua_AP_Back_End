@@ -34,6 +34,7 @@ export class CreateReitoriaReportController {
         .status(201)
         .json({ message: "Reitoria report created successfully", reportUrl });
     } catch (error: any) {
+      console.log('erro ', error)
       if (error instanceof InvalidRequest) {
         return new BadRequest(error.message).send(res);
       }
