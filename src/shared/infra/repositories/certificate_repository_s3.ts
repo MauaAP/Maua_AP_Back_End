@@ -102,7 +102,7 @@ export async function saveReitoriaReport(
 
   const params = {
     Bucket: `${process.env.BUCKET_NAME}`,
-    Key: `relatorios-reitoria/${date}-relatorio.pdf`,
+    Key: `relatorios-reitoria/${date}-relatorio-reitoria.pdf`,
     Body: ReportPdf,
   };
   console.log(params.Key);

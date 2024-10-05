@@ -14,13 +14,21 @@ import {
 import { Event } from "../../../../shared/domain/entities/event";
 
 export class CreateReitoriaReportUsecase {
-  constructor(private eventRepository: IEventRepository) {}
+  constructor(private eventRepository: IEventRepository, private presenceRepository: IPresenceRepository) {}
 
   async execute() {
     const events: Event[] = await this.eventRepository.getAll();
 
-    const activities = events.map((event: Event) => {
-      const professors = event.props.host.split(",").length;
+
+    const activities = events.map( async (event: Event) => {
+
+      if (!event.props.eventId) {
+        throw new NoItemsFound("Event not found");
+      }
+      const professors = await this.presenceRepository.countPresencesByEventId(event.props.eventId);
+      console.log('aquiiiii' , event.eventName,  professors )
+
+
       const technicalStaff = event.props.manager.length;
       const collaborators = event.props.hostEmail.length;
       const students = 0;
@@ -36,23 +44,25 @@ export class CreateReitoriaReportUsecase {
       };
     });
 
+    const resolvedActivities = await Promise.all(activities);
+
     const grandTotal = {
-      professors: activities.reduce((acc, act) => acc + act.professors, 0),
-      technicalStaff: activities.reduce(
+      professors: resolvedActivities.reduce((acc, act) => acc + act.professors, 0),
+      technicalStaff: resolvedActivities.reduce(
         (acc, act) => acc + act.technicalStaff,
         0
       ),
-      collaborators: activities.reduce(
+      collaborators: resolvedActivities.reduce(
         (acc, act) => acc + act.collaborators,
         0
       ),
-      students: activities.reduce((acc, act) => acc + act.students, 0),
-      total: activities.reduce((acc, act) => acc + act.total, 0),
+      students: resolvedActivities.reduce((acc, act) => acc + act.students, 0),
+      total: resolvedActivities.reduce((acc, act) => acc + act.total, 0),
     };
 
     const reportInfo: ReitoriaReportInfo = {
       totalEvents: events.length,
-      activities,
+      activities: resolvedActivities,
       grandTotal,
     };
 
@@ -60,7 +70,10 @@ export class CreateReitoriaReportUsecase {
 
     const htmlString = getReitoriaReportHtml(reportInfo);
 
-    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox"],
+    });
     const page = await browser.newPage();
     await page.setContent(htmlString);
 
