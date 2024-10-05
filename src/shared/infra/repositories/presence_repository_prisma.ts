@@ -177,7 +177,7 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
           eventId: eventId,
         },
       });
-  
+
       return count;
     } catch (error) {
       console.error("Erro ao contar presenças por evento:", error);
@@ -186,12 +186,11 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
       await prisma.$disconnect();
     }
   }
-  
 
   async getAllPresences(profUser: string): Promise<CompleteCertificateDTO[]> {
     try {
       var presencesFromPrisma;
-      if(profUser != ""){
+      if (profUser != "") {
         presencesFromPrisma = await prisma.presence.findMany({
           include: {
             user: {
@@ -207,9 +206,9 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
           },
           where: {
             user: {
-              id: profUser
-            }
-          }
+              id: profUser,
+            },
+          },
         });
       } else {
         presencesFromPrisma = await prisma.presence.findMany({
@@ -229,7 +228,7 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
       }
 
       if (presencesFromPrisma.length === 0) {
-        return []
+        return [];
       }
 
       const presences = presencesFromPrisma.map((presenceFromPrisma) => {

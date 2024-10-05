@@ -1,0 +1,28 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Heroku CLI
+      run: |
+        curl https://cli-assets.heroku.com/install.sh | sh
+
+    - name: Authenticate with Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}  
+      run: |
+        echo $HEROKU_API_KEY | heroku auth:token
+        heroku git:remote -a <your-heroku-app-name>  # Substitua pelo nome do seu app no Heroku
+
+    - name: Deploy to Heroku
+      run: git push heroku main
