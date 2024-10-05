@@ -170,6 +170,24 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
     }
   }
 
+  async countPresencesByEventId(eventId: string): Promise<number> {
+    try {
+      const count = await prisma.presence.count({
+        where: {
+          eventId: eventId,
+        },
+      });
+  
+      return count;
+    } catch (error) {
+      console.error("Erro ao contar presenças por evento:", error);
+      throw new Error("Erro ao contar presenças por evento.");
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
+  
+
   async getAllPresences(profUser: string): Promise<CompleteCertificateDTO[]> {
     try {
       var presencesFromPrisma;
