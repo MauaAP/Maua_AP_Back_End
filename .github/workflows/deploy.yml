@@ -28,4 +28,4 @@ jobs:
       run: git fetch --unshallow
 
     - name: Deploy to Heroku
-      run: git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-m
+      run: git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git HEAD:main
