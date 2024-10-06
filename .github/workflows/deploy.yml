@@ -24,8 +24,5 @@ jobs:
       run: |
         heroku git:remote -a serene-mountain-65884
 
-    - name: Pull latest changes from Heroku (merge)
-      run: git pull --no-rebase https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git main
-
     - name: Deploy to Heroku
       run: git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git main
