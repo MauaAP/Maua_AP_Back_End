@@ -25,4 +25,4 @@ jobs:
         heroku git:remote -a serene-mountain-65884
 
     - name: Deploy to Heroku
-      run: git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git main
+      run: git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git main
