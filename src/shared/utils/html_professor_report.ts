@@ -37,7 +37,6 @@ function formatDuration(startTime: Date, endTime: Date): string {
     let totalHours = endHours - startHours;
     let totalMinutes = endMinutes - startMinutes;
 
-    // Se os minutos finais forem menores que os minutos iniciais, precisamos ajustar a hora
     if (totalMinutes < 0) {
         totalMinutes += 60;
         totalHours -= 1;
@@ -52,10 +51,15 @@ function formatDuration(startTime: Date, endTime: Date): string {
     }
 }
 
+function formatDateToBR(date: string): string {
+    const [month, day, year] = date.split('/');
+    return `${day}/${month}/${year}`;
+}
+
 export function getProfessorReportHtml(reportInfo: ProfessorReportInfo): string {
     const formattedActivities = reportInfo.activities.map(activity => `
         <tr>
-            <td style="border: 1px solid black;">${activity.date}</td>
+            <td style="border: 1px solid black;">${formatDateToBR(activity.date)}</td>
             <td style="border: 1px solid black;">${activity.time}</td>
             <td style="border: 1px solid black;">${activity.duration}</td>
             <td style="border: 1px solid black; padding: 4px; width: 50%;">${activity.event}</td>
@@ -64,7 +68,7 @@ export function getProfessorReportHtml(reportInfo: ProfessorReportInfo): string 
 
     const formattedInstructorActivities = reportInfo.instructorActivities.map(activity => `
         <tr>
-            <td style="border: 1px solid black;">${activity.date}</td>
+            <td style="border: 1px solid black;">${formatDateToBR(activity.date)}</td>
             <td style="border: 1px solid black;">${activity.time}</td>
             <td style="border: 1px solid black;">${activity.duration}</td>
             <td style="border: 1px solid black; padding: 4px; width: 50%;">${activity.event}</td>
