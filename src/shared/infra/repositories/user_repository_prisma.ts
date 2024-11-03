@@ -174,4 +174,55 @@ export class UserRepositoryPrisma implements IUserRepository {
       await prisma.$disconnect();
     }
   }
+
+  async updateUser(id: string, user: Partial<User>): Promise<User> {
+    try {
+      const data: { [key: string]: any } = {}
+
+      if (user.name) {
+        data["name"] = user.name;
+      }
+      if (user.email) {
+        data["email"] = user.email;
+      }
+      if (user.role) {
+        data["role"] = user.role;
+      }
+      if (user.password) {
+        data["password"] = user.password;
+      }
+      if (user.telefone) {
+        data["telefone"] = user.telefone;
+      }
+      if (user.cpf) {
+        data["cpf"] = user.cpf;
+      }
+      if (user.status) {
+        data["status"] = user.status;
+      }
+
+      const updatedUserFromPrisma = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: data,
+      })
+
+      const updatedUser = new User({
+        id: updatedUserFromPrisma.id,
+        name: updatedUserFromPrisma.name,
+        email: updatedUserFromPrisma.email,
+        role: updatedUserFromPrisma.role as ROLE,
+        password: updatedUserFromPrisma.password,
+        telefone: updatedUserFromPrisma.telefone,
+        cpf: updatedUserFromPrisma.cpf,
+        status: updatedUserFromPrisma.status as STATUS,
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      throw new Error("Erro ao atualizar usuário");
+    }
+  }
 }
