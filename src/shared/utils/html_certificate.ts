@@ -27,6 +27,8 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
     const [day, month, year] = jsonInfo.date.split('/');
     const formattedDate = `${day} de ${formatMonth(month)} de ${year}`;
     
+    const isBeforeOctober = parseInt(year) < 2024 || (parseInt(year) === 2024 && (parseInt(month) < 10 || (parseInt(month) === 9 && parseInt(day) <= 30)));
+
     return `<!DOCTYPE html>
     <html lang="pt-br">
     <head>
@@ -138,17 +140,24 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             </aside>
             <aside class="footerInfo">
                 <div class="cardInfo">
-                    <label>prof. Dr. Octavio Mattasoglio Neto</label>
+                    <label>Prof. Dr. Octavio Mattasoglio Neto</label>
                     <label>Presidente da Academia de Professores</label>
                     <label>CEUN-IMT</label>
                 </div>
                 <div class="cardInfo">
+                    ${isBeforeOctober ? `
                     <label>Prof. Dr. José Carlos de Souza Junior</label>
                     <label>Reitor</label>
                     <label>CEUN-IMT</label>
+                    ` : `
+                    <label>Prof. Dr. Marcello Nitz</label>
+                    <label>Reitor</label>
+                    <label>CEUN-IMT</label>
+                    `}
                 </div>
             </aside>
         </section>
     </body>
     </html>`;
 }
+
