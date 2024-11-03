@@ -24,6 +24,7 @@ import CreateExternalCertificatePresenter from "../modules/presence/create_exter
 import CreateProfessorReportPresenter from "../modules/report/create_professor_report_by_token/app/create_professor_report_presenter";
 import CreateProfessorReportByUserPresenter from "../modules/report/create_professor_report_by_user/app/create_professor_report_by_user_presenter";
 import CreateReitoriaReportPresenter from "../modules/report/create_reitoria_report/app/create_reitoria_report_presenter";  
+import UpdateUserPresenter from '../modules/user/update_user/app/update_user_presenter';
 
 const routes = (app: Express) => {
   app
@@ -39,6 +40,7 @@ const routes = (app: Express) => {
   app.use("/api", GetUserByIdPresenter);
   app.use("/api", UpdateStatusPresenter);
   app.use("/api", DownloadUsersCsvPresenter);
+  app.use("/api", UpdateUserPresenter);
 
   // event routes
   app.use("/api", CreateEventPresenter);
