@@ -99,6 +99,8 @@ export class CreateEventController {
         throw new MissingParameters("Finish Time");
       }
 
+      
+
       const eventProps = {
         eventName,
         date,
@@ -107,7 +109,7 @@ export class CreateEventController {
         hostEmail,
         hostPhone,
         local,
-        modality,
+        modality: modality.toUpperCase(),
         targetAudience,
         activityType,
         goals,
