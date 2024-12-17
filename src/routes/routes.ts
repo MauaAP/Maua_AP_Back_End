@@ -29,7 +29,7 @@ import UpdateUserPresenter from '../modules/user/update_user/app/update_user_pre
 const routes = (app: Express) => {
   app
     .route("/")
-    .get((req: Request, res: Response) => res.status(200).send("Api AP"));
+    .get((req: Request, res: Response) => res.status(200).send("Api AP - V2"));
 
   // user routes
   app.use("/api", CreateUserPresenter);
