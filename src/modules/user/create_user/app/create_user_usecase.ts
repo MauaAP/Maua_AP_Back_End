@@ -1,6 +1,7 @@
 import { User, UserProps } from "../../../../shared/domain/entities/user";
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
+import { DuplicatedItem } from "../../../../shared/helpers/errors/usecase_errors";
 
 export class CreateUserUsecase {
   constructor(private repo: IUserRepository) {}
@@ -24,6 +25,11 @@ export class CreateUserUsecase {
     }
     if (!User.validatestatus(userProps.status)) {
       throw new EntityError("status");
+    }
+
+    const user = await this.repo.getUserByEmail(userProps.email);
+    if (user) {
+      throw new DuplicatedItem("email");
     }
 
     const newUser = await this.repo.createUser(new User(userProps));

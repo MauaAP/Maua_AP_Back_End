@@ -13,7 +13,7 @@ import {
   MissingParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 import { CreateUserViewModel } from "./create_user_viewmodel";
-import { ConflictItems } from "../../../../shared/helpers/errors/usecase_errors";
+import { ConflictItems, DuplicatedItem } from "../../../../shared/helpers/errors/usecase_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 
@@ -85,6 +85,9 @@ export class CreateUserController {
       }
       if (error instanceof EntityError) {
         return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof DuplicatedItem) {
+        return new BadRequest(error.message).send(res);
       }
       if (error instanceof Forbidden) {
         return new Forbidden(error.getMessage()).send(res);
