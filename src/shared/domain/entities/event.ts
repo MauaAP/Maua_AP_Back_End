@@ -7,7 +7,6 @@ export interface EventProps {
   date: number;
   host: string;
   manager: string[];
-  duration: string;
   hostEmail: string[];
   hostPhone: string[];
   local: string;
@@ -16,6 +15,7 @@ export interface EventProps {
   activityType: string;
   numberMaxParticipants?: number;
   goals: string;
+  period: string
   contentActivities: string[];
   developedCompetencies: string;
   initTime: number;
@@ -42,10 +42,6 @@ export class Event {
 
     if (!Event.isValidManager(props.manager)) {
       throw new EntityError("manager");
-    }
-
-    if (!Event.isValidAtributtes(props.duration)) {
-      throw new EntityError("duration");
     }
 
     if (!Event.isValidAtributtes(props.hostEmail)) {
@@ -81,6 +77,10 @@ export class Event {
 
     if (!Event.isValidAtributtes(props.goals)) {
       throw new EntityError("goals");
+    }
+
+    if (!Event.isValidAtributtes(props.period)) {
+      throw new EntityError("period");
     }
 
     if (!Event.isValidAtributtes(props.contentActivities)) {
@@ -124,10 +124,6 @@ export class Event {
     return this.props.manager;
   }
 
-  get duration(): string {
-    return this.props.duration;
-  }
-
   get hostEmail(): string[] {
     return this.props.hostEmail;
   }
@@ -158,6 +154,10 @@ export class Event {
 
   get goals(): string {
     return this.props.goals;
+  }
+
+  get period(): string {
+    return this.props.period;
   }
 
   get contentActivities(): string[] {
@@ -202,13 +202,6 @@ export class Event {
       throw new EntityError("manager");
     }
     this.props.manager = manager;
-  }
-
-  setDuration(duration: string): void {
-    if (!Event.isValidAtributtes(duration)) {
-      throw new EntityError("duration");
-    }
-    this.props.duration = duration;
   }
 
   setHostEmail(hostEmail: string[]): void {
@@ -268,6 +261,13 @@ export class Event {
       throw new EntityError("Invalid goals");
     }
     this.props.goals = goals;
+  }
+
+  setPeriod(period: string): void {
+    if (!Event.isValidAtributtes(period)) {
+      throw new EntityError("Invalid period");
+    }
+    this.props.period = period;
   }
 
   setContentActivities(contentActivities: string[]): void {
@@ -335,5 +335,9 @@ export class Event {
 
   static isValidManager(manager: string[]): boolean {
     return manager.length > 0;
+  }
+
+  static isValidModality(modality: MODALITY): boolean {
+    return Object.values(MODALITY).includes(modality);
   }
 }

@@ -1,12 +1,10 @@
-import { PrismaClient } from "@prisma/client";
 import { UserProps } from "../../../shared/domain/entities/user";
 import { IUserRepository } from "../../../shared/domain/repositories/user_repository_interface";
 import { User } from "../../domain/entities/user";
 import { ROLE } from "../../domain/enums/role_enum";
 import bcrypt from "bcrypt";
 import { STATUS } from "../../domain/enums/status_enum";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../../../prisma/prisma";
 
 export class UserRepositoryPrisma implements IUserRepository {
   async createUser(userProps: UserProps): Promise<User> {
@@ -31,8 +29,8 @@ export class UserRepositoryPrisma implements IUserRepository {
           email: userProps.email,
           role: userProps.role as string,
           password: hashedPassword,
-          telefone: userProps.telefone || '', 
-          cpf: userProps.cpf || '', 
+          telefone: userProps.telefone || "",
+          cpf: userProps.cpf || "",
           status: userProps.status as string,
         },
       });
@@ -56,6 +54,8 @@ export class UserRepositoryPrisma implements IUserRepository {
         throw new Error("Usuário já cadastrado.");
       }
       throw new Error("Erro ao criar usuário no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -68,7 +68,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
 
       if (!existingUser) {
-        return undefined; 
+        return undefined;
       }
 
       return new User({
@@ -83,7 +83,8 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
     } catch (error) {
       console.error("Erro ao buscar usuário por email:", error);
-      throw new Error("Erro ao buscar usuário por email");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -108,6 +109,8 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao buscar todos os usuários:", error);
       throw new Error("Erro ao buscar todos os usuários");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -120,7 +123,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       });
 
       if (!existingUser) {
-        return undefined; 
+        return undefined;
       }
 
       return new User({
@@ -136,6 +139,8 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao buscar usuário por id:", error);
       throw new Error("Erro ao buscar usuário por id");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -165,6 +170,59 @@ export class UserRepositoryPrisma implements IUserRepository {
     } catch (error) {
       console.error("Erro ao atualizar status do usuário:", error);
       throw new Error("Erro ao atualizar status do usuário");
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
+
+  async updateUser(id: string, user: Partial<User>): Promise<User> {
+    try {
+      const data: { [key: string]: any } = {}
+
+      if (user.name) {
+        data["name"] = user.name;
+      }
+      if (user.email) {
+        data["email"] = user.email;
+      }
+      if (user.role) {
+        data["role"] = user.role;
+      }
+      if (user.password) {
+        data["password"] = user.password;
+      }
+      if (user.telefone) {
+        data["telefone"] = user.telefone;
+      }
+      if (user.cpf) {
+        data["cpf"] = user.cpf;
+      }
+      if (user.status) {
+        data["status"] = user.status;
+      }
+
+      const updatedUserFromPrisma = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: data,
+      })
+
+      const updatedUser = new User({
+        id: updatedUserFromPrisma.id,
+        name: updatedUserFromPrisma.name,
+        email: updatedUserFromPrisma.email,
+        role: updatedUserFromPrisma.role as ROLE,
+        password: updatedUserFromPrisma.password,
+        telefone: updatedUserFromPrisma.telefone,
+        cpf: updatedUserFromPrisma.cpf,
+        status: updatedUserFromPrisma.status as STATUS,
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      throw new Error("Erro ao atualizar usuário");
     }
   }
 }

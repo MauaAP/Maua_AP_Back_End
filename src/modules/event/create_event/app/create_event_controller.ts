@@ -1,8 +1,20 @@
 import { Request, Response } from "express";
 import { CreateEventUsecase } from "./create_event_usecase";
 import { CreateEventViewmodel } from "./create_event_viemodel";
-import { BadRequest, Forbidden, InternalServerError } from "http-errors";
+import {
+  ParameterError,
+  BadRequest,
+  InternalServerError,
+  Forbidden,
+} from "../../../../shared/helpers/http/http_codes";
 import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
+import { ConflictItems } from "../../../../shared/helpers/errors/usecase_errors";
+import {
+  InvalidParameter,
+  InvalidRequest,
+  MissingParameters,
+} from "../../../../shared/helpers/errors/controller_errors";
+import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 
 export class CreateEventController {
   constructor(private createEventUsecase: CreateEventUsecase) {}
@@ -13,14 +25,17 @@ export class CreateEventController {
 
       const allowedRoles = ["ADMIN", "SECRETARY", "MODERATOR"];
       if (!allowedRoles.includes(userFromToken.role)) {
-        return res.status(403).json({ error: "Acesso negado." });
+        throw new Forbidden(
+          "You do not have permission to access this feature"
+        );
       }
+
+      console.log("ATTEMPTING TO CREATE EVENT");
       const {
         eventName,
         date,
         host,
         manager,
-        duration,
         hostEmail,
         hostPhone,
         local,
@@ -28,96 +43,107 @@ export class CreateEventController {
         targetAudience,
         activityType,
         goals,
+        period,
         contentActivities,
         developedCompetencies,
         initTime,
         finishTime,
       } = req.body;
 
-      const errors = [];
-
       if (!eventName) {
-        errors.push("Missing event name");
+        throw new MissingParameters("Event Name");
       }
       if (!date) {
-        errors.push("Missing date");
+        throw new MissingParameters("Date");
       }
       if (!host) {
-        errors.push("Missing host");
+        throw new MissingParameters("Host");
       }
       if (!manager) {
-        errors.push("Missing manager");
-      }
-      if (!duration) {
-        errors.push("Missing duration");
+        throw new MissingParameters("Manager");
       }
       if (!hostEmail) {
-        errors.push("Missing host email");
+        throw new MissingParameters("Host Email");
       }
       if (!hostPhone) {
-        errors.push("Missing host phone");
+        throw new MissingParameters("Host Phone");
       }
       if (!local) {
-        errors.push("Missing local");
+        throw new MissingParameters("Local");
       }
       if (!modality) {
-        errors.push("Missing modality");
+        throw new MissingParameters("Modality");
       }
       if (!targetAudience) {
-        errors.push("Missing target audience");
+        throw new MissingParameters("Target Audience");
       }
       if (!activityType) {
-        errors.push("Missing activity type");
+        throw new MissingParameters("Activity Type");
       }
       if (!goals) {
-        errors.push("Missing goals");
+        throw new MissingParameters("Goals");
+      }
+      if (!period) {
+        throw new MissingParameters("Period");
       }
       if (!contentActivities) {
-        errors.push("Missing content activities");
+        throw new MissingParameters("Content Activities");
       }
       if (!developedCompetencies) {
-        errors.push("Missing developed competencies");
+        throw new MissingParameters("Developed Competencies");
       }
       if (!initTime) {
-        errors.push("Missing init time");
+        throw new MissingParameters("Init Time");
       }
       if (!finishTime) {
-        errors.push("Missing finish time");
+        throw new MissingParameters("Finish Time");
       }
-      if (errors.length > 0) {
-        return res.status(400).json(errors);
-      }
+
+      
+
       const eventProps = {
         eventName,
         date,
         host,
         manager,
-        duration,
         hostEmail,
         hostPhone,
         local,
-        modality,
+        modality: modality.toUpperCase(),
         targetAudience,
         activityType,
         goals,
+        period,
         contentActivities,
         developedCompetencies,
         initTime,
         finishTime,
       };
+
       await this.createEventUsecase.execute(eventProps);
 
       const viewmodel = new CreateEventViewmodel("Evento criado com sucesso!");
-      res.status(201).json(viewmodel);
+      return res.status(201).json(viewmodel);
     } catch (error: any) {
-      if (
-        error instanceof BadRequest ||
-        error instanceof Forbidden ||
-        error instanceof InternalServerError
-      ) {
-        return res.status(error.status).json(error);
+      if (error instanceof InvalidRequest) {
+        return new BadRequest(error.message).send(res);
       }
-      return res.status(500).json(new InternalServerError(error.message));
+      if (error instanceof InvalidParameter) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof EntityError) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof Forbidden) {
+        return new Forbidden(error.getMessage()).send(res);
+      }
+      if (error instanceof MissingParameters) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof ConflictItems) {
+        return new ConflictItems(error.message);
+      }
+      return new InternalServerError("Internal Server Error").send(res);
     }
   }
 }

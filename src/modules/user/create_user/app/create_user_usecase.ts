@@ -1,31 +1,35 @@
 import { User, UserProps } from "../../../../shared/domain/entities/user";
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
+import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
+import { DuplicatedItem } from "../../../../shared/helpers/errors/usecase_errors";
 
 export class CreateUserUsecase {
   constructor(private repo: IUserRepository) {}
 
   async execute(userProps: UserProps) {
-    if (!userProps.name) {
-      throw new Error("Missing name");
+    if (!User.isValidName(userProps.name)) {
+      throw new EntityError("name");
     }
-    if (!userProps.email) {
-      throw new Error("Missing email");
+    if (!User.isValidEmail(userProps.email)) {
+      throw new EntityError("email");
     }
-    if (!userProps.password) {
-      throw new Error("Missing password");
+    if (!User.isValidPassword(userProps.password)) {
+      throw new EntityError("password");
     }
-    if (!userProps.role) {
-      throw new Error("Missing role");
-    }
-    if (!userProps.telefone) {
-      throw new Error("Missing telefone");
-    }
-    if (!userProps.cpf) {
-      throw new Error("Missing cpf");
+    if (!User.validateRole(userProps.role)) {
+      throw new EntityError("role");
     }
 
-    if (!userProps.status) {
-      throw new Error("Missing status");
+    if (!userProps.cpf || !User.validateCPF(userProps.cpf)) {
+      throw new EntityError("cpf");
+    }
+    if (!User.validatestatus(userProps.status)) {
+      throw new EntityError("status");
+    }
+
+    const user = await this.repo.getUserByEmail(userProps.email);
+    if (user) {
+      throw new DuplicatedItem("email");
     }
 
     const newUser = await this.repo.createUser(new User(userProps));

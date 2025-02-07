@@ -5,12 +5,20 @@ import {
 } from "../../../../shared/helpers/errors/usecase_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import {
+  InvalidParameter,
+  InvalidRequest,
   MissingParameters,
-  WrongTypeParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 
 import { DeletePresenceByIdUsecase } from "./delete_presence_by_id_usecase";
 import { DeletePresenceByIdViewmodel } from "./delete_presence_by_id_viewmodel";
+import {
+  BadRequest,
+  Forbidden,
+  InternalServerError,
+  ParameterError,
+  UnprocessableEntity,
+} from "../../../../shared/helpers/http/http_codes";
 
 export class deletePresenceByIdController {
   constructor(
@@ -31,23 +39,29 @@ export class deletePresenceByIdController {
         "Presença deletada com sucesso."
       );
       res.status(201).json(viewmodel);
-    } catch (error: any) {
+    } catch (error) {
+      if (error instanceof InvalidRequest) {
+        return new BadRequest(error.message).send(res);
+      }
+      if (error instanceof InvalidParameter) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof EntityError) {
+        return new ParameterError(error.message).send(res);
+      }
+      if (error instanceof Forbidden) {
+        return new Forbidden(error.getMessage()).send(res);
+      }
       if (error instanceof NoItemsFound) {
-        return res.status(404).json({ error: error.message });
+        return new Forbidden(error.message).send(res);
       }
-      if (
-        error instanceof MissingParameters ||
-        error instanceof WrongTypeParameters ||
-        error instanceof EntityError
-      ) {
-        return res.status(400).json({ error: error.message });
+      if (error instanceof UnprocessableEntity) {
+        return new UnprocessableEntity(error.getMessage()).send(res);
       }
-      if (error instanceof ForbiddenAction) {
-        return res.status(401).json({ error: error.message });
+      if (error instanceof MissingParameters) {
+        return new ParameterError(error.message).send(res);
       }
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
-      }
+      return new InternalServerError("Internal Server Error").send(res);
     }
   }
 }

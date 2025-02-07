@@ -1,0 +1,31 @@
+# name: Deploy to Heroku
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+
+#     - name: Install Heroku CLI
+#       run: |
+#         curl https://cli-assets.heroku.com/install.sh | sh
+
+#     - name: Set up Heroku credentials
+#       run: echo "https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com" > ~/.git-credentials
+
+#     - name: Set up Heroku remote
+#       run: |
+#         heroku git:remote -a serene-mountain-65884
+
+#     - name: Fetch full history
+#       run: git fetch --unshallow
+
+#     - name: Deploy to Heroku
+#       run: git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git HEAD:main

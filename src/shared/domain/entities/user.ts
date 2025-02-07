@@ -142,11 +142,7 @@ export class User {
   static isValidPassword(password: string): boolean {
     return (
       typeof password === "string" &&
-      password.length >= 8 &&
-      /[A-Z]/.test(password) &&
-      /[a-z]/.test(password) &&
-      /\d/.test(password) &&
-      /[!@#$%^&*()-=_+[\]{};':"\\|,.<>/?]/.test(password)
+      password.length >= 8 
     );
   }
 

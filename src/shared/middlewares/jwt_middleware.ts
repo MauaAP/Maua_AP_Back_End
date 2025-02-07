@@ -1,12 +1,14 @@
 import { Request as ExpressRequest, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { EntityError } from "../helpers/errors/domain_errors";
-import { ROLE } from "../domain/enums/role_enum";
+import { Unauthorized, InternalServerError } from "../helpers/http/http_codes";
 
 export type UserFromToken = {
   id: string;
   email: string;
-  role: ROLE;
+  role: string;
+  status: string;
+  iat: number;
+  exp: number;
 };
 
 declare module "express" {
@@ -27,7 +29,7 @@ export function authenticateToken(
 
   if (!token) {
     console.log("Token not provided");
-    return res.sendStatus(401);
+    return new Unauthorized("Token not provided").send(res);
   }
 
   try {
@@ -37,20 +39,24 @@ export function authenticateToken(
     ) as UserFromToken;
 
     if (!decoded) {
-      throw new EntityError("Invalid token");
+      console.log("Token verification failed");
+      return new Unauthorized("Invalid token").send(res);
     }
 
-    const user = decoded;
-    console.log("User from token:", user);
-
-    req.user = user;
-
+    console.log("User from token:", decoded);
+    req.user = decoded;
     next();
   } catch (error: any) {
     console.log("Error decoding token:", error);
-    if (error instanceof EntityError) {
-      return res.sendStatus(403);
+
+    if (error.name === "JsonWebTokenError") {
+      return new Unauthorized("Invalid token").send(res);
+    } else if (error.name === "TokenExpiredError") {
+      return new Unauthorized("Invalid token: expired").send(res);
+    } else if (error.name === "NotBeforeError") {
+      return new Unauthorized("Invalid token: not active yet").send(res);
     }
-    return res.sendStatus(500);
+
+    return new InternalServerError("Internal Server Error").send(res);
   }
 }

@@ -6,7 +6,6 @@ export class GetAllEventsViewmodel {
   date: number;
   host: string;
   manager: string[];
-  duration: string;
   hostEmail: string[];
   hostPhone: string[];
   local: string;
@@ -14,6 +13,7 @@ export class GetAllEventsViewmodel {
   targetAudience: string;
   activityType: string;
   goals: string;
+  period: string;
   contentActivities: string[];
   developedCompetencies: string;
   initTime: number;
@@ -25,7 +25,6 @@ export class GetAllEventsViewmodel {
     this.date = event.date;
     this.host = event.host;
     this.manager = event.manager;
-    this.duration = event.duration;
     this.hostEmail = event.hostEmail;
     this.hostPhone = event.hostPhone;
     this.local = event.local;
@@ -33,6 +32,7 @@ export class GetAllEventsViewmodel {
     this.targetAudience = event.targetAudience;
     this.activityType = event.activityType;
     this.goals = event.goals;
+    this.period = event.period;
     this.contentActivities = event.contentActivities;
     this.developedCompetencies = event.developedCompetencies;
     this.initTime = event.initTime;

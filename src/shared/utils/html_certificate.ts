@@ -4,7 +4,6 @@ export type JsonInfo = {
     initTime: string
     finishTime: string
     eventName: string
-    duration: string
     date: string
     local: string
     dateNow: string
@@ -12,7 +11,24 @@ export type JsonInfo = {
     yearNow: string
 }
 
+function formatMonth(month: string): string {
+    const months = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    return months[parseInt(month) - 1];
+}
+
+function formatTime(time: string): string {
+    let [hours, minutes] = time.split(':');
+    hours = hours.padStart(2, '0');
+    minutes = (minutes || '00').padStart(2, '0');
+    return minutes === '00' ? `${hours}h` : `${hours}h${minutes}`;
+}
+
 export function getCertificateHtml(jsonInfo: JsonInfo): string {
+    const [day, month, year] = jsonInfo.date.split('/');
+    const formattedDate = `${day} de ${formatMonth(month)} de ${year}`;
+    
+    const isBeforeOctober = parseInt(year) < 2024 || (parseInt(year) === 2024 && (parseInt(month) < 10 || (parseInt(month) === 9 && parseInt(day) <= 30)));
+
     return `<!DOCTYPE html>
     <html lang="pt-br">
     <head>
@@ -119,22 +135,29 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
             <aside class="bodyInfo">
                 <p class="fontGentiumBookRegular">A Academia de Professores do Centro Universitário do Instituto Mauá de Tecnologia confere a</p>
                 <h2>${jsonInfo.name}</h2>
-                <p class="fontGentiumBookRegular">o presente Certificado por ter participado do treinamento ${jsonInfo.eventName}, ministrado pela ${jsonInfo.manager}, realizado entre os dias ${jsonInfo.date}, das ${jsonInfo.initTime} às ${jsonInfo.finishTime}, num total de ${jsonInfo.duration} horas, na sala ${jsonInfo.local}.</p>
-                <p class="fontGentiumBookRegular">São Caetano do Sul, ${jsonInfo.dateNow} de ${jsonInfo.monthNow} de ${jsonInfo.yearNow}.</p>
+                <p class="fontGentiumBookRegular">o presente Certificado por ter participado do evento ${jsonInfo.eventName}, ministrado por ${jsonInfo.manager.join(', ')}, realizado em ${formattedDate}, das ${formatTime(jsonInfo.initTime)} às ${formatTime(jsonInfo.finishTime)}.</p>
+                <p class="fontGentiumBookRegular">São Caetano do Sul, ${jsonInfo.dateNow} de ${formatMonth(jsonInfo.monthNow)} de ${jsonInfo.yearNow}.</p>
             </aside>
             <aside class="footerInfo">
                 <div class="cardInfo">
-                    <label>prof. Dr. Octavio Mattasoglio Neto</label>
+                    <label>Prof. Dr. Octavio Mattasoglio Neto</label>
                     <label>Presidente da Academia de Professores</label>
                     <label>CEUN-IMT</label>
                 </div>
                 <div class="cardInfo">
+                    ${isBeforeOctober ? `
                     <label>Prof. Dr. José Carlos de Souza Junior</label>
                     <label>Reitor</label>
                     <label>CEUN-IMT</label>
+                    ` : `
+                    <label>Prof. Dr. Marcello Nitz</label>
+                    <label>Reitor</label>
+                    <label>CEUN-IMT</label>
+                    `}
                 </div>
             </aside>
         </section>
     </body>
-    </html>`
+    </html>`;
 }
+

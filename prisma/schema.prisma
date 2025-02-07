@@ -20,12 +20,11 @@ model User {
 }
 
 model Event {
-  id                    String     @id @default(uuid())
+  id                    String             @id @default(uuid())
   eventName             String
   date                  DateTime
   host                  String
   manager               String[]
-  duration              String
   hostEmail             String[]
   hostPhone             String[]
   local                 String
@@ -34,12 +33,14 @@ model Event {
   activityType          String
   maxParticipants       Int?
   goals                 String
+  period                String
   contentActivities     String[]
   developedCompetencies String
   initTime              DateTime
   finishTime            DateTime
   link                  String?
   presences             Presence[]
+  ExternalPresence      ExternalPresence[]
 }
 
 model Presence {
@@ -48,7 +49,16 @@ model Presence {
   event   Event    @relation(fields: [eventId], references: [id])
   userId  String
   user    User     @relation(fields: [userId], references: [id])
-  date    DateTime @unique
+  date    DateTime
 
-  @@unique([eventId, userId, date])
+  @@unique([eventId, userId])
+}
+
+model ExternalPresence {
+  id      String   @id @default(uuid())
+  eventId String
+  event   Event    @relation(fields: [eventId], references: [id])
+  name    String
+  email   String
+  date    DateTime
 }

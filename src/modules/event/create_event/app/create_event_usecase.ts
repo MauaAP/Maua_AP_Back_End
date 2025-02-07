@@ -1,57 +1,63 @@
 import { Event, EventProps } from "../../../../shared/domain/entities/event";
+import { User } from "../../../../shared/domain/entities/user";
 import { IEventRepository } from "../../../../shared/domain/repositories/event_repository_interface";
+import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 
 export class CreateEventUsecase {
   constructor(private repo: IEventRepository) {}
 
   async execute(eventProps: EventProps) {
-    if (!eventProps.eventName) {
-      throw new Error("Missing event name");
+    if (!Event.isValidAtributtes(eventProps.eventName)) {
+      throw new EntityError("event name");
     }
-    if (!eventProps.date) {
-      throw new Error("Missing date");
+    if (!Event.validateTime(eventProps.date)) {
+      throw new EntityError("date");
     }
-    if (!eventProps.host) {
-      throw new Error("Missing host");
+    if (!Event.isValidHost(eventProps.host)) {
+      throw new EntityError("host");
     }
-    if (!eventProps.manager) {
-      throw new Error("Missing manager");
+    if (!Event.isValidManager(eventProps.manager)) {
+      throw new EntityError("manager");
     }
-    if (!eventProps.duration) {
-      throw new Error("Missing duration");
+    for (const email of eventProps.hostEmail) {
+      if (!User.isValidEmail(email)) {
+        throw new EntityError("host email");
+      }
     }
-    if (!eventProps.hostEmail) {
-      throw new Error("Missing host email");
+    for (const phone of eventProps.hostPhone) {
+      if (!User.validatePhoneNumber(phone)) {
+        throw new EntityError("host phone");
+      }
     }
-    if (!eventProps.hostPhone) {
-      throw new Error("Missing host phone");
+    if (!Event.isValidAtributtes(eventProps.local)) {
+      throw new EntityError("local");
     }
-    if (!eventProps.local) {
-      throw new Error("Missing local");
+    if (!Event.isValidModality(eventProps.modality)) {
+      throw new EntityError("modality");
     }
-    if (!eventProps.modality) {
-      throw new Error("Missing modality");
+    if (!Event.isValidAtributtes(eventProps.targetAudience)) {
+      throw new EntityError("target audience");
     }
-    if (!eventProps.targetAudience) {
-      throw new Error("Missing target audience");
+    if (!Event.isValidAtributtes(eventProps.activityType)) {
+      throw new EntityError("activity type");
     }
-    if (!eventProps.activityType) {
-      throw new Error("Missing activity type");
+    if (!Event.isValidAtributtes(eventProps.goals)) {
+      throw new EntityError("goals");
     }
-    if (!eventProps.goals) {
-      throw new Error("Missing goals");
+    if (!Event.isValidAtributtes(eventProps.period)) {
+      throw new EntityError("period");
     }
-    if (!eventProps.contentActivities) {
-      throw new Error("Missing content activities");
+    if (!Event.isValidAtributtes(eventProps.contentActivities)) {
+      throw new EntityError("content activities");
     }
-    if (!eventProps.developedCompetencies) {
-      throw new Error("Missing developed competencies");
+    if (!Event.isValidAtributtes(eventProps.developedCompetencies)) {
+      throw new EntityError("developed competencies");
     }
-    if (!eventProps.initTime) {
-      throw new Error("Missing init time");
+    if (!Event.validateTime(eventProps.initTime)) {
+      throw new EntityError("init time");
     }
-    if (!eventProps.finishTime) {
-      throw new Error("Missing finish time");
+    if (!Event.validateTime(eventProps.finishTime)) {
+      throw new EntityError("finish time");
     }
 
     const newEvent = await this.repo.createEvent(new Event(eventProps));

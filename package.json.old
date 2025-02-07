@@ -1,0 +1,48 @@
+{
+  "name": "maua_ap_back_end",
+  "version": "1.0.0",
+  "description": "Repositório para criação do back-end da aplicação da academia de professores do Instituto Mauá de Tecnologia.",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/server.js", 
+    "start:dev": "nodemon server.ts",
+    "build": "tsc"    
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://github.com/MauaAP/Maua_AP_Back_End#readme",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.574.0",
+    "@hayzeddev/html-pdf-converter": "^1.0.9",
+    "@prisma/client": "^5.11.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "html-pdf": "^3.0.1",
+    "html2canvas": "^1.4.1",
+    "jsdom": "^24.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "jspdf": "^2.5.1",
+    "nodemon": "^3.0.2",
+    "puppeteer-html-pdf": "^4.0.6",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/html-pdf": "^3.0.3",
+    "@types/jsdom": "^21.1.6",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.27",
+    "@types/uuid": "^9.0.8",
+    "prisma": "^5.11.0",
+    "typescript": "^5.4.2"
+  }
+}

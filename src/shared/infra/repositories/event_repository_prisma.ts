@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { IEventRepository } from "../../../shared/domain/repositories/event_repository_interface";
 import { Event } from "../../domain/entities/event";
 import { MODALITY } from "../../domain/enums/modality_type";
@@ -16,7 +16,6 @@ export class EventRepositoryPrisma implements IEventRepository {
           date: new Date(event.date),
           host: event.host,
           manager: event.manager,
-          duration: event.duration,
           hostEmail: event.hostEmail,
           hostPhone: event.hostPhone,
           local: event.local,
@@ -24,6 +23,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           targetAudience: event.targetAudience,
           activityType: event.activityType,
           goals: event.goals,
+          period: event.period,
           contentActivities: event.contentActivities,
           developedCompetencies: event.developedCompetencies,
           initTime: new Date(event.initTime),
@@ -37,7 +37,6 @@ export class EventRepositoryPrisma implements IEventRepository {
         date: createdEventFromPrisma.date.getTime(),
         host: createdEventFromPrisma.host,
         manager: createdEventFromPrisma.manager,
-        duration: createdEventFromPrisma.duration,
         hostEmail: createdEventFromPrisma.hostEmail,
         hostPhone: createdEventFromPrisma.hostPhone,
         local: createdEventFromPrisma.local,
@@ -45,6 +44,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         targetAudience: createdEventFromPrisma.targetAudience,
         activityType: createdEventFromPrisma.activityType,
         goals: createdEventFromPrisma.goals,
+        period: createdEventFromPrisma.period,
         contentActivities: createdEventFromPrisma.contentActivities,
         developedCompetencies: createdEventFromPrisma.developedCompetencies,
         initTime: createdEventFromPrisma.initTime.getTime(),
@@ -57,6 +57,8 @@ export class EventRepositoryPrisma implements IEventRepository {
     } catch (error: any) {
       console.error("Erro ao criar evento:", error);
       throw new Error("Erro ao criar evento no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -73,7 +75,6 @@ export class EventRepositoryPrisma implements IEventRepository {
           date: event.date.getTime(),
           host: event.host,
           manager: event.manager,
-          duration: event.duration,
           hostEmail: event.hostEmail,
           hostPhone: event.hostPhone,
           local: event.local,
@@ -81,6 +82,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           targetAudience: event.targetAudience,
           activityType: event.activityType,
           goals: event.goals,
+          period: event.period,
           contentActivities: event.contentActivities,
           developedCompetencies: event.developedCompetencies,
           initTime: event.initTime.getTime(),
@@ -94,6 +96,8 @@ export class EventRepositoryPrisma implements IEventRepository {
     } catch (error: any) {
       console.error("Erro ao buscar eventos:", error);
       throw new Error("Erro ao buscar eventos no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -108,6 +112,7 @@ export class EventRepositoryPrisma implements IEventRepository {
       });
 
       if (!eventFromPrisma) {
+        console.error(`Evento não encontrado para o ID: ${eventId}`);
         throw new Error("Evento não encontrado.");
       }
 
@@ -117,7 +122,6 @@ export class EventRepositoryPrisma implements IEventRepository {
         date: eventFromPrisma.date.getTime(),
         host: eventFromPrisma.host,
         manager: eventFromPrisma.manager,
-        duration: eventFromPrisma.duration,
         hostEmail: eventFromPrisma.hostEmail,
         hostPhone: eventFromPrisma.hostPhone,
         local: eventFromPrisma.local,
@@ -125,6 +129,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         targetAudience: eventFromPrisma.targetAudience,
         activityType: eventFromPrisma.activityType,
         goals: eventFromPrisma.goals,
+        period: eventFromPrisma.period,
         contentActivities: eventFromPrisma.contentActivities,
         developedCompetencies: eventFromPrisma.developedCompetencies,
         initTime: eventFromPrisma.initTime.getTime(),
@@ -135,8 +140,23 @@ export class EventRepositoryPrisma implements IEventRepository {
 
       return event;
     } catch (error: any) {
-      console.error("Erro ao buscar evento por ID:", error);
-      throw new Error("Erro ao buscar evento por ID no banco de dados.");
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        console.error(
+          "Erro conhecido do Prisma ao buscar evento por ID:",
+          error.message
+        );
+        throw new Error("Erro no banco de dados ao buscar evento por ID.");
+      } else if (error instanceof Prisma.PrismaClientInitializationError) {
+        console.error("Erro de inicialização do Prisma:", error.message);
+        throw new Error("Erro de inicialização do banco de dados.");
+      } else {
+        console.error("Erro desconhecido ao buscar evento por ID:", error);
+        throw new Error(
+          `Erro ao buscar evento por ID no banco de dados: ${error.message}`
+        );
+      }
+    } finally {
+      await prisma.$disconnect();
     }
   }
 
@@ -154,6 +174,8 @@ export class EventRepositoryPrisma implements IEventRepository {
     } catch (error: any) {
       console.error("Erro ao deletar evento por ID:", error);
       throw new Error("Erro ao deletar evento por ID no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
     }
   }
 }

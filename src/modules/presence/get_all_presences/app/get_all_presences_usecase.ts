@@ -5,13 +5,8 @@ export class GetAllPresencesUsecase {
     this.presenceRepository = presenceRepository;
   }
 
-  async execute() {
-    try {
-      const presences = await this.presenceRepository.getAllPresences();
-      return presences;
-    } catch (error) {
-      console.error("Erro ao buscar presenças:", error);
-      throw new Error("Erro ao buscar presenças no banco de dados.");
-    }
+  async execute(profUser: string) {
+    const presences = await this.presenceRepository.getAllPresences(profUser);
+    return presences;
   }
 }

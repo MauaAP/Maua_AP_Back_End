@@ -1,9 +1,13 @@
 import { IEventRepository } from "../../../../shared/domain/repositories/event_repository_interface";
 import { IPresenceRepository } from "../../../../shared/domain/repositories/presence_repository_interface";
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
-import { JsonInfo, getCertificateHtml } from "../../../../shared/utils/html_certificate";
+import {
+  JsonInfo,
+  getCertificateHtml,
+} from "../../../../shared/utils/html_certificate";
 import { saveCertificate } from "../../../../shared/infra/repositories/certificate_repository_s3";
-import puppeteer from 'puppeteer';
+import puppeteer from "puppeteer";
+import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 
 export class CreateCertificateUsecase {
   constructor(
@@ -16,7 +20,7 @@ export class CreateCertificateUsecase {
     const presence = await this.presenceRepository.getPresenceById(presenceId);
 
     if (!presence) {
-      throw new Error("Presença não encontrada");
+      throw new NoItemsFound("presence");
     }
     const userId = presence.userId;
     const eventId = presence.eventId;
@@ -24,7 +28,7 @@ export class CreateCertificateUsecase {
     const user = await this.userRepository.getUserById(userId);
 
     if (!user) {
-      throw new Error("Usuário não encontrado");
+      throw new NoItemsFound("Usuário não encontrado");
     }
 
     const event = await this.eventRepository.getEventById(eventId);
@@ -42,7 +46,6 @@ export class CreateCertificateUsecase {
       name: user.name,
       manager: event.manager,
       eventName: event.eventName,
-      duration: event.duration,
       date: eventDate,
       local: event.local,
       dateNow: new Date().getDate().toString(),
@@ -60,15 +63,11 @@ export class CreateCertificateUsecase {
 
     const htmlString = getCertificateHtml(json);
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: '/usr/bin/google-chrome-stable',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     const page = await browser.newPage();
     await page.setContent(htmlString);
 
-    const pdfBuffer = await page.pdf({ format: 'A4', landscape: true });
+    const pdfBuffer = await page.pdf({ format: "A4", landscape: true });
 
     await browser.close();
 
