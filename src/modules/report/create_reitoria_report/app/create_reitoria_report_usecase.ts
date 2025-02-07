@@ -95,13 +95,17 @@ import { Event } from "../../../../shared/domain/entities/event";
 // }
 
 
-import pLimit from 'p-limit';
+let pLimit: any;
 
 export class CreateReitoriaReportUsecase {
   constructor(
     private eventRepository: IEventRepository,
     private presenceRepository: IPresenceRepository
-  ) {}
+  ) {
+    (async () => {
+      pLimit = (await import('p-limit')).default;
+    })();
+  }
 
   async execute() {
     const events: Event[] = await this.eventRepository.getAll();
