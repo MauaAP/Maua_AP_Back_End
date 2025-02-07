@@ -39,6 +39,9 @@ export class CreateCertificateController {
         .status(201)
         .json({ message: "Certificate created successfully", certificateUrl });
     } catch (error: any) {
+      console.error("ERROR: ", error);
+      console.error("Stack Trace:", error.stack);
+
       if (error instanceof InvalidRequest) {
         return new BadRequest(error.message).send(res);
       }
