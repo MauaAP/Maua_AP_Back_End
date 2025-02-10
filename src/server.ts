@@ -23,6 +23,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import routes from "./routes/routes";
 
 dotenv.config();
 
@@ -45,8 +46,11 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("⚠️ Unhandled Rejection at:", promise, "reason:", reason);
 });
 
+routes(app);
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT} 🚀`);
 });
+
 
 export default app;
