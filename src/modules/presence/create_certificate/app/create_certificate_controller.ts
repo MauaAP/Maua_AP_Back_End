@@ -27,6 +27,7 @@ export class CreateCertificateController {
         );
       }
       const presenceId = req.params.presenceId;
+      
 
       if (!presenceId) {
         throw new BadRequest("Missing presence id").send(res);
