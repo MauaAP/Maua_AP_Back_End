@@ -64,10 +64,16 @@ export class CreateCertificateUsecase {
 
     const htmlString = getCertificateHtml(json);
 
+    // const browser = await puppeteer.launch({
+    //   executablePath: "/root/.cache/puppeteer/chrome/linux-124.0.6367.78/chrome-linux64/chrome",
+    //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    // });
+
     const browser = await puppeteer.launch({
-      executablePath: "/root/.cache/puppeteer/chrome/linux-124.0.6367.78/chrome-linux64/chrome",
+      executablePath: puppeteer.executablePath(),
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
+    
     
     const page = await browser.newPage();
     await page.setContent(htmlString);
