@@ -5,8 +5,8 @@
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,      
     "outDir": "./dist",           
-    "rootDir": "./src",
-    "baseUrl": "./",                // Permite caminhos relativos mais organizados
+    "rootDir": ".",
+    "baseUrl": ".",                // Permite caminhos relativos mais organizados
     "paths": {                      // Atalho para importar sem "../../../../"
       "@prisma/*": ["prisma/*"],
       "@src/*": ["src/*"]
