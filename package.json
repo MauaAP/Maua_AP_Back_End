@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npx puppeteer browsers install chrome",
-    "start": "npx puppeteer browsers install chrome && node dist/src/server.js",
+    "build": "tsc && npx puppeteer browsers install chrome && mkdir -p ./.cache && mv /app/.cache/puppeteer ./.cache",
+    "start": "node dist/src/server.js",
     "start:dev": "nodemon src/server.ts",
-    "build": "tsc",
     "heroku-postbuild": "npm run build && mkdir ./.cache && mv /app/.cache/puppeteer ./.cache"
   },
   "keywords": [],
