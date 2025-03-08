@@ -8,7 +8,7 @@
     "postinstall2": "npx puppeteer browsers install chrome",
     "postinstall": "npx playwright install chromium",
     "buildreserva": "tsc && npx puppeteer browsers install chrome && npx puppeteer -p \"puppeteer.executablePath()\"",
-    "build": " tsc && npx playwright install chromium"
+    "build": " tsc && npx playwright install chromium",
     "start": "node dist/src/server.js",
     "start:dev": "nodemon src/server.ts",
     "heroku-postbuild": "npm run build && mkdir ./.cache && mv /app/.cache/puppeteer ./.cache"
