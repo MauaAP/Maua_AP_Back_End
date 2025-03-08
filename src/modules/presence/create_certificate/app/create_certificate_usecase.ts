@@ -65,7 +65,7 @@ export class CreateCertificateUsecase {
     const htmlString = getCertificateHtml(json);
 
     const browser = await puppeteer.launch({
-      executablePath: process.env.CHROME_PATH || puppeteer.executablePath(),
+      executablePath: "/root/.cache/puppeteer/chrome/linux-124.0.6367.78/chrome-linux64/chrome",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     
