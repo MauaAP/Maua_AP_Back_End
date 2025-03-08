@@ -5,9 +5,10 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npx puppeteer browsers install chrome",
-    "build2": "tsc && npx puppeteer browsers install chrome",
-    "build": "tsc && npx puppeteer browsers install chrome && npx puppeteer -p \"puppeteer.executablePath()\"",
+    "postinstall2": "npx puppeteer browsers install chrome",
+    "postinstall": "npx playwright install chromium",
+    "buildreserva": "tsc && npx puppeteer browsers install chrome && npx puppeteer -p \"puppeteer.executablePath()\"",
+    "build": " tsc && npx playwright install chromium"
     "start": "node dist/src/server.js",
     "start:dev": "nodemon src/server.ts",
     "heroku-postbuild": "npm run build && mkdir ./.cache && mv /app/.cache/puppeteer ./.cache"
@@ -32,9 +33,10 @@
     "jspdf": "^2.5.1",
     "nodemailer": "^6.9.14",
     "p-limit": "^6.1.0",
+    "playwright": "^1.51.0",
     "puppeteer-html-pdf": "^4.0.6",
-    "uuid": "^9.0.1",    
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
