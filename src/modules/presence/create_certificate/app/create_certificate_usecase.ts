@@ -16,19 +16,7 @@ export class CreateCertificateUsecase {
     private userRepository: IUserRepository
   ) {}
 
-
-  private executablePathVariable: string = "";
-
   async execute(presenceId: string) {
-
-    if (process.env.IS_LOCAL) {
-      this.executablePathVariable = puppeteer.executablePath();
-    } else {
-      this.executablePathVariable = "/usr/bin/google-chrome";
-    }
-
-    console.log(`Usando o Chrome em AQUI CLOUDWATCH: ${this.executablePathVariable}`);
-
 
     const presence = await this.presenceRepository.getPresenceById(presenceId);
 
@@ -77,9 +65,10 @@ export class CreateCertificateUsecase {
     const htmlString = getCertificateHtml(json);
 
     const browser = await puppeteer.launch({
-      executablePath: this.executablePathVariable,
-      args: ["--no-sandbox"],
+      executablePath: process.env.CHROME_PATH || puppeteer.executablePath(),
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
+    
     const page = await browser.newPage();
     await page.setContent(htmlString);
 
