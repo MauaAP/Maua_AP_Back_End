@@ -120,7 +120,6 @@ export class CreateReitoriaReportUsecase {
         const professors = await this.presenceRepository.countPresencesByEventId(
           event.props.eventId
         );
-        console.log('aquiiiii', event.props.eventName, professors);
 
         const technicalStaff = event.props.manager.length;
         const collaborators = event.props.hostEmail.length;
