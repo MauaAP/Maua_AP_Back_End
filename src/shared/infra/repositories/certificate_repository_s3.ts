@@ -13,11 +13,14 @@ const s3 = new S3Client({
   region: region,
 });
 
+console.log("S3 Client: ", s3);
+
 export async function saveCertificate(
   userId: string,
   eventId: string,
   certificatePdf: Buffer
 ): Promise<string> {
+  console.log("S3 Client AQQQQQQQ: ", s3);
   console.log("Certificate PDF type:", typeof certificatePdf);
   console.log("Certificate PDF length:", certificatePdf.length);
 
