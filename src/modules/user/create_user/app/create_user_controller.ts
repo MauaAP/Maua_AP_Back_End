@@ -70,7 +70,7 @@ export class CreateUserController {
         cpf,
         status,
       };
-      await this.createUserUsecase.execute(userProps);
+      await this.createUserUsecase.execute(userProps); // salvou no banco ou retornou erro
 
       const viewModel = new CreateUserViewModel(
         "Usuário cadastrado com sucesso!"

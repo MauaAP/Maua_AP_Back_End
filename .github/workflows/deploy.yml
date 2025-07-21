@@ -1,31 +1,48 @@
-# name: Deploy to Heroku
+# Nome do Workflow
+name: Build, Push to ECR and Deploy to App Runner
 
-# on:
-#   push:
-#     branches:
-#       - main
+# Gatilho: Executa a pipeline quando houver um push na branch 'main'
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
 
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v2
+    steps:
+      # 1. Clona o código do seu repositório
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-#     - name: Install Heroku CLI
-#       run: |
-#         curl https://cli-assets.heroku.com/install.sh | sh
+      # 2. Configura as credenciais da AWS usando chaves de acesso
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-#     - name: Set up Heroku credentials
-#       run: echo "https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com" > ~/.git-credentials
+      # 3. Faz o login no Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-#     - name: Set up Heroku remote
-#       run: |
-#         heroku git:remote -a serene-mountain-65884
+      # 4. Constrói a imagem Docker, adiciona a tag e envia para o ECR
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-#     - name: Fetch full history
-#       run: git fetch --unshallow
-
-#     - name: Deploy to Heroku
-#       run: git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/serene-mountain-65884.git HEAD:main
+      # 5. Inicia o deploy no AWS App Runner
+      - name: Deploy to AWS App Runner
+        run: |
+          aws apprunner start-deployment --service-arn ${{ secrets.APP_RUNNER_SERVICE_ARN }}
