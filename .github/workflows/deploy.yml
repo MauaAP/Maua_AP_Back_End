@@ -43,6 +43,13 @@ jobs:
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       # 5. Inicia o deploy no AWS App Runner
-      - name: Deploy to AWS App Runner
+      # 5. Atualiza o serviço do App Runner para usar a nova imagem e faz o deploy
+      - name: Deploy new image to AWS App Runner
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SERVICE_ARN: ${{ secrets.APP_RUNNER_SERVICE_ARN }}
+          IMAGE_URI: ${{ steps.build-image.outputs.image }}
         run: |
-          aws apprunner start-deployment --service-arn ${{ secrets.APP_RUNNER_SERVICE_ARN }}
+          aws apprunner update-service \
+            --service-arn "$SERVICE_ARN" \
+            --source-configuration "ImageRepository={ImageIdentifier=$IMAGE_URI,ImageRepositoryType=ECR}"

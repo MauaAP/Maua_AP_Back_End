@@ -6,7 +6,7 @@ const credentials: AwsCredentialIdentity = {
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
 };
 
-const region = process.env.REGION || "us-east-1";
+const region = process.env.REGION || "sa-east-1";
 
 const s3 = new S3Client({
   credentials: credentials,
