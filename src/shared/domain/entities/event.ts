@@ -334,7 +334,7 @@ export class Event {
   }
 
   static isValidManager(manager: string[]): boolean {
-    return manager.length > 0;
+    return Array.isArray(manager);
   }
 
   static isValidModality(modality: MODALITY): boolean {
