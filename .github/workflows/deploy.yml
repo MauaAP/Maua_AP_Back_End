@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - imt
 
 jobs:
   build-and-deploy:
@@ -21,8 +22,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_IMT }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_IMT }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       # 3. Faz o login no Amazon ECR
