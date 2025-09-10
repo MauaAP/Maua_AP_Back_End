@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-      - imt
+      - feature/deploy-aws-imt
 
 jobs:
   build-and-deploy:
