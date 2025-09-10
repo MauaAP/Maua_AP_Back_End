@@ -24,8 +24,9 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_IMT }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_IMT }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN_IMT }}
           aws-region: ${{ secrets.AWS_REGION }}
-
+          
       # 3. Faz o login no Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
