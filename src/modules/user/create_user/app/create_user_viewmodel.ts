@@ -5,3 +5,4 @@ export class CreateUserViewModel {
     this.message = message;
   }
 }
+
