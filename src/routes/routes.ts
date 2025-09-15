@@ -25,6 +25,9 @@ import CreateProfessorReportPresenter from "../modules/report/create_professor_r
 import CreateProfessorReportByUserPresenter from "../modules/report/create_professor_report_by_user/app/create_professor_report_by_user_presenter";
 import CreateReitoriaReportPresenter from "../modules/report/create_reitoria_report/app/create_reitoria_report_presenter";  
 import UpdateUserPresenter from '../modules/user/update_user/app/update_user_presenter';
+import ListCertificatesPresenter from "../modules/presence/list_certificates/app/list_certificates_presenter";
+import GenerateAllCertificatesPresenter from "../modules/presence/generate_all_certificates/app/generate_all_certificates_presenter";
+import GenerateSelectedCertificatesPresenter from "../modules/presence/generate_selected_certificates/app/generate_selected_certificates_presenter";
 
 const routes = (app: Express) => {
   app
@@ -57,6 +60,10 @@ const routes = (app: Express) => {
   app.use("/api", GetPresenceByIdPresenter);
   app.use("/api", DeletePresenceByIdPresenter);
   app.use("/api", CreateCertificatePresenter);
+  // Added certificate-related routes
+  app.use("/api", ListCertificatesPresenter);
+  app.use("/api", GenerateAllCertificatesPresenter);
+  app.use("/api", GenerateSelectedCertificatesPresenter);
 
   // external presence routes
   app.use("/api", CreateExternalPresencePresenter);

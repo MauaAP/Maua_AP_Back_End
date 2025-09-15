@@ -28,16 +28,21 @@ export class CreateProfessorReportByUserController {
           "You do not have permission to access this feature"
         );
       }
-      const professorId = req.params.userId;
 
+      const professorId = req.params.userId;
       if (!professorId) {
-        throw new BadRequest("Missing professor id").send(res);
+        return new BadRequest("Missing professor id").send(res);
       }
 
-      const reportUrl = await this.usecase.execute(professorId);
-      return res
-        .status(201)
-        .json({ message: "Professor report created successfully", reportUrl });
+      const pdfBuffer = await this.usecase.execute(professorId);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="professor_report_${professorId}.pdf"`
+      );
+
+      return res.status(200).send(pdfBuffer);
     } catch (error: any) {
       if (error instanceof InvalidRequest) {
         return new BadRequest(error.message).send(res);

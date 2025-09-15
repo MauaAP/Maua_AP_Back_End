@@ -106,22 +106,18 @@ export class CreateCertificateUsecase {
     private userRepository: IUserRepository
   ) {}
 
-  async execute(presenceId: string) {
+  async execute(presenceId: string): Promise<Buffer> {
     const presence = await this.presenceRepository.getPresenceById(presenceId);
-
     if (!presence) {
       throw new NoItemsFound("presence");
     }
-    const userId = presence.userId;
-    const eventId = presence.eventId;
 
-    const user = await this.userRepository.getUserById(userId);
-
+    const user = await this.userRepository.getUserById(presence.userId);
     if (!user) {
       throw new NoItemsFound("Usuário não encontrado");
     }
 
-    const event = await this.eventRepository.getEventById(eventId);
+    const event = await this.eventRepository.getEventById(presence.eventId);
     if (!event) {
       throw new Error("Evento não encontrado");
     }
@@ -132,6 +128,7 @@ export class CreateCertificateUsecase {
       (new Date(event.date).getMonth() + 1) +
       "/" +
       new Date(event.date).getFullYear();
+
     const json: JsonInfo = {
       name: user.name,
       manager: event.manager,
@@ -164,7 +161,7 @@ export class CreateCertificateUsecase {
 
     await browser.close();
 
-    const certificateUrl = await saveCertificate(userId, eventId, pdfBuffer);
-    return certificateUrl;
+    return pdfBuffer;
   }
 }
+

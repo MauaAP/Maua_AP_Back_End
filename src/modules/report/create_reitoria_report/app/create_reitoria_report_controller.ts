@@ -29,12 +29,17 @@ export class CreateReitoriaReportController {
         );
       }
 
-      const reportUrl = await this.usecase.execute();
-      return res
-        .status(201)
-        .json({ message: "Reitoria report created successfully", reportUrl });
+      const pdfBuffer = await this.usecase.execute();
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="reitoria_report_${Date.now()}.pdf"`
+      );
+
+      return res.status(200).send(pdfBuffer);
     } catch (error: any) {
-      console.log('erro ', error)
+      console.log("erro ", error);
       if (error instanceof InvalidRequest) {
         return new BadRequest(error.message).send(res);
       }
@@ -53,7 +58,6 @@ export class CreateReitoriaReportController {
       if (error instanceof ConflictItems) {
         return new ConflictItems(error.message);
       }
-      // Se não for nenhum dos erros conhecidos, retorna erro interno
       return new InternalServerError("Internal Server Error").send(res);
     }
   }

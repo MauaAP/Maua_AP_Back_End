@@ -16,9 +16,7 @@ import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { ConflictItems } from "../../../../shared/helpers/errors/usecase_errors";
 
 export class CreateProfessorReportController {
-  constructor(
-    private usecase: CreateProfessorReportUsecase
-  ) {}
+  constructor(private usecase: CreateProfessorReportUsecase) {}
 
   async handle(req: Request, res: Response) {
     try {
@@ -28,18 +26,21 @@ export class CreateProfessorReportController {
           "You do not have permission to access this feature"
         );
       }
-      const professorId = userFromToken.id;
 
+      const professorId = userFromToken.id;
       if (!professorId) {
-        throw new BadRequest("Missing professor id").send(res);
+        return new BadRequest("Missing professor id").send(res);
       }
 
-      const reportUrl = await this.usecase.execute(
-        professorId
+      const pdfBuffer = await this.usecase.execute(professorId);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="professor_report_${professorId}.pdf"`
       );
-      return res
-        .status(201)
-        .json({ message: "Professor report created successfully", reportUrl });
+
+      return res.status(200).send(pdfBuffer);
     } catch (error: any) {
       if (error instanceof InvalidRequest) {
         return new BadRequest(error.message).send(res);
