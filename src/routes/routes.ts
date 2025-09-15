@@ -60,7 +60,8 @@ const routes = (app: Express) => {
   app.use("/api", GetPresenceByIdPresenter);
   app.use("/api", DeletePresenceByIdPresenter);
   app.use("/api", CreateCertificatePresenter);
-  app.use("/api", ListCertificatesPresenter); // novo aqui merola, esses 3
+  // Added certificate-related routes
+  app.use("/api", ListCertificatesPresenter);
   app.use("/api", GenerateAllCertificatesPresenter);
   app.use("/api", GenerateSelectedCertificatesPresenter);
 
