@@ -22,7 +22,7 @@ export class GenerateAllCertificatesUsecase {
         copiedPages.forEach((page: any) => mergedPdf.addPage(page));
       } catch (error: any) {
         console.error(
-          `Erro ao gerar certificado da presença ${presence.presenceId}: ${error.message}`
+          `Error generating certificate for presence ${presence.presenceId}: ${error.message}`
         );
       }
     }
