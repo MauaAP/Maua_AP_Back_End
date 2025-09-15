@@ -3,10 +3,6 @@ import {
   JsonInfo,
   getCertificateHtml,
 } from "../../../../shared/utils/html_certificate";
-import {
-  saveCertificate,
-  saveCertificateExternal,
-} from "../../../../shared/infra/repositories/certificate_repository_s3";
 import puppeteer from "puppeteer";
 import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
 import { IExternalPresenceRepository } from "../../../../shared/domain/repositories/external_presence_interface";
@@ -17,7 +13,7 @@ export class CreateExternalCertificateUsecase {
     private eventRepository: IEventRepository
   ) {}
 
-  async execute(presenceId: string) {
+  async execute(presenceId: string): Promise<Buffer> {
     const presence =
       await this.externalPresenceRepository.getExternalPresenceById(presenceId);
 
@@ -25,11 +21,7 @@ export class CreateExternalCertificateUsecase {
       throw new NoItemsFound("presence");
     }
 
-    const email = presence.email;
-
-    const eventId = presence.eventId;
-
-    const event = await this.eventRepository.getEventById(eventId);
+    const event = await this.eventRepository.getEventById(presence.eventId);
     if (!event) {
       throw new Error("Evento não encontrado");
     }
@@ -40,6 +32,7 @@ export class CreateExternalCertificateUsecase {
       (new Date(event.date).getMonth() + 1) +
       "/" +
       new Date(event.date).getFullYear();
+
     const json: JsonInfo = {
       name: presence.name,
       manager: event.manager,
@@ -69,11 +62,6 @@ export class CreateExternalCertificateUsecase {
 
     await browser.close();
 
-    const certificateUrl = await saveCertificateExternal(
-      email,
-      eventId,
-      pdfBuffer
-    );
-    return certificateUrl;
+    return pdfBuffer;
   }
 }
