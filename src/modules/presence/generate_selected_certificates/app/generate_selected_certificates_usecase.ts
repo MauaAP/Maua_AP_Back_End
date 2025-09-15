@@ -1,5 +1,6 @@
 import { IPresenceRepository } from "../../../../shared/domain/repositories/presence_repository_interface";
 import { CreateCertificateUsecase } from "../../create_certificate/app/create_certificate_usecase";
+import { PDFDocument } from "pdf-lib";
 
 export class GenerateSelectedCertificatesUsecase {
   constructor(
@@ -7,18 +8,31 @@ export class GenerateSelectedCertificatesUsecase {
     private createCertificateUsecase: CreateCertificateUsecase
   ) {}
 
-  async execute(userId: string, presenceIds: string[]) {
+  async execute(userId: string, presenceIds: string[]): Promise<Buffer> {
     const presences = await this.presenceRepository.getAllPresencesByUserId(userId);
-    const validPresences = presences.filter((p: any) => presenceIds.includes(p.presenceId));
-    const results = [];
+    const validPresences = presences.filter((p: any) =>
+      presenceIds.includes(p.presenceId)
+    );
+
+    const mergedPdf = await PDFDocument.create();
+
     for (const presence of validPresences) {
       try {
-        const certificateUrl = await this.createCertificateUsecase.execute(presence.presenceId);
-        results.push({ presenceId: presence.presenceId, certificateUrl });
+        const pdfBuffer = await this.createCertificateUsecase.execute(
+          presence.presenceId
+        );
+
+        const pdf = await PDFDocument.load(pdfBuffer);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach((page) => mergedPdf.addPage(page));
       } catch (error: any) {
-        results.push({ presenceId: presence.presenceId, error: error.message });
+        console.error(
+          `Erro ao gerar certificado da presença ${presence.presenceId}: ${error.message}`
+        );
       }
     }
-    return results;
+
+    const finalPdf = await mergedPdf.save();
+    return Buffer.from(finalPdf);
   }
 }
