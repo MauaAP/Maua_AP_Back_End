@@ -15,7 +15,7 @@ const createCertificateUsecase = new CreateCertificateUsecase(presenceRepository
 const generateSelectedCertificatesUsecase = new GenerateSelectedCertificatesUsecase(presenceRepository, createCertificateUsecase);
 const generateSelectedCertificatesController = new GenerateSelectedCertificatesController(generateSelectedCertificatesUsecase);
 
-router.post("/certificates/generate-selected", authenticateToken, async (req: Request, res: Response) => {
+router.get("/certificates/generate-selected", authenticateToken, async (req: Request, res: Response) => {
   await generateSelectedCertificatesController.handle(req, res);
 });
 
