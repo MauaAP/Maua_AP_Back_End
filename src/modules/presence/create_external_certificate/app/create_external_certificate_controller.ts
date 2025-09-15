@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { UserFromToken } from "../../../../shared/middlewares/jwt_middleware";
 import {
   BadRequest,
   Forbidden,
@@ -20,19 +19,20 @@ export class CreateExternalCertificateController {
 
   async handle(req: Request, res: Response) {
     try {
-
       const presenceId = req.params.presenceId;
-
       if (!presenceId) {
-        throw new BadRequest("Missing presence id").send(res);
+        return new BadRequest("Missing presence id").send(res);
       }
 
-      const certificateUrl = await this.usecase.execute(
-        presenceId
+      const pdfBuffer = await this.usecase.execute(presenceId);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="certificate_${presenceId}.pdf"`
       );
-      return res
-        .status(201)
-        .json({ message: "Certificate created successfully", certificateUrl });
+
+      return res.status(200).send(pdfBuffer);
     } catch (error: any) {
       if (error instanceof InvalidRequest) {
         return new BadRequest(error.message).send(res);
