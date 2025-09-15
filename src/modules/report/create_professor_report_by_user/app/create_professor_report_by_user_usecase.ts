@@ -8,7 +8,6 @@ import {
   getProfessorReportHtml,
   ProfessorReportInfo,
 } from "../../../../shared/utils/html_professor_report";
-import { saveReport } from "../../../../shared/infra/repositories/certificate_repository_s3";
 
 export class CreateProfessorReportByUserUsecase {
   constructor(
@@ -17,7 +16,7 @@ export class CreateProfessorReportByUserUsecase {
     private userRepository: IUserRepository
   ) {}
 
-  async execute(professorId: string) {
+  async execute(professorId: string): Promise<Buffer> {
     const user = await this.userRepository.getUserById(professorId);
 
     if (!user) {
@@ -71,16 +70,7 @@ export class CreateProfessorReportByUserUsecase {
 
     await browser.close();
 
-    const reportUrl = await saveReport(professorId, pdfBuffer);
-
-    // Isso com certeza é a coisa mais gambiarra que você desenvolvedor atual do projeto verá!
-    // Mas é o que temos para hoje, infelizmente.
-    // Se arrumar, glória eterna para o senhor! Absolute Cinema! Adeus!
-    const antesPontoCom = reportUrl.split(".com/")[0];
-    const depoisPontoCom = reportUrl.split(".com/")[1];
-    const formattedReportUrl = `${antesPontoCom}.com/relatorios/${depoisPontoCom}`;
-
-    return formattedReportUrl;
+    return pdfBuffer;
   }
 }
 
