@@ -14,7 +14,6 @@ import {
   MissingParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
-
 export class CreateCertificateController {
   constructor(private createCertificateUseCase: CreateCertificateUsecase) {}
 
@@ -26,19 +25,21 @@ export class CreateCertificateController {
           "You do not have permission to access this feature"
         );
       }
-      const presenceId = req.params.presenceId;
-      
 
+      const presenceId = req.params.presenceId;
       if (!presenceId) {
-        throw new BadRequest("Missing presence id").send(res);
+        return new BadRequest("Missing presence id").send(res);
       }
 
-      const certificateUrl = await this.createCertificateUseCase.execute(
-        presenceId
+      const pdfBuffer = await this.createCertificateUseCase.execute(presenceId);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="certificate_${presenceId}.pdf"`
       );
-      return res
-        .status(201)
-        .json({ message: "Certificate created successfully", certificateUrl });
+
+      return res.status(200).send(pdfBuffer);
     } catch (error: any) {
       console.error("ERROR: ", error);
       console.error("Stack Trace:", error.stack);
