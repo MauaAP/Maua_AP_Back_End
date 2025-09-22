@@ -10,6 +10,7 @@ import {
 import {
   saveReitoriaReport,
   saveReport,
+  saveReitoriaReportIfNotExists,
 } from "../../../../shared/infra/repositories/certificate_repository_s3";
 import { Event } from "../../../../shared/domain/entities/event";
 
@@ -174,7 +175,7 @@ export class CreateReitoriaReportUsecase {
 
     await browser.close();
 
-    const reportUrl = await saveReitoriaReport(date, pdfBuffer);
+    const reportUrl = await saveReitoriaReportIfNotExists(date, pdfBuffer);
 
     const antesPontoCom = reportUrl.split('.com/')[0];
     const depoisPontoCom = reportUrl.split('.com/')[1];
