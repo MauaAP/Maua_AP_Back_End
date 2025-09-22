@@ -6,6 +6,8 @@ import {
 import {
   saveCertificate,
   saveCertificateExternal,
+  getCertificateExternalS3Url,
+  saveCertificateExternalIfNotExists,
 } from "../../../../shared/infra/repositories/certificate_repository_s3";
 import puppeteer from "puppeteer";
 import { NoItemsFound } from "../../../../shared/helpers/errors/usecase_errors";
@@ -69,11 +71,8 @@ export class CreateExternalCertificateUsecase {
 
     await browser.close();
 
-    const certificateUrl = await saveCertificateExternal(
-      email,
-      eventId,
-      pdfBuffer
-    );
+    // Salva o certificado no S3 e retorna a URL garantida
+    const certificateUrl = await saveCertificateExternalIfNotExists(email, eventId, pdfBuffer);
     return certificateUrl;
   }
 }
