@@ -8,7 +8,7 @@ import {
   getProfessorReportHtml,
   ProfessorReportInfo,
 } from "../../../../shared/utils/html_professor_report";
-import { saveReport } from "../../../../shared/infra/repositories/certificate_repository_s3";
+import { saveReportIfNotExists } from "../../../../shared/infra/repositories/certificate_repository_s3";
 
 export class CreateProfessorReportByUserUsecase {
   constructor(
@@ -71,7 +71,7 @@ export class CreateProfessorReportByUserUsecase {
 
     await browser.close();
 
-    const reportUrl = await saveReport(professorId, pdfBuffer);
+    const reportUrl = await saveReportIfNotExists(professorId, pdfBuffer);
 
     // Isso com certeza é a coisa mais gambiarra que você desenvolvedor atual do projeto verá!
     // Mas é o que temos para hoje, infelizmente.
