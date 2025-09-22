@@ -29,6 +29,7 @@ import UpdateUserPresenter from '../modules/user/update_user/app/update_user_pre
 import ListCertificatesS3Presenter from "../modules/presence/list_certificates_s3/app/list_certificates_s3_presenter";
 import GenerateAllCertificatesS3Presenter from "../modules/presence/generate_all_certificates_s3/app/generate_all_certificates_s3_presenter";
 import GenerateSelectedCertificatesS3Presenter from "../modules/presence/generate_selected_certificates_s3/app/generate_selected_certificates_s3_presenter";
+import UsersFromPDFPresenter from "../modules/user/get_users_from_pdf/app/get_users_from_pdf_presenter";
 
 const routes = (app: Express) => {
   app
@@ -45,6 +46,7 @@ const routes = (app: Express) => {
   app.use("/api", UpdateStatusPresenter);
   app.use("/api", DownloadUsersCsvPresenter);
   app.use("/api", UpdateUserPresenter);
+  app.use("/api", UsersFromPDFPresenter);
 
   // event routes
   app.use("/api", CreateEventPresenter);

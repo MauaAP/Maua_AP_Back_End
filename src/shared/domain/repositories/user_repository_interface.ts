@@ -8,4 +8,5 @@ export interface IUserRepository {
   getUserById(id: string): Promise<User | undefined>;
   updateStatus(id: String, status: STATUS): Promise<User>;
   updateUser(id: string, user: Partial<User>): Promise<User>;
+  getUsersByName(name: string): Promise<User[]>;
 }

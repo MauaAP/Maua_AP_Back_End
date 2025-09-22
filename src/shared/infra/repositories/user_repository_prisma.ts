@@ -225,4 +225,42 @@ export class UserRepositoryPrisma implements IUserRepository {
       throw new Error("Erro ao atualizar usuário");
     }
   }
+
+  async getUsersByName(name: string): Promise<User[]> {
+    try {
+      const usersFromPrisma = await prisma.user.findMany({
+        where: {
+          name: {
+            contains: name,
+            mode: "insensitive",
+          },
+        },
+      });
+
+      // Não lança exceção se não encontrar usuários, apenas retorna array vazio
+      if (usersFromPrisma.length === 0) {
+        return [];
+      }
+
+      const users = usersFromPrisma.map((user: any) => {
+        return new User({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role as ROLE,
+          password: user.password,
+          telefone: user.telefone,
+          cpf: user.cpf,
+          status: user.status as STATUS,
+        });
+      });
+
+      return users;
+    } catch (error: any) {
+      console.error("Erro ao buscar usuários por nome:", error);
+      throw new Error("Erro ao buscar usuários por nome.");
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
 }
