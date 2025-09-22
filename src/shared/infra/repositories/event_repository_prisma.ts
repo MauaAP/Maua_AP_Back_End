@@ -178,4 +178,18 @@ export class EventRepositoryPrisma implements IEventRepository {
       await prisma.$disconnect();
     }
   }
+
+  async updateDevelopedCompetencies(eventId: string, developedCompetencies: string): Promise<void> {
+    try {
+      await prisma.event.update({
+        where: { id: eventId },
+        data: { developedCompetencies },
+      });
+    } catch (error: any) {
+      console.error("Erro ao atualizar competências do evento:", error);
+      throw new Error("Erro ao atualizar competências do evento no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
 }
