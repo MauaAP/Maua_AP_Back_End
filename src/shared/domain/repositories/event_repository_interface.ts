@@ -5,4 +5,5 @@ export interface IEventRepository {
   getAll(): Promise<Event[]>;
   getEventById(id: String): Promise<Event>;
   delete(id: String): Promise<void>;
+  updateDevelopedCompetencies(eventId: string, developedCompetencies: string): Promise<void>;
 }
