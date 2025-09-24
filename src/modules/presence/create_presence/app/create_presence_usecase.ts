@@ -5,6 +5,7 @@ import {
 import { IEventRepository } from "../../../../shared/domain/repositories/event_repository_interface";
 import { IPresenceRepository } from "../../../../shared/domain/repositories/presence_repository_interface";
 import { IUserRepository } from "../../../../shared/domain/repositories/user_repository_interface";
+import axios from "axios";
 
 export class CreatePresenceUsecase {
   constructor(
@@ -45,6 +46,23 @@ export class CreatePresenceUsecase {
       const createdPresence = await this.presenceRepository.createPresence(
         new Presence(presenceProps)
       );
+
+      try {
+        await axios.post(
+          'https://2l94ticpqf.execute-api.sa-east-1.amazonaws.com/prod/click-car/discord-send?topic=login&bot=benchimol',
+          {
+            message: `ATENÇÃO: usuário ${user.name} criou uma presença no evento ${event.eventName}`,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': 'clickcar-test-key-123',
+            },
+          }
+        );
+      } catch (err) {
+        console.log('Erro ao enviar mensagem Discord:', err && typeof err === 'object' && 'message' in err ? (err as any).message : String(err));
+      }
 
       return createdPresence;
     } catch (error) {
