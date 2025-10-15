@@ -12,4 +12,18 @@ export class GetAllEventsUsecase {
     }
     return events;
   }
+
+  async executeEventsAfterToday(): Promise<Event[]> {
+    const events = this.repo.getAll();
+    if (!events) {
+      throw new NoItemsFound("events");
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return (await events).filter(event => {
+      const eventDate = new Date(Number(event.date));
+      eventDate.setHours(0, 0, 0, 0);
+      return eventDate >= today;
+    });
+  }
 }
