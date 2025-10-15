@@ -13,6 +13,7 @@ import GetEventByIdPresenter from "../modules/event/get_event_by_id/app/get_even
 import DeleteEventByIdPresenter from "../modules/event/delete_event_by_id/app/delete_event_by_id_presenter";
 import DownloadEventsCsvPresenter from "../modules/event/download_events_csv/app/download_events_csv_presenter";
 import UpdateEventCompetenciesPresenter from "../modules/event/update_event_competencies/app/update_event_competencies_presenter";
+import UpdateEventPresenter from "../modules/event/update_event/app/update_event_presenter";
 import CreatePresencePresenter from "../modules/presence/create_presence/app/create_presence_presenter";
 import CreateExternalPresencePresenter from "../modules/presence/create_external_presence/app/create_external_presence_presenter";
 import GetAllPresencesByEventPresenter from "../modules/presence/get_all_presences_by_event/app/get_all_presences_by_event_presenter";
@@ -55,6 +56,7 @@ const routes = (app: Express) => {
   app.use("/api", DeleteEventByIdPresenter);
   app.use("/api", DownloadEventsCsvPresenter);
   app.use("/api", UpdateEventCompetenciesPresenter);
+  app.use("/api", UpdateEventPresenter);
 
   // presence routes
   app.use("/api", CreatePresencePresenter);
