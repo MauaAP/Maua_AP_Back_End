@@ -28,8 +28,12 @@ export class GetAllEventsController {
           "You do not have permission to access this feature"
         );
       }
-
-      const events = await this.repo.execute();
+      let events;
+      if (req.query.afterToday === "true") {
+        events = await this.repo.executeEventsAfterToday();
+      } else {
+        events = await this.repo.execute();
+      }
       const viewmodel = events.map((event) => new GetAllEventsViewmodel(event));
       res.status(200).json(viewmodel);
     } catch (error: any) {
