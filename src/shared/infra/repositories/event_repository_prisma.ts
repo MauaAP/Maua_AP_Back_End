@@ -192,4 +192,73 @@ export class EventRepositoryPrisma implements IEventRepository {
       await prisma.$disconnect();
     }
   }
+
+  async updateEvent(eventId: string, event: Event): Promise<Event> {
+    try {
+      console.log("Atualizando evento:", eventId, event);
+
+      const updatedEventFromPrisma = await prisma.event.update({
+        where: { id: eventId },
+        data: {
+          eventName: event.eventName,
+          date: new Date(event.date),
+          host: event.host,
+          manager: event.manager,
+          hostEmail: event.hostEmail,
+          hostPhone: event.hostPhone,
+          local: event.local,
+          modality: event.modality as string,
+          targetAudience: event.targetAudience,
+          activityType: event.activityType,
+          maxParticipants: event.maxParticipants,
+          goals: event.goals,
+          period: event.period,
+          contentActivities: event.contentActivities,
+          developedCompetencies: event.developedCompetencies,
+          initTime: new Date(event.initTime),
+          finishTime: new Date(event.finishTime),
+        },
+      });
+
+      const updatedEvent = new Event({
+        eventId: updatedEventFromPrisma.id,
+        eventName: updatedEventFromPrisma.eventName,
+        date: updatedEventFromPrisma.date ? updatedEventFromPrisma.date.getTime() : new Date().getTime(),
+        host: updatedEventFromPrisma.host,
+        manager: updatedEventFromPrisma.manager || [],
+        hostEmail: updatedEventFromPrisma.hostEmail || [],
+        hostPhone: updatedEventFromPrisma.hostPhone || [],
+        local: updatedEventFromPrisma.local,
+        modality: updatedEventFromPrisma.modality as MODALITY,
+        targetAudience: updatedEventFromPrisma.targetAudience,
+        activityType: updatedEventFromPrisma.activityType,
+        numberMaxParticipants: updatedEventFromPrisma.maxParticipants ?? undefined,
+        goals: updatedEventFromPrisma.goals,
+        period: updatedEventFromPrisma.period,
+        contentActivities: updatedEventFromPrisma.contentActivities || [],
+        developedCompetencies: updatedEventFromPrisma.developedCompetencies,
+        initTime: updatedEventFromPrisma.initTime ? updatedEventFromPrisma.initTime.getTime() : new Date().getTime(),
+        finishTime: updatedEventFromPrisma.finishTime ? updatedEventFromPrisma.finishTime.getTime() : new Date().getTime(),
+      });
+
+      console.log("Evento atualizado com sucesso:", updatedEvent);
+
+      return updatedEvent;
+    } catch (error: any) {
+      console.error("Erro ao atualizar evento:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new Error("Evento não encontrado.");
+        }
+        throw new Error("Erro no banco de dados ao atualizar evento.");
+      } else if (error instanceof Prisma.PrismaClientInitializationError) {
+        console.error("Erro de inicialização do Prisma:", error.message);
+        throw new Error("Erro de inicialização do banco de dados.");
+      } else {
+        throw new Error(`Erro ao atualizar evento no banco de dados: ${error.message}`);
+      }
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
 }
