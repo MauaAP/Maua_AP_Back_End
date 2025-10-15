@@ -45,7 +45,16 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
       <title>Certificado</title>
       <style>
           @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-          * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+          * { 
+              margin: 0; 
+              padding: 0; 
+              box-sizing: border-box; 
+              font-family: Arial, sans-serif; 
+          }
+          body {
+              font-size: 16px;
+              line-height: 1.4;
+          }
           @page { size: A4 landscape; margin: 2cm; }
           .container {
               display: flex;
@@ -87,14 +96,35 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
               display: flex;
               flex-direction: column;
               align-items: center;
+              justify-content: center;
               gap: 3rem;
+              text-align: center;
           }
           .bodyInfo p {
               font-size: 1.5rem;
               text-align: center;
               font-style: italic;
+              line-height: 1.4;
           }
-          .bodyInfo h2 { font-size: 3rem; font-weight: bold; }
+          .bodyInfo h2 { 
+              font-size: 3rem; 
+              font-weight: bold; 
+              text-align: center;
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              word-wrap: break-word;
+          }
+          .professor-name {
+              font-size: 3rem;
+              font-weight: bold;
+              text-align: center;
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              word-wrap: break-word;
+              display: block;
+          }
           .footerInfo {
               display: flex;
               justify-content: space-around;
@@ -105,6 +135,12 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
               display: flex;
               flex-direction: column;
               align-items: center;
+              text-align: center;
+          }
+          .cardInfo label {
+              font-size: 1rem;
+              margin: 0.2rem 0;
+              font-weight: normal;
           }
       </style>
   </head>
@@ -120,7 +156,7 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
               </aside>
               <aside class="bodyInfo">
                   <p>A Academia de Professores do Centro Universitário do Instituto Mauá de Tecnologia confere a</p>
-                  <h2>${jsonInfo.name}</h2>
+                  <h2 class="professor-name">${jsonInfo.name}</h2>
                   <p>o presente Certificado por ter participado do evento ${jsonInfo.eventName}, ministrado por ${jsonInfo.manager.join(", ")}, realizado em ${formattedDate}, das ${formatTime(jsonInfo.initTime)} às ${formatTime(jsonInfo.finishTime)}.</p>
                   <p>São Caetano do Sul, ${jsonInfo.dateNow} de ${formatMonth(jsonInfo.monthNow)} de ${jsonInfo.yearNow}.</p>
               </aside>
