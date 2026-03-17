@@ -35,7 +35,6 @@ export class UpdateEventController {
         throw new MissingParameters("Event ID");
       }
 
-      console.log("ATTEMPTING TO UPDATE EVENT:", eventId);
       const {
         eventName,
         date,
@@ -54,6 +53,7 @@ export class UpdateEventController {
         developedCompetencies,
         initTime,
         finishTime,
+        link,
       } = req.body;
 
       if (!eventName) {
@@ -123,6 +123,7 @@ export class UpdateEventController {
         developedCompetencies,
         initTime,
         finishTime,
+        link,
       };
 
       await this.updateEventUsecase.execute(eventId, eventProps);

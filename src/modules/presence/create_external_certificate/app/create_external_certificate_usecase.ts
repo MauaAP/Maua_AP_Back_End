@@ -67,7 +67,7 @@ export class CreateExternalCertificateUsecase {
     const page = await browser.newPage();
     await page.setContent(htmlString);
 
-    const pdfBuffer = await page.pdf({ format: "A4", landscape: true });
+    const pdfBuffer = await page.pdf({ landscape: true, printBackground: true, preferCSSPageSize: true });
 
     await browser.close();
 

@@ -28,6 +28,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           developedCompetencies: event.developedCompetencies,
           initTime: new Date(event.initTime),
           finishTime: new Date(event.finishTime),
+          link: event.link ?? null,
         },
       });
 
@@ -49,6 +50,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         developedCompetencies: createdEventFromPrisma.developedCompetencies,
         initTime: createdEventFromPrisma.initTime ? createdEventFromPrisma.initTime.getTime() : new Date().getTime(),
         finishTime: createdEventFromPrisma.finishTime ? createdEventFromPrisma.finishTime.getTime() : new Date().getTime(),
+        link: createdEventFromPrisma.link ?? undefined,
       });
 
       console.log("Evento criado com sucesso:", createdEvent);
@@ -87,6 +89,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           developedCompetencies: event.developedCompetencies,
           initTime: event.initTime ? event.initTime.getTime() : new Date().getTime(),
           finishTime: event.finishTime ? event.finishTime.getTime() : new Date().getTime(),
+          link: event.link ?? undefined,
         });
       });
 
@@ -134,6 +137,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         developedCompetencies: eventFromPrisma.developedCompetencies,
         initTime: eventFromPrisma.initTime ? eventFromPrisma.initTime.getTime() : new Date().getTime(),
         finishTime: eventFromPrisma.finishTime ? eventFromPrisma.finishTime.getTime() : new Date().getTime(),
+        link: eventFromPrisma.link ?? undefined,
       });
 
       console.log("Evento encontrado:", event);
@@ -217,6 +221,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           developedCompetencies: event.developedCompetencies,
           initTime: new Date(event.initTime),
           finishTime: new Date(event.finishTime),
+          link: event.link ?? null,
         },
       });
 
@@ -239,6 +244,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         developedCompetencies: updatedEventFromPrisma.developedCompetencies,
         initTime: updatedEventFromPrisma.initTime ? updatedEventFromPrisma.initTime.getTime() : new Date().getTime(),
         finishTime: updatedEventFromPrisma.finishTime ? updatedEventFromPrisma.finishTime.getTime() : new Date().getTime(),
+        link: updatedEventFromPrisma.link ?? undefined,
       });
 
       console.log("Evento atualizado com sucesso:", updatedEvent);

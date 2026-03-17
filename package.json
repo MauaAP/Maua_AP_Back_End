@@ -4,6 +4,7 @@
   "description": "Repositório para criação do back-end da aplicação da academia de professores do Instituto Mauá de Tecnologia.",
   "main": "server.ts",
   "scripts": {
+    "consultas:treinamento-print": "ts-node --transpile-only -P consultas_ap/tsconfig.json consultas_ap/treinamento_print_presencas.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-antigo": " tsc && npx playwright install chromium",
     "build": "tsc && npx puppeteer browsers install chrome && npm install && ls -R /",
@@ -43,7 +44,8 @@
     "puppeteer-html-pdf": "^4.0.6",
     "tesseract.js": "^6.0.1",
     "ts-node": "^10.9.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

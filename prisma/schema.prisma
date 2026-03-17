@@ -8,15 +8,16 @@ generator client {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  role      String
-  password  String
-  telefone  String     @unique
-  cpf       String     @unique
-  status    String
-  presences Presence[]
+  id          String            @id @default(uuid())
+  name        String
+  email       String            @unique
+  role        String
+  password    String
+  telefone    String            @unique
+  cpf         String            @unique
+  status      String
+  presences   Presence[]
+  evaluations EventEvaluation[]
 }
 
 model Event {
@@ -41,6 +42,7 @@ model Event {
   link                  String?
   presences             Presence[]
   ExternalPresence      ExternalPresence[]
+  evaluations           EventEvaluation[]
 }
 
 model Presence {
@@ -61,4 +63,39 @@ model ExternalPresence {
   name    String
   email   String
   date    DateTime
+}
+
+model EvaluationQuestion {
+  id       String             @id @default(uuid())
+  text     String
+  type     String
+  isActive Boolean            @default(true)
+  answers  EvaluationAnswer[]
+}
+
+model EventEvaluation {
+  id            String             @id @default(uuid())
+  eventId       String
+  event         Event              @relation(fields: [eventId], references: [id])
+  userId        String?
+  user          User?              @relation(fields: [userId], references: [id])
+  externalEmail String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  answers       EvaluationAnswer[]
+
+  @@unique([eventId, userId])
+  @@unique([eventId, externalEmail])
+}
+
+model EvaluationAnswer {
+  id           String             @id @default(uuid())
+  evaluationId String
+  evaluation   EventEvaluation    @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     EvaluationQuestion @relation(fields: [questionId], references: [id])
+  rating       Int?
+  textAnswer   String?
+
+  @@unique([evaluationId, questionId])
 }

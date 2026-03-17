@@ -17,6 +17,8 @@ import UpdateEventPresenter from "../modules/event/update_event/app/update_event
 import CreatePresencePresenter from "../modules/presence/create_presence/app/create_presence_presenter";
 import CreateExternalPresencePresenter from "../modules/presence/create_external_presence/app/create_external_presence_presenter";
 import GetAllPresencesByEventPresenter from "../modules/presence/get_all_presences_by_event/app/get_all_presences_by_event_presenter";
+import GetTreinamentoPrintPresencasPresenter from "../modules/presence/get_treinamento_print_presencas/app/get_treinamento_print_presencas_presenter";
+import DownloadTreinamentoPrintExcelPresenter from "../modules/presence/download_treinamento_print_excel/app/download_treinamento_print_excel_presenter";
 import GetAllPresencesByTokenPresenter from "../modules/presence/get_all_presences_by_token/app/get_all_presences_by_token_presenter";
 import GetAllPresencesPresenter from "../modules/presence/get_all_presences/app/get_all_presences_presenter";
 import GetPresenceByIdPresenter from "../modules/presence/get_presence_by_id/app/get_presence_by_id_presenter";
@@ -30,7 +32,14 @@ import UpdateUserPresenter from '../modules/user/update_user/app/update_user_pre
 import ListCertificatesS3Presenter from "../modules/presence/list_certificates_s3/app/list_certificates_s3_presenter";
 import GenerateAllCertificatesS3Presenter from "../modules/presence/generate_all_certificates_s3/app/generate_all_certificates_s3_presenter";
 import GenerateSelectedCertificatesS3Presenter from "../modules/presence/generate_selected_certificates_s3/app/generate_selected_certificates_s3_presenter";
+import DownloadPresencesByEventExcelPresenter from "../modules/presence/download_presences_by_event_excel/app/download_presences_by_event_excel_presenter";
+import CountPresences2025Presenter from "../modules/presence/count_presences_2025/app/count_presences_2025_presenter";
 import UsersFromPDFPresenter from "../modules/user/get_users_from_pdf/app/get_users_from_pdf_presenter";
+import GetActiveQuestionsPresenter from "../modules/evaluation/get_active_questions/app/get_active_questions_presenter";
+import CreateQuestionPresenter from "../modules/evaluation/create_question/app/create_question_presenter";
+import CreateEvaluationPresenter from "../modules/evaluation/create_evaluation/app/create_evaluation_presenter";
+import UpdateEvaluationPresenter from "../modules/evaluation/update_evaluation/app/update_evaluation_presenter";
+import GetEvaluationsByEventPresenter from "../modules/evaluation/get_evaluations_by_event/app/get_evaluations_by_event_presenter";
 
 const routes = (app: Express) => {
   app
@@ -61,6 +70,8 @@ const routes = (app: Express) => {
   // presence routes
   app.use("/api", CreatePresencePresenter);
   app.use("/api", GetAllPresencesByEventPresenter);
+  app.use("/api", DownloadTreinamentoPrintExcelPresenter);
+  app.use("/api", GetTreinamentoPrintPresencasPresenter);
   app.use("/api", GetAllPresencesByTokenPresenter);
   app.use("/api", GetAllPresencesPresenter);
   app.use("/api", GetPresenceByIdPresenter);
@@ -69,10 +80,19 @@ const routes = (app: Express) => {
   app.use("/api", ListCertificatesS3Presenter);
   app.use("/api", GenerateAllCertificatesS3Presenter);
   app.use("/api", GenerateSelectedCertificatesS3Presenter);
+  app.use("/api", DownloadPresencesByEventExcelPresenter);
+  app.use("/api", CountPresences2025Presenter);
 
   // external presence routes
   app.use("/api", CreateExternalPresencePresenter);
   app.use("/api", CreateExternalCertificatePresenter);
+
+  // evaluation routes
+  app.use("/api", GetActiveQuestionsPresenter);
+  app.use("/api", CreateQuestionPresenter);
+  app.use("/api", CreateEvaluationPresenter);
+  app.use("/api", UpdateEvaluationPresenter);
+  app.use("/api", GetEvaluationsByEventPresenter);
 
   // report routes
   app.use("/api", CreateProfessorReportPresenter);

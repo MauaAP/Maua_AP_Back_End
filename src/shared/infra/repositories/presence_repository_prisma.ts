@@ -106,6 +106,7 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
           user: {
             select: {
               name: true,
+              email: true,
             },
           },
           event: {
@@ -127,7 +128,8 @@ export class PresenceRepositoryPrisma implements IPresenceRepository {
           presenceFromPrisma.eventId,
           presenceFromPrisma.date.getTime(),
           presenceFromPrisma.event.eventName,
-          presenceFromPrisma.user.name
+          presenceFromPrisma.user.name,
+          presenceFromPrisma.user.email
         );
       });
 

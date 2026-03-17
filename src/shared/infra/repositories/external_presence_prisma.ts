@@ -90,4 +90,20 @@ export class ExternalPresenceRepositoryPrisma
       throw new Error("Erro ao buscar presença externa no banco de dados.");
     }
   }
+
+  async getAllExternalPresencesByEventId(eventId: string): Promise<ExternalPresence[]> {
+    try {
+      const externalPresences = await prisma.externalPresence.findMany({
+        where: {
+          eventId,
+        },
+      });
+      return externalPresences;
+    } catch (error) {
+      console.error("Erro ao buscar presenças externas por evento:", error);
+      throw new Error("Erro ao buscar presenças externas por evento.");
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
 }

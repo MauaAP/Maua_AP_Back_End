@@ -51,6 +51,9 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
               box-sizing: border-box; 
               font-family: Arial, sans-serif; 
           }
+          html {
+              font-size: 16px;
+          }
           body {
               font-size: 16px;
               line-height: 1.4;
@@ -121,9 +124,7 @@ export function getCertificateHtml(jsonInfo: JsonInfo): string {
               text-align: center;
               margin: 0;
               padding: 0;
-              width: 100%;
               word-wrap: break-word;
-              display: block;
           }
           .footerInfo {
               display: flex;

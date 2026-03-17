@@ -5,6 +5,7 @@ export class PresencesFromEventDTO {
   date: number;
   eventName: string;
   userName: string;
+  userEmail: string;
 
   constructor(
     presenceId: string,
@@ -12,7 +13,8 @@ export class PresencesFromEventDTO {
     eventId: string,
     date: number,
     eventName: string,
-    userName: string
+    userName: string,
+    userEmail: string = ""
   ) {
     this.presenceId = presenceId;
     this.userId = userId;
@@ -20,6 +22,7 @@ export class PresencesFromEventDTO {
     this.date = date;
     this.eventName = eventName;
     this.userName = userName;
+    this.userEmail = userEmail;
   }
 
   toJSON() {
@@ -30,6 +33,7 @@ export class PresencesFromEventDTO {
       date: this.date,
       eventName: this.eventName,
       userName: this.userName,
+      userEmail: this.userEmail,
     };
   }
 }

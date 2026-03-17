@@ -60,8 +60,9 @@ export class CreateCertificateUsecase {
     await page.setContent(getCertificateHtml(json), { waitUntil: "networkidle" });
 
     const pdfFront = await page.pdf({
-      format: "A4",
+      landscape: true,
       printBackground: true,
+      preferCSSPageSize: true,
     });
 
     // ============ GERAR PDF VERSO ============
@@ -69,8 +70,9 @@ export class CreateCertificateUsecase {
     await pageBack.setContent(getCertificateBackHtml(json), { waitUntil: "networkidle" });
 
     const pdfBack = await pageBack.pdf({
-      format: "A4",
+      landscape: true,
       printBackground: true,
+      preferCSSPageSize: true,
     });
 
     await browser.close();

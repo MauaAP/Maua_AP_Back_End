@@ -15,11 +15,12 @@ export interface EventProps {
   activityType: string;
   numberMaxParticipants?: number;
   goals: string;
-  period: string
+  period: string;
   contentActivities: string[];
   developedCompetencies: string;
   initTime: number;
   finishTime: number;
+  link?: string;
 }
 
 export class Event {
@@ -174,6 +175,14 @@ export class Event {
 
   get finishTime(): number {
     return this.props.finishTime;
+  }
+
+  get link(): string | undefined {
+    return this.props.link;
+  }
+
+  setLink(link: string | undefined): void {
+    this.props.link = link;
   }
 
   setEventName(eventName: string): void {
