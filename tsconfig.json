@@ -15,5 +15,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src", "prisma", "consultas_ap"]
+  "include": ["src", "prisma"]
 }
