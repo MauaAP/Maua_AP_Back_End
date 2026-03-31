@@ -1,4 +1,4 @@
-import { IEventEvaluationRepository } from "../../../../shared/domain/repositories/event_evaluation_repository_interface";
+import { IEventQuestionnaireRepository } from "../../../../shared/domain/repositories/event_questionnaire_repository_interface";
 import { prisma } from "../../../../../prisma/prisma";
 
 interface EvaluationAnswerDetail {
@@ -25,6 +25,10 @@ export interface GetEvaluationsByEventResult {
 }
 
 export class GetEvaluationsByEventUsecase {
+  constructor(
+    private questionnaireRepository: IEventQuestionnaireRepository
+  ) {}
+
   async execute(eventId: string): Promise<GetEvaluationsByEventResult> {
     const event = await prisma.event.findUnique({
       where: { id: eventId },
@@ -33,6 +37,12 @@ export class GetEvaluationsByEventUsecase {
     if (!event) {
       throw new Error("Evento não encontrado");
     }
+
+    const allowedQuestionIds = new Set(
+      await this.questionnaireRepository.getAllowedActiveQuestionIdsForEvent(
+        eventId
+      )
+    );
 
     const evaluations = await prisma.eventEvaluation.findMany({
       where: { eventId },
@@ -55,13 +65,15 @@ export class GetEvaluationsByEventUsecase {
       externalEmail: e.externalEmail,
       createdAt: e.createdAt,
       updatedAt: e.updatedAt,
-      answers: e.answers.map((a) => ({
-        questionId: a.questionId,
-        questionText: a.question.text,
-        questionType: a.question.type,
-        rating: a.rating,
-        textAnswer: a.textAnswer,
-      })),
+      answers: e.answers
+        .filter((a) => allowedQuestionIds.has(a.questionId))
+        .map((a) => ({
+          questionId: a.questionId,
+          questionText: a.question.text,
+          questionType: a.question.type,
+          rating: a.rating,
+          textAnswer: a.textAnswer,
+        })),
     }));
 
     return { evaluations: mapped };
