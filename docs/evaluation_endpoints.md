@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-O sistema de avaliação permite que participantes (internos e externos) avaliem eventos após sua ocorrência. As perguntas são globais e podem ser de dois tipos: **RATING** (escala 1-5) e **TEXT** (resposta dissertativa).
+O sistema de avaliação permite que participantes (internos e externos) avaliem eventos após sua ocorrência. As perguntas são cadastradas de forma **global** (tabela de perguntas) e podem ser de dois tipos: **RATING** (escala 1-5) e **TEXT** (resposta dissertativa). Por evento, o administrador pode definir **quais** perguntas entram no questionário; se o evento **não tiver** vínculos configurados, vale o comportamento legado: **todas** as perguntas ativas.
 
 ---
 
@@ -78,9 +78,69 @@ Cria uma nova pergunta no sistema. Apenas administradores.
 
 ---
 
+## 2.1 Listar perguntas do questionário de um evento
+
+Retorna as perguntas **ativas** aplicáveis àquele evento: se existir configuração na tabela de vínculo, apenas as vinculadas (ordenadas por `displayOrder`); caso contrário, todas as perguntas ativas (como `GET /api/evaluations/questions`).
+
+**`GET /api/evaluations/event/:eventId/questions`**
+
+**Autenticação:** Não requerida
+
+### Response `200 OK`
+
+Mesmo formato de `questions` do endpoint global (array de `{ id, text, type }`).
+
+### Erros
+
+| Status | Mensagem              |
+|--------|------------------------|
+| 404    | Evento não encontrado |
+
+---
+
+## 2.2 Configurar questionário do evento (Admin)
+
+Substitui o conjunto de perguntas do evento. Apenas IDs de perguntas **existentes e ativas** são aceitos. Lista vazia remove os vínculos e restaura o fallback (todas as ativas).
+
+**`PUT /api/evaluations/event/:eventId/questionnaire`**
+
+**Autenticação:** Bearer Token (**ADMIN**)
+
+### Request Body
+
+```json
+{
+  "questionIds": ["uuid-1", "uuid-2", "uuid-3"]
+}
+```
+
+| Campo         | Tipo       | Obrigatório | Descrição                          |
+|---------------|------------|-------------|-------------------------------------|
+| `questionIds` | `string[]` | Sim         | Ordem do array define a exibição   |
+
+### Response `200 OK`
+
+```json
+{
+  "message": "Questionário do evento atualizado com sucesso",
+  "questionIds": ["uuid-1", "uuid-2", "uuid-3"]
+}
+```
+
+### Erros
+
+| Status | Mensagem                                                                 |
+|--------|---------------------------------------------------------------------------|
+| 400    | O campo 'questionIds' deve ser um array de UUIDs                          |
+| 400    | Pergunta(s) inválida(s) ou inativa(s): …                                  |
+| 403    | Apenas administradores podem configurar o questionário do evento          |
+| 404    | Evento não encontrado                                                     |
+
+---
+
 ## 3. Criar Avaliação
 
-Cria uma avaliação para um evento. O evento deve ter sido finalizado e o avaliador deve ter presença confirmada.
+Cria uma avaliação para um evento. O evento deve ter sido finalizado e o avaliador deve ter presença confirmada. Cada `questionId` em `answers` deve pertencer ao **questionário permitido** daquele evento (perguntas vinculadas ativas, ou todas as ativas se não houver vínculo).
 
 **`POST /api/evaluations/event/:eventId`**
 
@@ -170,6 +230,7 @@ Cria uma avaliação para um evento. O evento deve ter sido finalizado e o avali
 | 404    | Evento não encontrado                                              |
 | 409    | Usuário já avaliou este evento                                     |
 | 409    | Convidado externo já avaliou este evento                           |
+| 400    | Uma ou mais perguntas não fazem parte do questionário deste evento |
 
 ---
 
@@ -251,12 +312,13 @@ Permite ao avaliador editar suas respostas. Substitui todas as respostas anterio
 | 400    | É necessário enviar ao menos uma resposta no campo 'answers'   |
 | 403    | Você não tem permissão para editar esta avaliação              |
 | 404    | Avaliação não encontrada                                       |
+| 400    | Uma ou mais perguntas não fazem parte do questionário deste evento |
 
 ---
 
 ## 5. Listar Avaliações por Evento (Admin)
 
-Retorna todas as avaliações de um evento com dados do avaliador e respostas detalhadas.
+Retorna todas as avaliações de um evento com dados do avaliador e respostas detalhadas. As respostas são **filtradas** para exibir apenas perguntas que fazem parte do questionário permitido do evento (mesma regra do formulário: vínculos ativos ou todas as ativas se não houver vínculo).
 
 **`GET /api/evaluations/event/:eventId`**
 
@@ -327,7 +389,9 @@ Retorna todas as avaliações de um evento com dados do avaliador e respostas de
 
 | Método | Rota                               | Auth              | Descrição                          |
 |--------|-------------------------------------|--------------------|-------------------------------------|
-| GET    | `/api/evaluations/questions`       | Público            | Listar perguntas ativas            |
+| GET    | `/api/evaluations/questions`       | Público            | Listar perguntas ativas (globais)  |
+| GET    | `/api/evaluations/event/:eventId/questions` | Público   | Perguntas do questionário do evento |
+| PUT    | `/api/evaluations/event/:eventId/questionnaire` | ADMIN | Definir perguntas do evento     |
 | POST   | `/api/evaluations/questions`       | ADMIN              | Criar pergunta                     |
 | POST   | `/api/evaluations/event/:eventId`  | Opcional (JWT/Email)| Criar avaliação                   |
 | PUT    | `/api/evaluations/:evaluationId`   | Opcional (JWT/Email)| Editar avaliação                  |
@@ -350,6 +414,21 @@ Retorna todas as avaliações de um evento com dados do avaliador e respostas de
 
 ```bash
 curl -X GET http://localhost:3000/api/evaluations/questions
+```
+
+### Listar perguntas do questionário de um evento
+
+```bash
+curl -X GET http://localhost:3000/api/evaluations/event/EVENT_ID/questions
+```
+
+### Configurar questionário do evento (Admin)
+
+```bash
+curl -X PUT http://localhost:3000/api/evaluations/event/EVENT_ID/questionnaire \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN_ADMIN" \
+  -d '{"questionIds":["UUID_1","UUID_2"]}'
 ```
 
 ### Criar pergunta (Admin)
