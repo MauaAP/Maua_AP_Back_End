@@ -2,6 +2,10 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { IEventRepository } from "../../../shared/domain/repositories/event_repository_interface";
 import { Event } from "../../domain/entities/event";
 import { MODALITY } from "../../domain/enums/modality_type";
+import {
+  prismaEventToCsvRow,
+  type EventCsvRow,
+} from "../../utils/event_csv_export_mapper";
 
 const prisma = new PrismaClient();
 
@@ -83,6 +87,7 @@ export class EventRepositoryPrisma implements IEventRepository {
           modality: event.modality as MODALITY,
           targetAudience: event.targetAudience,
           activityType: event.activityType,
+          numberMaxParticipants: event.maxParticipants ?? undefined,
           goals: event.goals,
           period: event.period,
           contentActivities: event.contentActivities || [],
@@ -98,6 +103,18 @@ export class EventRepositoryPrisma implements IEventRepository {
       return events;
     } catch (error: any) {
       console.error("Erro ao buscar eventos:", error);
+      throw new Error("Erro ao buscar eventos no banco de dados.");
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
+
+  async findAllForCsvExport(): Promise<EventCsvRow[]> {
+    try {
+      const rows = await prisma.event.findMany();
+      return rows.map(prismaEventToCsvRow);
+    } catch (error: any) {
+      console.error("Erro ao buscar eventos para exportação CSV:", error);
       throw new Error("Erro ao buscar eventos no banco de dados.");
     } finally {
       await prisma.$disconnect();
@@ -131,6 +148,7 @@ export class EventRepositoryPrisma implements IEventRepository {
         modality: eventFromPrisma.modality as MODALITY,
         targetAudience: eventFromPrisma.targetAudience,
         activityType: eventFromPrisma.activityType,
+        numberMaxParticipants: eventFromPrisma.maxParticipants ?? undefined,
         goals: eventFromPrisma.goals,
         period: eventFromPrisma.period,
         contentActivities: eventFromPrisma.contentActivities || [],
