@@ -62,4 +62,4 @@ curl -s -H "Authorization: Bearer <TOKEN>" \
 npm run verify:event-csv
 ```
 
-Valida que o mapper gera todas as chaves definidas em `EVENT_CSV_FIELD_NAMES` (sem acesso ao banco).
+Valida que o mapper gera todas as chaves definidas em `EVENT_CSV_FIELD_NAMES` (sem acesso ao banco). Implementação: [`src/scripts/verify_event_csv_mapper.ts`](../src/scripts/verify_event_csv_mapper.ts).

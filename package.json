@@ -6,7 +6,7 @@
   "scripts": {
     "consultas:treinamento-print": "ts-node --transpile-only -P consultas_ap/tsconfig.json consultas_ap/treinamento_print_presencas.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "verify:event-csv": "ts-node --transpile-only consultas_ap/verify_event_csv_mapper.ts",
+    "verify:event-csv": "node -r ts-node/register/transpile-only src/scripts/verify_event_csv_mapper.ts",
     "build-antigo": " tsc && npx playwright install chromium",
     "build": "tsc && npx puppeteer browsers install chrome && npm install && ls -R /",
     "start": "node dist/src/server.js",

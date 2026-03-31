@@ -1,12 +1,12 @@
 /**
- * Smoke check: mapper produz exatamente as colunas documentadas (sem DB).
+ * Smoke: mapper cobre todas as colunas documentadas (sem DB).
  * npm run verify:event-csv
  */
 import type { Event as PrismaEvent } from "@prisma/client";
 import {
   EVENT_CSV_FIELD_NAMES,
   prismaEventToCsvRow,
-} from "../src/shared/utils/event_csv_export_mapper";
+} from "../shared/utils/event_csv_export_mapper";
 
 const mock = {
   id: "00000000-0000-4000-8000-000000000001",
