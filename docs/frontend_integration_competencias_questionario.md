@@ -1,11 +1,12 @@
-# Integração front-end — Competências e questionário por evento
+# Integração front-end — Competências, questionário por evento e eventos (admin)
 
-Documento de referência para o time de front-end implementar consumo das APIs de **competências desenvolvidas** e **questionário de avaliação por evento**.
+Documento de referência para o time de front-end implementar consumo das APIs de **competências desenvolvidas**, **questionário de avaliação por evento** e **CRUD/exportação de eventos** (rotas validadas em ambiente local).
 
 Documentação complementar:
 
 - [evaluation_endpoints.md](./evaluation_endpoints.md) — avaliações, perguntas e questionário
 - [event_developed_competencies.md](./event_developed_competencies.md) — formato de `developedCompetencies`
+- [export_events_csv.md](./export_events_csv.md) — exportação CSV de todos os eventos
 
 ---
 
@@ -24,6 +25,9 @@ Documentação complementar:
 
 3. **Ambiente de testes**  
    Em períodos de QA, `POST /api/create-user` pode ficar temporariamente **sem** `authenticateToken`; em **produção** deve exigir autenticação e papel adequado.
+
+4. **Eventos — atualização completa**  
+   `PUT /api/update-event/:eventId` exige o **mesmo conjunto de campos obrigatórios** que o create (incluindo `developedCompetencies` ou `competencies`). A resposta é só mensagem de sucesso; para exibir dados atualizados, chame `GET /api/events/:eventId`. Papéis: `ADMIN`, `SECRETARY`, `MODERATOR`.
 
 ---
 
@@ -50,10 +54,29 @@ Documentação complementar:
 
 ### Já existentes (úteis para telas admin)
 
-| Método | Caminho | Auth | Uso |
-|--------|---------|------|-----|
-| `GET` | `/evaluations/questions` | Não | Catálogo global de perguntas **ativas** (para montar o multi-select do questionário). |
-| `POST` | `/evaluations/questions` | Bearer **ADMIN** | Criar nova pergunta. |
+| Método | Caminho | Auth | Papel | Uso |
+|--------|---------|------|-------|-----|
+| `GET` | `/evaluations/questions` | Não | — | Catálogo global de perguntas **ativas** (multi-select do questionário). |
+| `POST` | `/evaluations/questions` | Bearer | **ADMIN** | Criar nova pergunta. |
+| `GET` | `/events` | Bearer | ADMIN, SECRETARY, MODERATOR | Lista todos os eventos (array com `eventId`, `eventName`, datas em **ms**, etc.). |
+| `GET` | `/events/:eventId` | Não | — | Detalhe de um evento (mesmo formato de campos da lista). |
+| `POST` | `/create-event` | Bearer | ADMIN, SECRETARY, MODERATOR | Cria evento; body completo; **201** + `{ "message": "..." }` (sem `eventId` na resposta — obter via `GET /events` ou fluxo da UI). |
+| `PUT` | `/update-event/:eventId` | Bearer | ADMIN, SECRETARY, MODERATOR | Atualiza evento inteiro; **200** + `{ "message": "Evento atualizado com sucesso!" }`; opcionais: `numberMaxParticipants`, `link`. |
+| `GET` | `/download-events` | Bearer | ADMIN, SECRETARY, MODERATOR | CSV com **todos** os eventos (análise externa). Ver [export_events_csv.md](./export_events_csv.md). |
+
+---
+
+## Eventos — contrato para o front (criar / atualizar)
+
+**Datas e horários:** enviar como **número** (epoch em **milissegundos**), igual ao retorno de `GET /events` e `GET /events/:eventId`.
+
+**`modality`:** string; o back faz `toUpperCase()` (ex.: `PRESENCIAL`).
+
+**`developedCompetencies`:** aceita **string** ou **array de strings**; persistido como string normalizada (ex.: `"Comp Y, Comp Z"`).
+
+**E-mails e telefones:** `hostEmail` e `hostPhone` são **arrays**; telefones devem passar na validação do domínio (ex. 11 dígitos para padrão BR usado no sistema).
+
+**Após `PUT /update-event/...`:** faça `GET /api/events/:eventId` para sincronizar o estado da tela — o PUT não devolve o objeto do evento.
 
 ---
 
@@ -68,6 +91,11 @@ Documentação complementar:
 
 3. **Tela admin / edição de evento — competências:**  
    - Preferir `PUT /api/event/:eventId/competencies` se existir tela só de competências; ou enviar no `POST`/`PUT` do evento completo com array ou string.
+
+4. **Tela admin / edição de evento — formulário completo:**  
+   - Carregar com `GET /api/events/:eventId`.  
+   - Salvar com `PUT /api/update-event/:eventId` enviando **todos** os campos obrigatórios.  
+   - Opcional: botão “Exportar todos os eventos (CSV)” chamando `GET /api/download-events`.
 
 ---
 
@@ -112,8 +140,67 @@ curl -s -X PUT "http://localhost:3000/api/event/<EVENT_UUID>/competencies" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{"developedCompetencies":["Comp A","Comp B"]}'
+
+# Listar eventos (admin)
+curl -s "http://localhost:3000/api/events" \
+  -H "Authorization: Bearer <TOKEN>"
+
+# Detalhe de um evento
+curl -s "http://localhost:3000/api/events/<EVENT_UUID>"
+
+# Criar evento (corpo mínimo ilustrativo — ajuste datas em ms e validações)
+curl -s -X POST "http://localhost:3000/api/create-event" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventName":"Meu evento",
+    "date":1735689600000,
+    "host":"Palestrante",
+    "manager":["Organizador"],
+    "hostEmail":["org@example.com"],
+    "hostPhone":["11987654321"],
+    "local":"Auditório",
+    "modality":"PRESENCIAL",
+    "targetAudience":"Docentes",
+    "activityType":"workshop",
+    "goals":"Objetivos do evento",
+    "period":"2026",
+    "contentActivities":["Atividade 1"],
+    "developedCompetencies":"Comp A",
+    "initTime":1735693200000,
+    "finishTime":1735704000000
+  }'
+
+# Atualizar evento (mesmos campos obrigatórios + opcionais numberMaxParticipants, link)
+curl -s -X PUT "http://localhost:3000/api/update-event/<EVENT_UUID>" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventName":"Meu evento (editado)",
+    "date":1735689600000,
+    "host":"Palestrante",
+    "manager":["Organizador"],
+    "hostEmail":["org@example.com"],
+    "hostPhone":["11987654321"],
+    "local":"Auditório B",
+    "modality":"PRESENCIAL",
+    "targetAudience":"Docentes",
+    "activityType":"workshop",
+    "goals":"Objetivos atualizados",
+    "period":"2026",
+    "contentActivities":["Atividade 1"],
+    "developedCompetencies":["Comp A","Comp B"],
+    "initTime":1735693200000,
+    "finishTime":1735704000000,
+    "link":"https://example.org/evento"
+  }'
+
+# Exportar todos os eventos em CSV
+curl -s "http://localhost:3000/api/download-events" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -o events.csv
 ```
 
 ---
 
-*Última atualização: alinhado à implementação de competências + questionário por evento no Maua AP Back End.*
+*Última atualização: competências, questionário por evento, atualização de eventos (`PUT /update-event`) e export CSV documentados para integração front-end.*
