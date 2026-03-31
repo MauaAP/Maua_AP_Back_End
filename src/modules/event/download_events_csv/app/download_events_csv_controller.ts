@@ -7,14 +7,12 @@ import {
   InternalServerError,
   ParameterError,
 } from "../../../../shared/helpers/http/http_codes";
-import { ConflictItems } from "../../../../shared/helpers/errors/usecase_errors";
 import {
-  InvalidParameter,
   InvalidRequest,
-  MissingParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
 import { DownloadEventsCsvUsecase } from "./download_events_csv_usecase";
+import { EVENT_CSV_FIELD_NAMES } from "../../../../shared/utils/event_csv_export_mapper";
 
 export class GetAllEventsController {
   constructor(private usecase: DownloadEventsCsvUsecase) {}
@@ -29,13 +27,13 @@ export class GetAllEventsController {
           "You do not have permission to access this feature"
         );
       }
-      const events = await this.usecase.execute();
+      const rows = await this.usecase.execute();
 
-      const csv = parse(events, {
-        fields: ["eventName", "date", "host", "manager", "cpf", "manager", "local", "activityType"],
+      const csv = parse(rows, {
+        fields: [...EVENT_CSV_FIELD_NAMES],
       });
 
-      res.header("Content-Type", "text/csv");
+      res.header("Content-Type", "text/csv; charset=utf-8");
       res.header("Content-Disposition", "attachment; filename=events.csv");
       return res.status(200).send(csv);
     } catch (error: any) {
