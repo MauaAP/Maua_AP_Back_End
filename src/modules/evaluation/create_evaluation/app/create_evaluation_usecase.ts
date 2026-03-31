@@ -1,6 +1,7 @@
 import { EventEvaluation } from "../../../../shared/domain/entities/event_evaluation";
 import { EvaluationAnswer } from "../../../../shared/domain/entities/evaluation_answer";
 import { IEventEvaluationRepository } from "../../../../shared/domain/repositories/event_evaluation_repository_interface";
+import { IEventQuestionnaireRepository } from "../../../../shared/domain/repositories/event_questionnaire_repository_interface";
 import { prisma } from "../../../../../prisma/prisma";
 
 interface AnswerInput {
@@ -17,7 +18,10 @@ interface CreateEvaluationInput {
 }
 
 export class CreateEvaluationUsecase {
-  constructor(private repository: IEventEvaluationRepository) {}
+  constructor(
+    private repository: IEventEvaluationRepository,
+    private questionnaireRepository: IEventQuestionnaireRepository
+  ) {}
 
   async execute(input: CreateEvaluationInput): Promise<EventEvaluation> {
     const event = await prisma.event.findUnique({
@@ -71,6 +75,19 @@ export class CreateEvaluationUsecase {
 
     if (!input.answers || input.answers.length === 0) {
       throw new Error("É necessário enviar ao menos uma resposta");
+    }
+
+    const allowedIds = new Set(
+      await this.questionnaireRepository.getAllowedActiveQuestionIdsForEvent(
+        input.eventId
+      )
+    );
+    for (const a of input.answers) {
+      if (!allowedIds.has(a.questionId)) {
+        throw new Error(
+          "Uma ou mais perguntas não fazem parte do questionário deste evento"
+        );
+      }
     }
 
     const answers = input.answers.map(
