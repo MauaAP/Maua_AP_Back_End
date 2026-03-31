@@ -1,0 +1,43 @@
+# Aplica o schema Prisma no banco (equivalente a `npx prisma db push` local).
+# Acionamento MANUAL para não alterar o banco em todo push/PR.
+#
+# Pré-requisitos no GitHub: Settings → Secrets → Actions
+#   - DATABASE_URL (mesma connection string do .env, com ssl se necessário)
+#
+# Rede: o RDS precisa aceitar conexões na porta 5432 a partir do runner.
+# Runners github-hosted usam IPs públicos variáveis; opções comuns:
+#   - regra temporária 0.0.0.0/0 em desenvolvimento (não recomendado em produção);
+#   - runner self-hosted na mesma VPC do RDS;
+#   - tunnel/VPN.
+name: Prisma DB Push
+
+on:
+  workflow_dispatch:
+
+jobs:
+  db-push:
+    name: Validate schema and push to database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma validate
+        run: npx prisma validate
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      - name: Prisma db push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma db push
