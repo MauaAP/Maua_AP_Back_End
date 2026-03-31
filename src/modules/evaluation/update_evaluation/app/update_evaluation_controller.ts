@@ -59,6 +59,12 @@ export class UpdateEvaluationController {
       if (error.message === "É necessário enviar ao menos uma resposta") {
         return new BadRequest(error.message).send(res);
       }
+      if (
+        error.message ===
+        "Uma ou mais perguntas não fazem parte do questionário deste evento"
+      ) {
+        return new BadRequest(error.message).send(res);
+      }
       return new InternalServerError("Internal Server Error").send(res);
     }
   }

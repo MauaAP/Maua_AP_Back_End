@@ -1,6 +1,7 @@
 import { EventEvaluation } from "../../../../shared/domain/entities/event_evaluation";
 import { EvaluationAnswer } from "../../../../shared/domain/entities/evaluation_answer";
 import { IEventEvaluationRepository } from "../../../../shared/domain/repositories/event_evaluation_repository_interface";
+import { IEventQuestionnaireRepository } from "../../../../shared/domain/repositories/event_questionnaire_repository_interface";
 
 interface AnswerInput {
   questionId: string;
@@ -16,7 +17,10 @@ interface UpdateEvaluationInput {
 }
 
 export class UpdateEvaluationUsecase {
-  constructor(private repository: IEventEvaluationRepository) {}
+  constructor(
+    private repository: IEventEvaluationRepository,
+    private questionnaireRepository: IEventQuestionnaireRepository
+  ) {}
 
   async execute(input: UpdateEvaluationInput): Promise<EventEvaluation> {
     const existing = await this.repository.getEvaluationById(
@@ -40,6 +44,19 @@ export class UpdateEvaluationUsecase {
 
     if (!input.answers || input.answers.length === 0) {
       throw new Error("É necessário enviar ao menos uma resposta");
+    }
+
+    const allowedIds = new Set(
+      await this.questionnaireRepository.getAllowedActiveQuestionIdsForEvent(
+        existing.eventId
+      )
+    );
+    for (const a of input.answers) {
+      if (!allowedIds.has(a.questionId)) {
+        throw new Error(
+          "Uma ou mais perguntas não fazem parte do questionário deste evento"
+        );
+      }
     }
 
     const answers = input.answers.map(

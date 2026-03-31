@@ -15,6 +15,7 @@ import {
   MissingParameters,
 } from "../../../../shared/helpers/errors/controller_errors";
 import { EntityError } from "../../../../shared/helpers/errors/domain_errors";
+import { normalizeDevelopedCompetencies } from "../../../../shared/utils/developed_competencies";
 
 export class UpdateEventController {
   constructor(private updateEventUsecase: UpdateEventUsecase) {}
@@ -95,7 +96,10 @@ export class UpdateEventController {
       if (!contentActivities) {
         throw new MissingParameters("Content Activities");
       }
-      if (!developedCompetencies) {
+      const developedCompetenciesNormalized = normalizeDevelopedCompetencies(
+        developedCompetencies ?? req.body?.competencies
+      );
+      if (!developedCompetenciesNormalized) {
         throw new MissingParameters("Developed Competencies");
       }
       if (!initTime) {
@@ -120,7 +124,7 @@ export class UpdateEventController {
         goals,
         period,
         contentActivities,
-        developedCompetencies,
+        developedCompetencies: developedCompetenciesNormalized,
         initTime,
         finishTime,
         link,

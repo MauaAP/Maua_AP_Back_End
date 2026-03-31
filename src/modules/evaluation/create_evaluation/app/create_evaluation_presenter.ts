@@ -2,12 +2,17 @@ import express, { Request, Response, NextFunction } from "express";
 import { CreateEvaluationUsecase } from "./create_evaluation_usecase";
 import { CreateEvaluationController } from "./create_evaluation_controller";
 import { EventEvaluationRepositoryPrisma } from "../../../../shared/infra/repositories/event_evaluation_repository_prisma";
+import { EventQuestionnaireRepositoryPrisma } from "../../../../shared/infra/repositories/event_questionnaire_repository_prisma";
 import { authenticateToken } from "../../../../shared/middlewares/jwt_middleware";
 
 const router = express.Router();
 
 const repository = new EventEvaluationRepositoryPrisma();
-const usecase = new CreateEvaluationUsecase(repository);
+const questionnaireRepository = new EventQuestionnaireRepositoryPrisma();
+const usecase = new CreateEvaluationUsecase(
+  repository,
+  questionnaireRepository
+);
 const controller = new CreateEvaluationController(usecase);
 
 function optionalAuth(req: Request, res: Response, next: NextFunction) {

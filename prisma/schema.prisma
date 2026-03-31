@@ -43,6 +43,7 @@ model Event {
   presences             Presence[]
   ExternalPresence      ExternalPresence[]
   evaluations           EventEvaluation[]
+  questionnaireItems    EventQuestionnaire[]
 }
 
 model Presence {
@@ -66,11 +67,24 @@ model ExternalPresence {
 }
 
 model EvaluationQuestion {
-  id       String             @id @default(uuid())
-  text     String
-  type     String
-  isActive Boolean            @default(true)
-  answers  EvaluationAnswer[]
+  id                 String               @id @default(uuid())
+  text               String
+  type               String
+  isActive           Boolean              @default(true)
+  answers            EvaluationAnswer[]
+  questionnaireItems EventQuestionnaire[]
+}
+
+model EventQuestionnaire {
+  id           String             @id @default(uuid())
+  eventId      String
+  event        Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     EvaluationQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  displayOrder Int                @default(0)
+
+  @@unique([eventId, questionId])
+  @@index([eventId])
 }
 
 model EventEvaluation {

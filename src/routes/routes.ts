@@ -40,6 +40,8 @@ import CreateQuestionPresenter from "../modules/evaluation/create_question/app/c
 import CreateEvaluationPresenter from "../modules/evaluation/create_evaluation/app/create_evaluation_presenter";
 import UpdateEvaluationPresenter from "../modules/evaluation/update_evaluation/app/update_evaluation_presenter";
 import GetEvaluationsByEventPresenter from "../modules/evaluation/get_evaluations_by_event/app/get_evaluations_by_event_presenter";
+import GetEventEvaluationQuestionsPresenter from "../modules/evaluation/get_event_evaluation_questions/app/get_event_evaluation_questions_presenter";
+import SetEventQuestionnairePresenter from "../modules/evaluation/set_event_questionnaire/app/set_event_questionnaire_presenter";
 
 const routes = (app: Express) => {
   app
@@ -90,6 +92,8 @@ const routes = (app: Express) => {
   // evaluation routes
   app.use("/api", GetActiveQuestionsPresenter);
   app.use("/api", CreateQuestionPresenter);
+  app.use("/api", GetEventEvaluationQuestionsPresenter);
+  app.use("/api", SetEventQuestionnairePresenter);
   app.use("/api", CreateEvaluationPresenter);
   app.use("/api", UpdateEvaluationPresenter);
   app.use("/api", GetEvaluationsByEventPresenter);
