@@ -40,4 +40,8 @@ export class EvaluationQuestionRepositoryPrisma
       isActive: created.isActive,
     });
   }
+
+  async deleteQuestion(id: string): Promise<void> {
+    await prisma.evaluationQuestion.delete({ where: { id } });
+  }
 }
